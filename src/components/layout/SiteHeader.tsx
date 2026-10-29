@@ -8,6 +8,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const NAV_ITEMS = [
   { href: "/play", key: "nav.play" },
+  { href: "/history", key: "nav.history" },
   { href: "/about", key: "nav.about" },
 ] as const;
 

@@ -13,7 +13,8 @@
     "label": "Main",
     "home": "Home",
     "about": "About",
-    "play": "Play"
+    "play": "Play",
+    "history": "History"
   },
   "home": {
     "title": "Souls Challenge Generator",
@@ -236,5 +237,28 @@
     "favorite": "Favorite",
     "favorited": "Added to favorites.",
     "unfavorited": "Removed from favorites."
+  },
+  "history": {
+    "title": "Your runs",
+    "favoritesTitle": "Favorites",
+    "favoritesEmpty": "Mark a run as favorite on its page and it stays here.",
+    "recentTitle": "Recent runs",
+    "recentEmpty": "Runs you open will show up here.",
+    "goToPlay": "Generate a run",
+    "rulesOne": "1 rule",
+    "rulesOther": "{count} rules",
+    "openedAt": "Opened {date}",
+    "savedAt": "Saved {date}",
+    "unavailable": "This seed is from another version and can no longer be rebuilt.",
+    "label": "Label",
+    "labelPlaceholder": "Add a label",
+    "remove": "Remove",
+    "removeNamed": "Remove {name}",
+    "clearHistory": "Clear history",
+    "clearFavorites": "Clear favorites",
+    "confirmClearHistory": "Remove all {count} runs from your history?",
+    "confirmClearFavorites": "Remove all {count} favorites?",
+    "confirm": "Yes, clear",
+    "cancel": "Cancel"
   }
 }
