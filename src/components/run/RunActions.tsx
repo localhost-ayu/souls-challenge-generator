@@ -8,12 +8,22 @@ import type { MessageKey } from "@/i18n/translate";
 import { copyText } from "@/lib/clipboard";
 import { randomSeedKey } from "@/lib/random";
 import { runPath, runUrl } from "@/lib/run-link";
+import { favoritesItem } from "@/lib/storage/items";
+import { isFavorite, toggleFavorite } from "@/lib/storage/saved-runs";
+import { setItemValue, useStorageItem } from "@/lib/storage/store";
 import { Button, ButtonLink } from "@/components/ui/Button";
 
 export function RunActions({ run }: { run: ChallengeRun }) {
   const { t } = useTranslation();
   const router = useRouter();
   const [status, setStatus] = useState<MessageKey | null>(null);
+  const favorites = useStorageItem(favoritesItem);
+  const favorite = isFavorite(favorites, run.seed);
+
+  function toggle() {
+    setItemValue(favoritesItem, toggleFavorite(favorites, run.seed, Date.now()));
+    setStatus(favorite ? "run.unfavorited" : "run.favorited");
+  }
 
   async function copy(text: string, success: MessageKey) {
     setStatus((await copyText(text)) ? success : "run.copyFailed");
@@ -48,6 +58,10 @@ export function RunActions({ run }: { run: ChallengeRun }) {
           {t("run.copyLink")}
         </Button>
         <Button onClick={share}>{t("run.share")}</Button>
+        <Button aria-pressed={favorite} onClick={toggle}>
+          <StarIcon filled={favorite} />
+          {t("run.favorite")}
+        </Button>
         <ButtonLink href="/play" variant="quiet" className="ml-auto">
           {t("run.newSettings")}
         </ButtonLink>
@@ -76,5 +90,20 @@ export function CopySeedButton({ seed }: { seed: string }) {
         {status && t(status)}
       </span>
     </div>
+  );
+}
+
+function StarIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={`size-5 ${filled ? "fill-ember text-ember" : "fill-none"}`}
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+    >
+      <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z" />
+    </svg>
   );
 }

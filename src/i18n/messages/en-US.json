@@ -232,6 +232,9 @@
       "generationTitle": "No run fits these settings",
       "generation": "Allow more rule types and try again.",
       "backToPlay": "Open the generator"
-    }
+    },
+    "favorite": "Favorite",
+    "favorited": "Added to favorites.",
+    "unfavorited": "Removed from favorites."
   }
 }

@@ -17,3 +17,33 @@ export const preferencesItem = defineStorageItem({
   schema: preferencesSchema.nullable(),
   fallback: null,
 });
+
+export const HISTORY_LIMIT = 30;
+export const FAVORITE_LABEL_MAX = 60;
+
+// Only the seed is stored: it rebuilds the whole run.
+const savedRunSchema = z.strictObject({
+  seed: z.string().min(1).max(64),
+  savedAt: z.number().int().nonnegative(),
+});
+
+const favoriteSchema = savedRunSchema.extend({
+  label: z.string().max(FAVORITE_LABEL_MAX).optional(),
+});
+
+export type SavedRun = z.infer<typeof savedRunSchema>;
+export type FavoriteRun = z.infer<typeof favoriteSchema>;
+
+export const historyItem = defineStorageItem<SavedRun[]>({
+  key: "history",
+  version: 1,
+  schema: z.array(savedRunSchema).max(HISTORY_LIMIT),
+  fallback: [],
+});
+
+export const favoritesItem = defineStorageItem<FavoriteRun[]>({
+  key: "favorites",
+  version: 1,
+  schema: z.array(favoriteSchema),
+  fallback: [],
+});

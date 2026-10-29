@@ -232,6 +232,9 @@
       "generationTitle": "Nenhuma run atende a essas configurações",
       "generation": "Permita mais tipos de regra e tente de novo.",
       "backToPlay": "Abrir o gerador"
-    }
+    },
+    "favorite": "Favoritar",
+    "favorited": "Adicionada aos favoritos.",
+    "unfavorited": "Removida dos favoritos."
   }
 }
