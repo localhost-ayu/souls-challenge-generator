@@ -105,6 +105,7 @@ export function generateFromModule<TData, TPools>(
       rulesetVersion: module.rulesetVersion,
       ...loadout,
       constraints: selected.map((c) => c.id),
+      difficulty: preferences.difficulty,
       objective: preferences.objective,
       includeDlc: preferences.includeDlc,
     };
