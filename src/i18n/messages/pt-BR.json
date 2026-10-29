@@ -13,7 +13,8 @@
     "label": "Principal",
     "home": "Início",
     "about": "Sobre",
-    "play": "Jogar"
+    "play": "Jogar",
+    "history": "Histórico"
   },
   "home": {
     "title": "Souls Challenge Generator",
@@ -232,6 +233,32 @@
       "generationTitle": "Nenhuma run atende a essas configurações",
       "generation": "Permita mais tipos de regra e tente de novo.",
       "backToPlay": "Abrir o gerador"
-    }
+    },
+    "favorite": "Favoritar",
+    "favorited": "Adicionada aos favoritos.",
+    "unfavorited": "Removida dos favoritos."
+  },
+  "history": {
+    "title": "Suas runs",
+    "favoritesTitle": "Favoritos",
+    "favoritesEmpty": "Favorite uma run na página dela e ela fica guardada aqui.",
+    "recentTitle": "Runs recentes",
+    "recentEmpty": "As runs que você abrir aparecem aqui.",
+    "goToPlay": "Gerar uma run",
+    "rulesOne": "1 regra",
+    "rulesOther": "{count} regras",
+    "openedAt": "Aberta em {date}",
+    "savedAt": "Salva em {date}",
+    "unavailable": "Esta seed é de outra versão e não pode mais ser recriada.",
+    "label": "Rótulo",
+    "labelPlaceholder": "Adicionar rótulo",
+    "remove": "Remover",
+    "removeNamed": "Remover {name}",
+    "clearHistory": "Limpar histórico",
+    "clearFavorites": "Limpar favoritos",
+    "confirmClearHistory": "Remover todas as {count} runs do histórico?",
+    "confirmClearFavorites": "Remover todos os {count} favoritos?",
+    "confirm": "Sim, limpar",
+    "cancel": "Cancelar"
   }
 }

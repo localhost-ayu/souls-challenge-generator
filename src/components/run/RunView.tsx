@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   generateRun,
   GenerationError,
@@ -10,6 +10,9 @@ import {
   type ChallengeRun,
 } from "@/engine";
 import { useTranslation } from "@/i18n/useTranslation";
+import { historyItem } from "@/lib/storage/items";
+import { addToHistory } from "@/lib/storage/saved-runs";
+import { getItemValue, setItemValue } from "@/lib/storage/store";
 import { RunActions, CopySeedButton } from "./RunActions";
 import { RunCard } from "./RunCard";
 import { RunMessage } from "./RunMessage";
@@ -45,6 +48,13 @@ export function RunView() {
   const { t } = useTranslation();
   const seed = useSearchParams().get("seed");
   const state = useMemo(() => evaluate(seed), [seed]);
+  const readySeed = state.kind === "ready" ? state.run.seed : null;
+
+  useEffect(() => {
+    if (!readySeed) return;
+    const history = getItemValue(historyItem);
+    setItemValue(historyItem, addToHistory(history, readySeed, Date.now()));
+  }, [readySeed]);
 
   return (
     <div className="mx-auto max-w-3xl px-5 pt-10 pb-16 sm:px-8 sm:pt-16">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent, type ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 import {
   CONSTRAINT_CATEGORIES,
   createLuckySeed,
@@ -13,6 +13,8 @@ import {
 import { useTranslation } from "@/i18n/useTranslation";
 import { randomSeedKey } from "@/lib/random";
 import { runPath } from "@/lib/run-link";
+import { preferencesItem } from "@/lib/storage/items";
+import { setItemValue, useStorageItem } from "@/lib/storage/store";
 import { Button } from "@/components/ui/Button";
 
 const UPCOMING_GAMES = ["ds2", "ds3", "bb", "er", "sote"] as const;
@@ -56,11 +58,12 @@ function Fieldset({
 export function PlayForm() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
+  const preferences = useStorageItem(preferencesItem) ?? DEFAULT_PREFERENCES;
   const noCategory = !Object.values(preferences.categories).some(Boolean);
 
+  // Saved on every change so the form comes back as the player left it.
   function update(patch: Partial<Preferences>) {
-    setPreferences((current) => ({ ...current, ...patch }));
+    setItemValue(preferencesItem, { ...preferences, ...patch });
   }
 
   function generate(event: FormEvent) {
