@@ -260,5 +260,11 @@
     "confirmClearFavorites": "Remove all {count} favorites?",
     "confirm": "Yes, clear",
     "cancel": "Cancel"
+  },
+  "notFound": {
+    "title": "This path leads nowhere",
+    "body": "The page you were looking for doesn't exist, or it moved. Head back to the bonfire and pick another way.",
+    "home": "Back to the start",
+    "play": "Start a challenge"
   }
 }
