@@ -53,7 +53,10 @@ export interface Loadout {
  */
 export interface GameModule<TData, TPools> {
   id: GameId;
-  /** Bumped whenever the dataset or the generation algorithm changes, since either alters the run a seed produces. */
+  /**
+   * Bumped whenever the dataset or the generation algorithm changes, since
+   * either alters the run a seed produces.
+   */
   rulesetVersion: number;
   data: TData;
   constraints: readonly ConstraintDefinition<TPools>[];
