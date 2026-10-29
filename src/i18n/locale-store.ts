@@ -1,24 +1,17 @@
-import { DEFAULT_LOCALE, isLocale, matchLocale, type Locale } from "./config";
+import { localeItem } from "@/lib/storage/items";
+import {
+  getItemValue,
+  setItemValue,
+  subscribeToItem,
+} from "@/lib/storage/store";
+import { DEFAULT_LOCALE, matchLocale, type Locale } from "./config";
 
-// Replaced by the versioned storage wrapper once it exists.
-const STORAGE_KEY = "scg:locale";
-
-const listeners = new Set<() => void>();
-let current: Locale | undefined;
-
-function detectLocale(): Locale {
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (isLocale(stored)) return stored;
-  } catch {
-    // Storage can be blocked (privacy mode, disabled cookies); fall through.
-  }
-  return matchLocale(navigator.languages ?? [navigator.language]);
-}
-
+/** The saved choice, else the browser languages, else the default. */
 export function getLocale(): Locale {
-  current ??= detectLocale();
-  return current;
+  return (
+    getItemValue(localeItem) ??
+    matchLocale(navigator.languages ?? [navigator.language])
+  );
 }
 
 /** The static HTML is always rendered in the default locale. */
@@ -27,16 +20,9 @@ export function getServerLocale(): Locale {
 }
 
 export function subscribeToLocale(listener: () => void): () => void {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+  return subscribeToItem(localeItem, listener);
 }
 
 export function setLocale(locale: Locale): void {
-  current = locale;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, locale);
-  } catch {
-    // Not persisting is fine; the choice still applies to this visit.
-  }
-  listeners.forEach((listener) => listener());
+  setItemValue(localeItem, locale);
 }
