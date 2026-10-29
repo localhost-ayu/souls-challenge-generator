@@ -2,6 +2,7 @@ import { generateFromModule } from "../core/generator";
 import type { SeedParts } from "../core/seed";
 import type {
   ChallengeRun,
+  ConstraintSummary,
   GameCatalog,
   GameId,
   GameModule,
@@ -16,6 +17,7 @@ export interface RegisteredGame {
   id: GameId;
   rulesetVersion: number;
   catalog: GameCatalog;
+  constraints: readonly ConstraintSummary[];
   generate(parts: SeedParts): ChallengeRun;
 }
 
@@ -26,6 +28,11 @@ function register<TData, TPools>(
     id: module.id,
     rulesetVersion: module.rulesetVersion,
     catalog: module.catalog,
+    constraints: module.constraints.map(({ id, category, difficulty }) => ({
+      id,
+      category,
+      difficulty,
+    })),
     generate: (parts) => generateFromModule(module, parts),
   };
 }

@@ -58,6 +58,12 @@ export interface BossEntry extends CatalogEntry {
   dlc: boolean;
 }
 
+/** What the UI needs to present a constraint; the text itself is translated. */
+export type ConstraintSummary = Pick<
+  ConstraintDefinition<unknown>,
+  "id" | "category" | "difficulty"
+>;
+
 /** Display names for the ids a run refers to. */
 export interface GameCatalog {
   classes: readonly CatalogEntry[];

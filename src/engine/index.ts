@@ -1,7 +1,12 @@
 import { randomPreferences, type Preferences } from "./core/preferences";
 import { createRng, hashString } from "./core/rng";
 import { decodeSeed, encodeSeed, type SeedParts } from "./core/seed";
-import type { ChallengeRun, GameCatalog, GameId } from "./core/types";
+import type {
+  ChallengeRun,
+  ConstraintSummary,
+  GameCatalog,
+  GameId,
+} from "./core/types";
 import { games, supportedRulesets } from "./games/registry";
 
 /**
@@ -41,6 +46,10 @@ export function getGameCatalog(gameId: GameId): GameCatalog {
   return games[gameId].catalog;
 }
 
+export function getGameConstraints(gameId: GameId): readonly ConstraintSummary[] {
+  return games[gameId].constraints;
+}
+
 /** Validates a seed against the rulesets this build supports. */
 export function parseSeed(seed: string): SeedParts {
   return decodeSeed(seed, supportedRulesets);
@@ -69,6 +78,7 @@ export {
   type CatalogEntry,
   type ChallengeRun,
   type ConstraintCategory,
+  type ConstraintSummary,
   type GameCatalog,
   type GameId,
 } from "./core/types";
