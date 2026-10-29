@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Alegreya_Sans, Cinzel, EB_Garamond } from "next/font/google";
+import { Atmosphere } from "@/components/layout/Atmosphere";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import "./globals.css";
 
@@ -36,8 +39,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en-US"
       className={`${cinzel.variable} ${garamond.variable} ${alegreyaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <I18nProvider>{children}</I18nProvider>
+      <body className="min-h-full">
+        <I18nProvider>
+          <Atmosphere />
+          <div className="relative z-10 flex min-h-dvh flex-col">
+            <SiteHeader />
+            <main id="content" className="flex-1">
+              {children}
+            </main>
+            <SiteFooter />
+          </div>
+        </I18nProvider>
       </body>
     </html>
   );

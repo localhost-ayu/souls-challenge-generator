@@ -1,10 +1,44 @@
 {
   "common": {
-    "appName": "Souls Challenge Generator"
+    "appName": "Souls Challenge Generator",
+    "skipToContent": "Skip to content"
   },
   "language": {
     "label": "Language",
     "en-US": "English",
     "pt-BR": "Português"
+  },
+  "nav": {
+    "label": "Main",
+    "home": "Home",
+    "about": "About"
+  },
+  "home": {
+    "title": "Souls Challenge Generator",
+    "lead": "Challenge runs for Dark Souls Remastered that hold together: a starting class, a set of rules and an objective that never contradict each other, rebuilt exactly from a single seed.",
+    "status": "The run generator opens in the next update."
+  },
+  "footer": {
+    "madeBy": "Made by a fan, for fans, by",
+    "github": "GitHub",
+    "portfolio": "Portfolio",
+    "disclaimer": "Unofficial fan project. Not affiliated with or endorsed by FromSoftware or Bandai Namco.",
+    "readMore": "Read the full notice"
+  },
+  "about": {
+    "metaDescription": "What Souls Challenge Generator is, how its runs stay coherent, and the legal notice.",
+    "title": "About",
+    "intro": "Souls Challenge Generator builds challenge runs for Souls games: a starting class, a handful of rules and an objective. Every run comes from a seed, so the same seed always rebuilds the same run, on any device.",
+    "coherenceTitle": "Runs that make sense",
+    "coherence": "Rules that contradict each other never appear together, and equipment picks respect the rest of the run. Under Soul Level 1, for example, the chosen weapon is always usable with the starting class's attributes.",
+    "dataTitle": "Game data",
+    "data": "Names, numbers and categories were gathered from community wikis and cross-checked between sources. No descriptions, lore, images or other official assets are used.",
+    "disclaimerTitle": "Legal notice",
+    "disclaimer": "Souls Challenge Generator is an unofficial, non-commercial fan project, made by a fan for fans. It is not affiliated with, endorsed, sponsored, or approved by FromSoftware, Inc. or Bandai Namco Entertainment Inc. Dark Souls and all related names, characters, and game content are trademarks and/or copyrighted material of their respective owners. No official game assets are used in this project.",
+    "creditsTitle": "Credits",
+    "credits": "Designed and built by",
+    "licenseTitle": "License",
+    "license": "The source code is available under the MIT license, which covers only the original code and assets of this project.",
+    "sourceCode": "View the source code"
   }
 }
