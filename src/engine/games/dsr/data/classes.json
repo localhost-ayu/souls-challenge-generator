@@ -1,0 +1,12 @@
+[
+  {"id": "warrior", "name": "Warrior", "soulLevel": 4, "attributes": {"vit": 11, "att": 8, "end": 12, "str": 13, "dex": 13, "res": 11, "int": 9, "fai": 9}, "startingEquipment": {"weapons": ["longsword"], "armorSet": "warrior-set"}},
+  {"id": "knight", "name": "Knight", "soulLevel": 5, "attributes": {"vit": 14, "att": 10, "end": 10, "str": 11, "dex": 11, "res": 10, "int": 9, "fai": 11}, "startingEquipment": {"weapons": ["broadsword"], "armorSet": "knight-set"}},
+  {"id": "wanderer", "name": "Wanderer", "soulLevel": 3, "attributes": {"vit": 10, "att": 11, "end": 10, "str": 10, "dex": 14, "res": 12, "int": 11, "fai": 8}, "startingEquipment": {"weapons": ["scimitar"], "armorSet": "wanderer-set"}},
+  {"id": "thief", "name": "Thief", "soulLevel": 5, "attributes": {"vit": 9, "att": 11, "end": 9, "str": 9, "dex": 15, "res": 10, "int": 12, "fai": 11}, "startingEquipment": {"weapons": ["bandits-knife"], "armorSet": "thief-set"}},
+  {"id": "bandit", "name": "Bandit", "soulLevel": 4, "attributes": {"vit": 12, "att": 8, "end": 14, "str": 14, "dex": 9, "res": 11, "int": 8, "fai": 10}, "startingEquipment": {"weapons": ["battle-axe"], "armorSet": "bandit-set"}},
+  {"id": "hunter", "name": "Hunter", "soulLevel": 4, "attributes": {"vit": 11, "att": 9, "end": 11, "str": 12, "dex": 14, "res": 11, "int": 9, "fai": 9}, "startingEquipment": {"weapons": ["shortsword", "short-bow"], "armorSet": "hunter-set"}},
+  {"id": "sorcerer", "name": "Sorcerer", "soulLevel": 3, "attributes": {"vit": 8, "att": 15, "end": 8, "str": 9, "dex": 11, "res": 8, "int": 15, "fai": 8}, "startingEquipment": {"weapons": ["dagger", "sorcerers-catalyst"], "armorSet": "sorcerer-set"}},
+  {"id": "pyromancer", "name": "Pyromancer", "soulLevel": 1, "attributes": {"vit": 10, "att": 12, "end": 11, "str": 12, "dex": 9, "res": 12, "int": 10, "fai": 8}, "startingEquipment": {"weapons": ["hand-axe", "pyromancy-flame"], "armorSet": "pyromancer-set"}},
+  {"id": "cleric", "name": "Cleric", "soulLevel": 2, "attributes": {"vit": 11, "att": 11, "end": 9, "str": 12, "dex": 8, "res": 11, "int": 8, "fai": 14}, "startingEquipment": {"weapons": ["mace", "canvas-talisman"], "armorSet": "holy-set"}},
+  {"id": "deprived", "name": "Deprived", "soulLevel": 6, "attributes": {"vit": 11, "att": 11, "end": 11, "str": 11, "dex": 11, "res": 11, "int": 11, "fai": 11}, "startingEquipment": {"weapons": ["club"], "armorSet": null}}
+]
