@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  createLuckySeed,
   createSeed,
   generateRun,
+  getGameCatalog,
   GenerationError,
   InvalidSeedError,
   parseSeed,
@@ -58,5 +60,27 @@ describe("engine public api", () => {
       },
     });
     expect(() => generateRun(noCategories)).toThrow(GenerationError);
+  });
+
+  it("creates deterministic lucky seeds with at least one category", () => {
+    const seeds = Array.from({ length: 200 }, (_, i) =>
+      createLuckySeed({ gameId: "dsr", key: `lucky${i}` }),
+    );
+
+    expect(createLuckySeed({ gameId: "dsr", key: "lucky0" })).toBe(seeds[0]);
+    expect(new Set(seeds.map((s) => s.split("-")[2])).size).toBeGreaterThan(20);
+    for (const seed of seeds) {
+      const { categories } = parseSeed(seed).preferences;
+      expect(Object.values(categories)).toContain(true);
+      expect(() => generateRun(seed)).not.toThrow();
+    }
+  });
+
+  it("exposes display names for the ids in a run", () => {
+    const catalog = getGameCatalog("dsr");
+    const run = generateRun(createSeed({ gameId: "dsr", preferences, key: "names" }));
+
+    expect(catalog.classes).toHaveLength(10);
+    expect(catalog.classes.map((c) => c.id)).toContain(run.startingClass);
   });
 });

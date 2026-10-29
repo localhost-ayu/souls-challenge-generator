@@ -1,4 +1,4 @@
-import type { Objective, Preferences } from "./preferences";
+import type { Difficulty, Objective, Preferences } from "./preferences";
 import type { Rng } from "./rng";
 
 export const GAME_IDS = ["dsr"] as const;
@@ -47,6 +47,31 @@ export interface Loadout {
   armorSet?: string;
 }
 
+export interface CatalogEntry {
+  id: string;
+  /** Proper name as used in the game; not translated. */
+  name: string;
+}
+
+export interface BossEntry extends CatalogEntry {
+  required: boolean;
+  dlc: boolean;
+}
+
+/** What the UI needs to present a constraint; the text itself is translated. */
+export type ConstraintSummary = Pick<
+  ConstraintDefinition<unknown>,
+  "id" | "category" | "difficulty"
+>;
+
+/** Display names for the ids a run refers to. */
+export interface GameCatalog {
+  classes: readonly CatalogEntry[];
+  weapons: readonly CatalogEntry[];
+  armorSets: readonly CatalogEntry[];
+  bosses: readonly BossEntry[];
+}
+
 /**
  * Everything the generator needs to know about one game. The core never
  * imports a game directly; games are looked up through the registry.
@@ -59,6 +84,7 @@ export interface GameModule<TData, TPools> {
    */
   rulesetVersion: number;
   data: TData;
+  catalog: GameCatalog;
   constraints: readonly ConstraintDefinition<TPools>[];
   objectives: readonly ObjectiveDefinition[];
   /** Every option the preferences allow, before constraints narrow it down. */
@@ -73,6 +99,7 @@ export interface ChallengeRun extends Loadout {
   gameId: GameId;
   rulesetVersion: number;
   constraints: string[];
+  difficulty: Difficulty;
   objective: Objective;
   includeDlc: boolean;
 }

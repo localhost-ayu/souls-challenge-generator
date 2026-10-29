@@ -137,3 +137,36 @@
     }
   }
 }
+
+@layer components {
+  /* The one orchestrated moment: the run card rises, then its rules follow. */
+  .run-reveal {
+    animation: run-reveal 700ms var(--ease-ember) both;
+  }
+
+  .run-reveal-item {
+    animation: run-reveal-item 500ms var(--ease-ember) both;
+    animation-delay: calc(350ms + var(--reveal-index) * 120ms);
+  }
+
+  @keyframes run-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.985);
+    }
+  }
+
+  @keyframes run-reveal-item {
+    from {
+      opacity: 0;
+      transform: translateX(-8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .run-reveal,
+    .run-reveal-item {
+      animation: none;
+    }
+  }
+}

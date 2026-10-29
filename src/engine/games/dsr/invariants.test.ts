@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { isCompatible } from "../../core/compatibility";
 import { DIFFICULTY_PROFILES } from "../../core/generator";
-import { DIFFICULTIES, OBJECTIVES, type Preferences } from "../../core/preferences";
-import { createRng, nextInt, pick, type Rng } from "../../core/rng";
+import {
+  DIFFICULTIES,
+  randomPreferences as randomCorePreferences,
+  type Preferences,
+} from "../../core/preferences";
+import { createRng, pick, type Rng } from "../../core/rng";
 import { seedKeyFromNumber } from "../../core/seed";
-import { CONSTRAINT_CATEGORIES, type ChallengeRun } from "../../core/types";
+import type { ChallengeRun } from "../../core/types";
 import { createSeed, generateRun } from "../../index";
 import { canWieldAtBaseStats, dsrConstraints } from "./constraints";
 import { dsrData } from "./dataset";
@@ -17,23 +21,11 @@ const weaponsById = new Map(dsrData.weapons.map((w) => [w.id, w]));
 const armorSetsById = new Map(dsrData.armorSets.map((s) => [s.id, s]));
 const MAGIC = ["catalyst", "talisman", "pyromancy-flame"];
 
-/** Random preferences with at least one category enabled. */
 function randomPreferences(
   rng: Rng,
   difficulty: Preferences["difficulty"],
 ): Preferences {
-  const mask = 1 + nextInt(rng, (1 << CONSTRAINT_CATEGORIES.length) - 1);
-  return {
-    difficulty,
-    objective: pick(rng, OBJECTIVES),
-    includeDlc: nextInt(rng, 2) === 1,
-    categories: Object.fromEntries(
-      CONSTRAINT_CATEGORIES.map((category, i) => [
-        category,
-        ((mask >> i) & 1) === 1,
-      ]),
-    ) as Preferences["categories"],
-  };
+  return { ...randomCorePreferences(rng), difficulty };
 }
 
 function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
@@ -52,6 +44,7 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
 
   const startingClass = classesById.get(run.startingClass);
   expect(startingClass).toBeDefined();
+  expect(run.difficulty).toBe(preferences.difficulty);
   expect(run.objective).toBe(preferences.objective);
   expect(run.includeDlc).toBe(preferences.includeDlc);
 
@@ -162,6 +155,7 @@ describe("generated runs", () => {
           "no-estus",
           "no-magic",
         ],
+        "difficulty": "chosen",
         "gameId": "dsr",
         "includeDlc": true,
         "objective": "all-bosses",

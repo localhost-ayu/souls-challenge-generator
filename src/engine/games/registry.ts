@@ -1,6 +1,12 @@
 import { generateFromModule } from "../core/generator";
 import type { SeedParts } from "../core/seed";
-import type { ChallengeRun, GameId, GameModule } from "../core/types";
+import type {
+  ChallengeRun,
+  ConstraintSummary,
+  GameCatalog,
+  GameId,
+  GameModule,
+} from "../core/types";
 import { dsrModule } from "./dsr";
 
 /**
@@ -10,6 +16,8 @@ import { dsrModule } from "./dsr";
 export interface RegisteredGame {
   id: GameId;
   rulesetVersion: number;
+  catalog: GameCatalog;
+  constraints: readonly ConstraintSummary[];
   generate(parts: SeedParts): ChallengeRun;
 }
 
@@ -19,6 +27,12 @@ function register<TData, TPools>(
   return {
     id: module.id,
     rulesetVersion: module.rulesetVersion,
+    catalog: module.catalog,
+    constraints: module.constraints.map(({ id, category, difficulty }) => ({
+      id,
+      category,
+      difficulty,
+    })),
     generate: (parts) => generateFromModule(module, parts),
   };
 }

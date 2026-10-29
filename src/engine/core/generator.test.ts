@@ -30,6 +30,7 @@ function makeModule(constraints: Definition[]): GameModule<null, Pools> {
     id: "dsr",
     rulesetVersion: 1,
     data: null,
+    catalog: { classes: [], weapons: [], armorSets: [], bosses: [] },
     constraints,
     objectives: [{ id: "main-bosses" }],
     createPools: () => ({ classes: ["knight", "thief", "cleric"] }),

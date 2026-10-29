@@ -1,6 +1,12 @@
-import type { Preferences } from "./core/preferences";
+import { randomPreferences, type Preferences } from "./core/preferences";
+import { createRng, hashString } from "./core/rng";
 import { decodeSeed, encodeSeed, type SeedParts } from "./core/seed";
-import type { ChallengeRun, GameId } from "./core/types";
+import type {
+  ChallengeRun,
+  ConstraintSummary,
+  GameCatalog,
+  GameId,
+} from "./core/types";
 import { games, supportedRulesets } from "./games/registry";
 
 /**
@@ -27,6 +33,23 @@ export function createSeed(input: {
   });
 }
 
+/**
+ * "I'm feeling lucky": the preferences themselves are drawn from the key,
+ * so the same key always leads to the same seed.
+ */
+export function createLuckySeed(input: { gameId: GameId; key: string }): string {
+  const rng = createRng(hashString(`lucky:${input.key}`));
+  return createSeed({ ...input, preferences: randomPreferences(rng) });
+}
+
+export function getGameCatalog(gameId: GameId): GameCatalog {
+  return games[gameId].catalog;
+}
+
+export function getGameConstraints(gameId: GameId): readonly ConstraintSummary[] {
+  return games[gameId].constraints;
+}
+
 /** Validates a seed against the rulesets this build supports. */
 export function parseSeed(seed: string): SeedParts {
   return decodeSeed(seed, supportedRulesets);
@@ -51,7 +74,11 @@ export {
 export {
   CONSTRAINT_CATEGORIES,
   GAME_IDS,
+  type BossEntry,
+  type CatalogEntry,
   type ChallengeRun,
   type ConstraintCategory,
+  type ConstraintSummary,
+  type GameCatalog,
   type GameId,
 } from "./core/types";
