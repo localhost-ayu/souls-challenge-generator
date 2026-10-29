@@ -1,7 +1,8 @@
 {
   "common": {
     "appName": "Souls Challenge Generator",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "comingSoon": "Coming soon"
   },
   "language": {
     "label": "Language",
@@ -11,11 +12,22 @@
   "nav": {
     "label": "Main",
     "home": "Home",
-    "about": "About"
+    "about": "About",
+    "play": "Play"
   },
   "home": {
     "title": "Souls Challenge Generator",
     "lead": "Challenge runs for Dark Souls Remastered that hold together: a starting class, a set of rules and an objective that never contradict each other, rebuilt exactly from a single seed.",
+    "cta": "Start a challenge",
+    "howTitle": "How it works",
+    "step1Title": "Pick a game",
+    "step1": "Dark Souls Remastered for now. More Souls games will follow.",
+    "step2Title": "Set the rules",
+    "step2": "Choose how hard it gets and which kinds of rules are allowed, or leave everything to luck.",
+    "step3Title": "Share the seed",
+    "step3": "Every run has a seed. Send it to a friend and they get exactly the same challenge.",
+    "exampleTitle": "An example run",
+    "exampleOpen": "Open this run",
     "status": "The run generator opens in the next update."
   },
   "footer": {
@@ -39,5 +51,188 @@
     "licenseTitle": "License",
     "license": "The source code is available under the MIT license, which covers only the original code and assets of this project.",
     "sourceCode": "View the source code"
+  },
+  "games": {
+    "dsr": "Dark Souls Remastered",
+    "ds2": "Dark Souls II",
+    "ds3": "Dark Souls III",
+    "bb": "Bloodborne",
+    "er": "Elden Ring",
+    "sote": "Shadow of the Erdtree"
+  },
+  "play": {
+    "title": "Start a challenge",
+    "gameLegend": "Game",
+    "difficultyLegend": "Difficulty",
+    "objectiveLegend": "Objective",
+    "includeDlc": "Include Artorias of the Abyss",
+    "includeDlcHint": "Adds the DLC bosses, weapons and armor.",
+    "categoriesLegend": "Allowed rule types",
+    "categoriesHint": "Turn off any kind of rule you don't want in your run.",
+    "categoriesEmpty": "Allow at least one rule type to generate a run.",
+    "generate": "Generate run",
+    "lucky": "I'm feeling lucky",
+    "luckyHint": "Difficulty, objective and rule types picked at random.",
+    "seedTitle": "Have a seed?",
+    "seedLabel": "Seed",
+    "seedSubmit": "Open run"
+  },
+  "difficulties": {
+    "hollow": {
+      "name": "Hollow",
+      "description": "One or two light rules. A gentle first challenge."
+    },
+    "undead": {
+      "name": "Undead",
+      "description": "Two or three rules, some of them demanding."
+    },
+    "chosen": {
+      "name": "Chosen Undead",
+      "description": "Three or four rules that change how you play."
+    },
+    "lord-of-cinder": {
+      "name": "Lord of Cinder",
+      "description": "Four or five rules, the harshest ones included."
+    }
+  },
+  "objectives": {
+    "main-bosses": {
+      "name": "Required bosses",
+      "description": "Defeat the {count} bosses needed to finish the game."
+    },
+    "all-bosses": {
+      "name": "Every boss",
+      "description": "Defeat all {count} bosses."
+    }
+  },
+  "categories": {
+    "level": {
+      "name": "Level",
+      "description": "Limits on leveling up."
+    },
+    "equipment": {
+      "name": "Equipment",
+      "description": "What you may wear and wield."
+    },
+    "movement": {
+      "name": "Movement",
+      "description": "How you may dodge."
+    },
+    "resource": {
+      "name": "Resources",
+      "description": "Healing and resting."
+    },
+    "style": {
+      "name": "Style",
+      "description": "Playstyle and how you start."
+    }
+  },
+  "constraints": {
+    "sl1": {
+      "name": "Soul Level 1",
+      "description": "Never level up. Your starting attributes are all you get."
+    },
+    "no-armor": {
+      "name": "No armor",
+      "description": "Wear nothing in any armor slot for the whole run."
+    },
+    "no-shield": {
+      "name": "No shield",
+      "description": "Never equip a shield."
+    },
+    "no-rolling": {
+      "name": "No rolling",
+      "description": "Never roll. Walk, block or backstep out of danger instead."
+    },
+    "no-estus": {
+      "name": "No Estus",
+      "description": "Never drink from the Estus Flask."
+    },
+    "no-bonfires": {
+      "name": "No bonfire rest",
+      "description": "You may light bonfires, but never rest at one."
+    },
+    "no-magic": {
+      "name": "No magic",
+      "description": "No sorceries, miracles or pyromancies."
+    },
+    "bow-only": {
+      "name": "Bows only",
+      "description": "Bows and greatbows are your only weapons."
+    },
+    "weapon-category": {
+      "name": "One weapon type",
+      "description": "Only use weapons of the type shown on this card."
+    },
+    "specific-weapon": {
+      "name": "One weapon",
+      "description": "Only use the weapon shown on this card. Upgrading it is allowed."
+    },
+    "cosplay": {
+      "name": "Cosplay",
+      "description": "Wear the full armor set shown on this card as soon as you find it."
+    },
+    "naked-start": {
+      "name": "Naked start",
+      "description": "Start as the Deprived, with only a club and a plank shield."
+    }
+  },
+  "weaponCategories": {
+    "dagger": "Dagger",
+    "straight-sword": "Straight sword",
+    "greatsword": "Greatsword",
+    "ultra-greatsword": "Ultra greatsword",
+    "curved-sword": "Curved sword",
+    "curved-greatsword": "Curved greatsword",
+    "katana": "Katana",
+    "thrusting-sword": "Thrusting sword",
+    "axe": "Axe",
+    "great-axe": "Great axe",
+    "hammer": "Hammer",
+    "great-hammer": "Great hammer",
+    "spear": "Spear",
+    "halberd": "Halberd",
+    "whip": "Whip",
+    "fist": "Fist weapon",
+    "bow": "Bow",
+    "greatbow": "Greatbow",
+    "crossbow": "Crossbow",
+    "catalyst": "Catalyst",
+    "talisman": "Talisman",
+    "pyromancy-flame": "Pyromancy flame"
+  },
+  "run": {
+    "title": "Your challenge run",
+    "loading": "Generating your run…",
+    "difficulty": "Difficulty",
+    "startingClass": "Starting class",
+    "weapon": "Weapon",
+    "weaponCategory": "Weapon type",
+    "armorSet": "Armor set",
+    "rules": "Rules",
+    "objective": "Objective",
+    "seed": "Seed",
+    "copySeed": "Copy seed",
+    "copyLink": "Copy link",
+    "share": "Share",
+    "another": "Generate another",
+    "newSettings": "Change settings",
+    "seedCopied": "Seed copied.",
+    "linkCopied": "Link copied.",
+    "copyFailed": "Couldn't copy. Select the text and copy it manually.",
+    "shareText": "Can you beat this Dark Souls Remastered challenge run?",
+    "errors": {
+      "missingTitle": "This link has no seed",
+      "missing": "Create a run in the generator, or paste a seed you already have.",
+      "invalidTitle": "This seed isn't valid",
+      "invalid": "Check that it was copied in full. Seeds look like {example}.",
+      "outdatedTitle": "This seed is from an earlier version",
+      "outdated": "It was made with ruleset {seedVersion}, and this version uses ruleset {currentVersion}, so the same run can't be rebuilt. Generate a new one instead.",
+      "newerTitle": "This seed is from a newer version",
+      "newer": "It needs ruleset {seedVersion}, but this page only knows ruleset {currentVersion}. Reload the page to get the latest version.",
+      "generationTitle": "No run fits these settings",
+      "generation": "Allow more rule types and try again.",
+      "backToPlay": "Open the generator"
+    }
   }
 }

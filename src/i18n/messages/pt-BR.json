@@ -1,7 +1,8 @@
 {
   "common": {
     "appName": "Souls Challenge Generator",
-    "skipToContent": "Pular para o conteúdo"
+    "skipToContent": "Pular para o conteúdo",
+    "comingSoon": "Em breve"
   },
   "language": {
     "label": "Idioma",
@@ -11,11 +12,22 @@
   "nav": {
     "label": "Principal",
     "home": "Início",
-    "about": "Sobre"
+    "about": "Sobre",
+    "play": "Jogar"
   },
   "home": {
     "title": "Souls Challenge Generator",
     "lead": "Challenge runs de Dark Souls Remastered que fazem sentido: uma classe inicial, um conjunto de regras e um objetivo que nunca se contradizem, recriados com exatidão a partir de uma única seed.",
+    "cta": "Começar desafio",
+    "howTitle": "Como funciona",
+    "step1Title": "Escolha o jogo",
+    "step1": "Por enquanto, Dark Souls Remastered. Outros jogos Souls virão depois.",
+    "step2Title": "Defina as regras",
+    "step2": "Escolha a dificuldade e os tipos de regra permitidos, ou deixe tudo por conta da sorte.",
+    "step3Title": "Compartilhe a seed",
+    "step3": "Toda run tem uma seed. Mande para um amigo e ele recebe exatamente o mesmo desafio.",
+    "exampleTitle": "Uma run de exemplo",
+    "exampleOpen": "Abrir esta run",
     "status": "O gerador de runs abre na próxima atualização."
   },
   "footer": {
@@ -39,5 +51,188 @@
     "licenseTitle": "Licença",
     "license": "O código-fonte está disponível sob a licença MIT, que cobre apenas o código e os assets originais deste projeto.",
     "sourceCode": "Ver o código-fonte"
+  },
+  "games": {
+    "dsr": "Dark Souls Remastered",
+    "ds2": "Dark Souls II",
+    "ds3": "Dark Souls III",
+    "bb": "Bloodborne",
+    "er": "Elden Ring",
+    "sote": "Shadow of the Erdtree"
+  },
+  "play": {
+    "title": "Começar desafio",
+    "gameLegend": "Jogo",
+    "difficultyLegend": "Dificuldade",
+    "objectiveLegend": "Objetivo",
+    "includeDlc": "Incluir Artorias of the Abyss",
+    "includeDlcHint": "Adiciona os bosses, armas e armaduras do DLC.",
+    "categoriesLegend": "Tipos de regra permitidos",
+    "categoriesHint": "Desligue os tipos de regra que você não quer na sua run.",
+    "categoriesEmpty": "Permita pelo menos um tipo de regra para gerar uma run.",
+    "generate": "Gerar run",
+    "lucky": "Estou com sorte",
+    "luckyHint": "Dificuldade, objetivo e tipos de regra sorteados.",
+    "seedTitle": "Tem uma seed?",
+    "seedLabel": "Seed",
+    "seedSubmit": "Abrir run"
+  },
+  "difficulties": {
+    "hollow": {
+      "name": "Hollow",
+      "description": "Uma ou duas regras leves. Um primeiro desafio tranquilo."
+    },
+    "undead": {
+      "name": "Morto-vivo",
+      "description": "Duas ou três regras, algumas exigentes."
+    },
+    "chosen": {
+      "name": "Morto-vivo Escolhido",
+      "description": "Três ou quatro regras que mudam o seu jeito de jogar."
+    },
+    "lord-of-cinder": {
+      "name": "Lorde das Cinzas",
+      "description": "Quatro ou cinco regras, incluindo as mais duras."
+    }
+  },
+  "objectives": {
+    "main-bosses": {
+      "name": "Bosses obrigatórios",
+      "description": "Derrote os {count} bosses necessários para terminar o jogo."
+    },
+    "all-bosses": {
+      "name": "Todos os bosses",
+      "description": "Derrote todos os {count} bosses."
+    }
+  },
+  "categories": {
+    "level": {
+      "name": "Nível",
+      "description": "Limites para subir de nível."
+    },
+    "equipment": {
+      "name": "Equipamento",
+      "description": "O que você pode vestir e empunhar."
+    },
+    "movement": {
+      "name": "Movimento",
+      "description": "Como você pode se esquivar."
+    },
+    "resource": {
+      "name": "Recursos",
+      "description": "Cura e descanso."
+    },
+    "style": {
+      "name": "Estilo",
+      "description": "Estilo de jogo e como você começa."
+    }
+  },
+  "constraints": {
+    "sl1": {
+      "name": "Soul Level 1",
+      "description": "Nunca suba de nível. Seus atributos iniciais são tudo o que você tem."
+    },
+    "no-armor": {
+      "name": "Sem armadura",
+      "description": "Não use nada nos espaços de armadura durante toda a run."
+    },
+    "no-shield": {
+      "name": "Sem escudo",
+      "description": "Nunca equipe um escudo."
+    },
+    "no-rolling": {
+      "name": "Sem rolar",
+      "description": "Nunca role. Ande, bloqueie ou dê backstep para sair do perigo."
+    },
+    "no-estus": {
+      "name": "Sem Estus",
+      "description": "Nunca beba do Frasco de Estus."
+    },
+    "no-bonfires": {
+      "name": "Sem descanso em fogueiras",
+      "description": "Você pode acender fogueiras, mas nunca descansar nelas."
+    },
+    "no-magic": {
+      "name": "Sem magia",
+      "description": "Nada de feitiçarias, milagres ou piromancias."
+    },
+    "bow-only": {
+      "name": "Só arcos",
+      "description": "Arcos e arcos grandes são suas únicas armas."
+    },
+    "weapon-category": {
+      "name": "Um tipo de arma",
+      "description": "Use apenas armas do tipo indicado nesta carta."
+    },
+    "specific-weapon": {
+      "name": "Uma arma",
+      "description": "Use apenas a arma indicada nesta carta. Melhorá-la é permitido."
+    },
+    "cosplay": {
+      "name": "Cosplay",
+      "description": "Vista o set de armadura indicado nesta carta assim que encontrá-lo."
+    },
+    "naked-start": {
+      "name": "Começo pelado",
+      "description": "Comece como Deprived, só com um porrete e um escudo de tábua."
+    }
+  },
+  "weaponCategories": {
+    "dagger": "Adaga",
+    "straight-sword": "Espada reta",
+    "greatsword": "Espada grande",
+    "ultra-greatsword": "Espada ultra grande",
+    "curved-sword": "Espada curva",
+    "curved-greatsword": "Espada curva grande",
+    "katana": "Katana",
+    "thrusting-sword": "Espada perfurante",
+    "axe": "Machado",
+    "great-axe": "Machado grande",
+    "hammer": "Martelo",
+    "great-hammer": "Martelo grande",
+    "spear": "Lança",
+    "halberd": "Alabarda",
+    "whip": "Chicote",
+    "fist": "Arma de punho",
+    "bow": "Arco",
+    "greatbow": "Arco grande",
+    "crossbow": "Besta",
+    "catalyst": "Catalisador",
+    "talisman": "Talismã",
+    "pyromancy-flame": "Chama de piromancia"
+  },
+  "run": {
+    "title": "Sua challenge run",
+    "loading": "Gerando sua run…",
+    "difficulty": "Dificuldade",
+    "startingClass": "Classe inicial",
+    "weapon": "Arma",
+    "weaponCategory": "Tipo de arma",
+    "armorSet": "Set de armadura",
+    "rules": "Regras",
+    "objective": "Objetivo",
+    "seed": "Seed",
+    "copySeed": "Copiar seed",
+    "copyLink": "Copiar link",
+    "share": "Compartilhar",
+    "another": "Gerar outra",
+    "newSettings": "Mudar configurações",
+    "seedCopied": "Seed copiada.",
+    "linkCopied": "Link copiado.",
+    "copyFailed": "Não foi possível copiar. Selecione o texto e copie manualmente.",
+    "shareText": "Você encara esta challenge run de Dark Souls Remastered?",
+    "errors": {
+      "missingTitle": "Este link não tem seed",
+      "missing": "Crie uma run no gerador ou cole uma seed que você já tem.",
+      "invalidTitle": "Esta seed não é válida",
+      "invalid": "Confira se ela foi copiada inteira. Seeds têm este formato: {example}.",
+      "outdatedTitle": "Esta seed é de uma versão anterior",
+      "outdated": "Ela foi criada com o ruleset {seedVersion}, e esta versão usa o ruleset {currentVersion}, então a mesma run não pode ser recriada. Gere uma nova.",
+      "newerTitle": "Esta seed é de uma versão mais nova",
+      "newer": "Ela precisa do ruleset {seedVersion}, mas esta página só conhece o ruleset {currentVersion}. Recarregue a página para pegar a versão mais recente.",
+      "generationTitle": "Nenhuma run atende a essas configurações",
+      "generation": "Permita mais tipos de regra e tente de novo.",
+      "backToPlay": "Abrir o gerador"
+    }
   }
 }
