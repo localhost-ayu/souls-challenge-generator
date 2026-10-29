@@ -1,0 +1,10 @@
+{
+  "common": {
+    "appName": "Souls Challenge Generator"
+  },
+  "language": {
+    "label": "Idioma",
+    "en-US": "English",
+    "pt-BR": "Português"
+  }
+}
