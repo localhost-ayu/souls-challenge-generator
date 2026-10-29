@@ -4,13 +4,13 @@
 
 [![CI](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml)
 [![Licença: MIT](https://img.shields.io/github/license/localhost-ayu/souls-challenge-generator)](LICENSE)
-[![Vercel](https://img.shields.io/github/deployments/localhost-ayu/souls-challenge-generator/production?label=vercel&logo=vercel)](https://souls-challenge-generator.vercel.app)
+[![Site](https://img.shields.io/website?url=https%3A%2F%2Fsouls.grazzioli.dev&label=site&logo=vercel)](https://souls.grazzioli.dev)
 
 Challenge runs de Dark Souls Remastered que fazem sentido: uma classe inicial, um conjunto de
 regras e um objetivo que nunca se contradizem, recriados com exatidão a partir de uma única seed.
 Feito de fã para fã.
 
-**Site:** https://souls-challenge-generator.vercel.app
+**Site:** https://souls.grazzioli.dev
 
 ![A página inicial: o título do site, o botão para começar um desafio e uma carta de exemplo para um Wanderer com Soul Level 1, Sem rolar, Sem Estus e Sem magia.](docs/screenshot.jpg)
 
