@@ -6,7 +6,10 @@ import { EmberMark } from "@/components/icons/EmberMark";
 import { useTranslation } from "@/i18n/useTranslation";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const NAV_ITEMS = [{ href: "/about", key: "nav.about" }] as const;
+const NAV_ITEMS = [
+  { href: "/play", key: "nav.play" },
+  { href: "/about", key: "nav.about" },
+] as const;
 
 export function SiteHeader() {
   const { t } = useTranslation();
