@@ -27,8 +27,7 @@
     "step3Title": "Compartilhe a seed",
     "step3": "Toda run tem uma seed. Mande para um amigo e ele recebe exatamente o mesmo desafio.",
     "exampleTitle": "Uma run de exemplo",
-    "exampleOpen": "Abrir esta run",
-    "status": "O gerador de runs abre na próxima atualização."
+    "exampleOpen": "Abrir esta run"
   },
   "footer": {
     "madeBy": "Feito de fã para fã por",
