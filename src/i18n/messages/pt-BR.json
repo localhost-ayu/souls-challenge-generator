@@ -26,7 +26,6 @@
     "readMore": "Ler o aviso completo"
   },
   "about": {
-    "metaDescription": "O que é o Souls Challenge Generator, como as runs se mantêm coerentes e o aviso legal.",
     "title": "Sobre",
     "intro": "O Souls Challenge Generator cria challenge runs para jogos Souls: uma classe inicial, algumas regras e um objetivo. Toda run nasce de uma seed, então a mesma seed sempre recria a mesma run, em qualquer dispositivo.",
     "coherenceTitle": "Runs que fazem sentido",
