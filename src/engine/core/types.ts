@@ -1,11 +1,14 @@
-export type GameId = "dsr";
+export const GAME_IDS = ["dsr"] as const;
+export type GameId = (typeof GAME_IDS)[number];
 
-export type ConstraintCategory =
-  | "level"
-  | "equipment"
-  | "movement"
-  | "resource"
-  | "style";
+export const CONSTRAINT_CATEGORIES = [
+  "level",
+  "equipment",
+  "movement",
+  "resource",
+  "style",
+] as const;
+export type ConstraintCategory = (typeof CONSTRAINT_CATEGORIES)[number];
 
 export type ConstraintDifficulty = 1 | 2 | 3;
 
