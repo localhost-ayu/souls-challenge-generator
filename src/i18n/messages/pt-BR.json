@@ -260,5 +260,11 @@
     "confirmClearFavorites": "Remover todos os {count} favoritos?",
     "confirm": "Sim, limpar",
     "cancel": "Cancelar"
+  },
+  "notFound": {
+    "title": "Este caminho não leva a lugar nenhum",
+    "body": "A página que você procurava não existe, ou mudou de lugar. Volte para a fogueira e escolha outro caminho.",
+    "home": "Voltar ao início",
+    "play": "Começar desafio"
   }
 }

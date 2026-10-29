@@ -98,10 +98,14 @@ export function RunView() {
   );
 }
 
+/**
+ * The static HTML only contains this fallback, so it fills the viewport:
+ * otherwise the footer would jump down when the card appears (layout shift).
+ */
 export function RunLoading() {
   const { t } = useTranslation();
   return (
-    <p className="mx-auto max-w-3xl px-5 pt-16 font-sans text-lg text-parchment sm:px-8">
+    <p className="mx-auto min-h-dvh max-w-3xl px-5 pt-16 font-sans text-lg text-parchment sm:px-8">
       {t("run.loading")}
     </p>
   );
