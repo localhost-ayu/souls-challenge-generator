@@ -4,13 +4,13 @@
 
 [![CI](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/github/license/localhost-ayu/souls-challenge-generator)](LICENSE)
-[![Vercel](https://img.shields.io/github/deployments/localhost-ayu/souls-challenge-generator/production?label=vercel&logo=vercel)](https://souls-challenge-generator.vercel.app)
+[![Site](https://img.shields.io/website?url=https%3A%2F%2Fsouls.grazzioli.dev&label=site&logo=vercel)](https://souls.grazzioli.dev)
 
 Challenge runs for Dark Souls Remastered that hold together: a starting class, a set of rules and
 an objective that never contradict each other, rebuilt exactly from a single seed.
 Made by a fan, for fans.
 
-**Live site:** https://souls-challenge-generator.vercel.app
+**Live site:** https://souls.grazzioli.dev
 
 ![The home page: the site title, a call to start a challenge, and an example run card for a Wanderer with Soul Level 1, No rolling, No Estus and No magic.](docs/screenshot.jpg)
 
