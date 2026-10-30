@@ -21,7 +21,7 @@ const preferences: Preferences = {
   },
 };
 
-// Locked by the engine snapshot: Thief with permadeath, no-magic, boss-weapons-only.
+// Locked by the engine snapshot: Thief with no-blocking, no-estus, tail-weapons-only, upgrade-cap.
 const run = generateRun(createSeed({ gameId: "dsr", preferences, key: "praisethesun" }));
 
 function renderCard() {
@@ -40,8 +40,8 @@ describe("RunCard", () => {
     renderCard();
 
     expect(screen.getByRole("heading", { name: "Thief" })).toBeTruthy();
-    expect(screen.getByText("Permadeath")).toBeTruthy();
-    expect(screen.getByText("No sorceries, miracles or pyromancies.")).toBeTruthy();
+    expect(screen.getByText("No blocking")).toBeTruthy();
+    expect(screen.getByText("Never drink from the Estus Flask.")).toBeTruthy();
     expect(screen.getByText("Every boss")).toBeTruthy();
     expect(screen.getByText("Defeat all 26 bosses.")).toBeTruthy();
     expect(screen.getByText(run.seed)).toBeTruthy();
@@ -82,7 +82,7 @@ describe("RunCard", () => {
 
     act(() => setLocale("pt-BR"));
 
-    expect(screen.getByText("Morte permanente")).toBeTruthy();
+    expect(screen.getByText("Sem bloquear")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Regras da casa" })).toBeTruthy();
     expect(screen.getByText("Derrote todos os 26 bosses.")).toBeTruthy();
     expect(screen.getByText("Morto-vivo Escolhido")).toBeTruthy();

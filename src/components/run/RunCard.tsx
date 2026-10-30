@@ -43,6 +43,8 @@ function formatParam(
       return t(`weaponCategories.${id}` as MessageKey);
     case "region":
       return t(`regions.${id}` as MessageKey);
+    case "stat":
+      return t(`attributes.${id}` as MessageKey);
     case "upgradeCap":
       return `+${id}`;
     default:

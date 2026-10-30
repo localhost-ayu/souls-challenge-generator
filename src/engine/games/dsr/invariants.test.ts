@@ -10,8 +10,13 @@ import { createRng, pick, type Rng } from "../../core/rng";
 import { seedKeyFromNumber } from "../../core/seed";
 import type { ChallengeRun } from "../../core/types";
 import { createSeed, generateRun } from "../../index";
-import { canWieldAtBaseStats, dsrConstraints } from "./constraints";
+import {
+  ATTRIBUTES,
+  dsrConstraints,
+  LEVEL_CAPS,
+} from "./constraints";
 import { dsrData } from "./dataset";
+import type { StartingClass, Weapon } from "./schema";
 
 const SEEDS_PER_DIFFICULTY = 5_000;
 
@@ -25,6 +30,8 @@ const PARAMETERIZED = [
   "cosplay",
   "region-weapons",
   "upgrade-cap",
+  "level-cap",
+  "single-stat",
 ];
 const SOURCE_RULES: Record<string, string> = {
   "boss-weapons-only": "boss-soul",
@@ -37,6 +44,23 @@ function randomPreferences(
   difficulty: Preferences["difficulty"],
 ): Preferences {
   return { ...randomCorePreferences(rng), difficulty };
+}
+
+/**
+ * Levels needed per attribute to wield a weapon two-handed, counted one
+ * level at a time so it does not share the resolver's arithmetic.
+ */
+function levelDeficits(startingClass: StartingClass, weapon: Weapon) {
+  const { attributes: base } = startingClass;
+  const { requirements } = weapon;
+  let str = base.str;
+  while (Math.floor(str * 1.5) < requirements.str) str++;
+  return {
+    str: str - base.str,
+    dex: Math.max(0, requirements.dex - base.dex),
+    int: Math.max(0, requirements.int - base.int),
+    fai: Math.max(0, requirements.fai - base.fai),
+  };
 }
 
 function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
@@ -70,6 +94,26 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   const armorSetId = paramsOf("cosplay")?.armorSet;
   const region = paramsOf("region-weapons")?.region;
   const upgradeCap = paramsOf("upgrade-cap")?.upgradeCap;
+  const maxLevel = paramsOf("level-cap")?.maxLevel;
+  const stat = paramsOf("single-stat")?.stat;
+  expect(maxLevel !== undefined).toBe(has("level-cap"));
+  expect(stat !== undefined).toBe(has("single-stat"));
+  if (stat !== undefined) expect(ATTRIBUTES).toContain(stat);
+  if (maxLevel !== undefined) {
+    expect(LEVEL_CAPS).toContain(maxLevel);
+    expect(maxLevel).toBeGreaterThan(startingClass!.soulLevel);
+  }
+
+  const frozen = has("sl1") || has("no-spending-souls");
+  const reachable = (w: Weapon) => {
+    const deficits = Object.entries(levelDeficits(startingClass!, w)).filter(
+      ([, levels]) => levels > 0,
+    );
+    if (frozen) return deficits.length === 0;
+    if (stat !== undefined && deficits.some(([name]) => name !== stat)) return false;
+    const total = deficits.reduce((sum, [, levels]) => sum + levels, 0);
+    return maxLevel === undefined || total <= Number(maxLevel) - startingClass!.soulLevel;
+  };
   expect(weaponId !== undefined).toBe(has("specific-weapon"));
   expect(weaponCategory !== undefined).toBe(has("weapon-category"));
   expect(armorSetId !== undefined).toBe(has("cosplay"));
@@ -81,8 +125,8 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   const allowed = dsrData.weapons.filter(
     (w) =>
       (preferences.includeDlc || !w.dlc) &&
-      (!has("sl1") || canWieldAtBaseStats(startingClass!, w)) &&
-      (!has("no-buying") ||
+      reachable(w) &&
+      (!(has("no-buying") || has("no-spending-souls")) ||
         startingClass!.startingEquipment.weapons.includes(w.id) ||
         w.sources.some((s) => s !== "merchant")) &&
       (!has("no-magic") || !MAGIC.includes(w.category)) &&
@@ -175,17 +219,23 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
 describe("generated runs", () => {
   it("are locked for a known seed", () => {
     // Regression guard: if this changes, the ruleset version must be bumped.
-    expect(generateRun("dsr-3-68u-praisethesun")).toMatchInlineSnapshot(`
+    expect(generateRun("dsr-4-68u-praisethesun")).toMatchInlineSnapshot(`
       {
         "constraints": [
           {
-            "id": "permadeath",
+            "id": "no-blocking",
           },
           {
-            "id": "no-magic",
+            "id": "no-estus",
           },
           {
-            "id": "boss-weapons-only",
+            "id": "tail-weapons-only",
+          },
+          {
+            "id": "upgrade-cap",
+            "params": {
+              "upgradeCap": 5,
+            },
           },
         ],
         "difficulty": "chosen",
@@ -197,8 +247,8 @@ describe("generated runs", () => {
         },
         "includeDlc": true,
         "objective": "all-bosses",
-        "rulesetVersion": 3,
-        "seed": "dsr-3-68u-praisethesun",
+        "rulesetVersion": 4,
+        "seed": "dsr-4-68u-praisethesun",
         "startingClass": "thief",
       }
     `);
