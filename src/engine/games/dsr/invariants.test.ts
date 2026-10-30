@@ -17,10 +17,20 @@ const SEEDS_PER_DIFFICULTY = 5_000;
 
 const constraintsById = new Map(dsrConstraints.map((c) => [c.id, c]));
 const classesById = new Map(dsrData.classes.map((c) => [c.id, c]));
-const weaponsById = new Map(dsrData.weapons.map((w) => [w.id, w]));
 const armorSetsById = new Map(dsrData.armorSets.map((s) => [s.id, s]));
 const MAGIC = ["catalyst", "talisman", "pyromancy-flame"];
-const PARAMETERIZED = ["specific-weapon", "weapon-category", "cosplay"];
+const PARAMETERIZED = [
+  "specific-weapon",
+  "weapon-category",
+  "cosplay",
+  "region-weapons",
+  "upgrade-cap",
+];
+const SOURCE_RULES: Record<string, string> = {
+  "boss-weapons-only": "boss-soul",
+  "tail-weapons-only": "tail-cut",
+  "enemy-drops-only": "enemy-drop",
+};
 
 function randomPreferences(
   rng: Rng,
@@ -58,40 +68,47 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   const weaponId = paramsOf("specific-weapon")?.weapon;
   const weaponCategory = paramsOf("weapon-category")?.weaponCategory;
   const armorSetId = paramsOf("cosplay")?.armorSet;
+  const region = paramsOf("region-weapons")?.region;
+  const upgradeCap = paramsOf("upgrade-cap")?.upgradeCap;
   expect(weaponId !== undefined).toBe(has("specific-weapon"));
   expect(weaponCategory !== undefined).toBe(has("weapon-category"));
   expect(armorSetId !== undefined).toBe(has("cosplay"));
+  expect(region !== undefined).toBe(has("region-weapons"));
+  expect(upgradeCap !== undefined).toBe(has("upgrade-cap"));
 
+  // Rebuilt independently of the resolver: the weapons this run allows.
+  const sourceRule = Object.keys(SOURCE_RULES).find(has);
+  const allowed = dsrData.weapons.filter(
+    (w) =>
+      (preferences.includeDlc || !w.dlc) &&
+      (!has("sl1") || canWieldAtBaseStats(startingClass!, w)) &&
+      (!has("no-buying") ||
+        startingClass!.startingEquipment.weapons.includes(w.id) ||
+        w.sources.some((s) => s !== "merchant")) &&
+      (!has("no-magic") || !MAGIC.includes(w.category)) &&
+      (!has("bow-only") || w.category === "bow" || w.category === "greatbow") &&
+      (!sourceRule || w.sources.includes(SOURCE_RULES[sourceRule] as never)) &&
+      (region === undefined ||
+        (w.region === region &&
+          w.sources.some((s) => ["found", "merchant", "enemy-drop"].includes(s)))),
+  );
+  expect(allowed.length).toBeGreaterThan(0);
+
+  let ruleWeapons = allowed;
   if (weaponId !== undefined) {
-    const weapon = weaponsById.get(String(weaponId));
-    expect(weapon).toBeDefined();
+    const weapon = allowed.find((w) => w.id === weaponId);
+    expect(weapon, String(weaponId)).toBeDefined();
     expect(weapon!.missable).toBe(false);
-    if (!preferences.includeDlc) expect(weapon!.dlc).toBe(false);
-    if (has("sl1")) expect(canWieldAtBaseStats(startingClass!, weapon!)).toBe(true);
-    if (has("no-magic")) expect(MAGIC).not.toContain(weapon!.category);
+    ruleWeapons = [weapon!];
   }
 
   if (weaponCategory !== undefined) {
-    const usable = dsrData.weapons.filter(
-      (w) =>
-        w.category === weaponCategory &&
-        !w.missable &&
-        (preferences.includeDlc || !w.dlc) &&
-        (!has("sl1") || canWieldAtBaseStats(startingClass!, w)),
-    );
-    expect(usable.length).toBeGreaterThan(0);
-    if (has("no-magic")) expect(MAGIC).not.toContain(weaponCategory);
+    ruleWeapons = allowed.filter((w) => w.category === weaponCategory);
+    expect(ruleWeapons.some((w) => !w.missable)).toBe(true);
   }
 
-  if (has("bow-only") && has("sl1")) {
-    const usableBow = dsrData.weapons.some(
-      (w) =>
-        (w.category === "bow" || w.category === "greatbow") &&
-        !w.missable &&
-        (preferences.includeDlc || !w.dlc) &&
-        canWieldAtBaseStats(startingClass!, w),
-    );
-    expect(usableBow).toBe(true);
+  if (upgradeCap !== undefined) {
+    expect(upgradeCap).toBeLessThan(Math.max(...ruleWeapons.map((w) => w.maxUpgrade)));
   }
 
   if (armorSetId !== undefined) {
@@ -158,20 +175,17 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
 describe("generated runs", () => {
   it("are locked for a known seed", () => {
     // Regression guard: if this changes, the ruleset version must be bumped.
-    expect(generateRun("dsr-2-68u-praisethesun")).toMatchInlineSnapshot(`
+    expect(generateRun("dsr-3-68u-praisethesun")).toMatchInlineSnapshot(`
       {
         "constraints": [
           {
-            "id": "no-blocking",
+            "id": "permadeath",
           },
           {
-            "id": "boss-no-hit",
+            "id": "no-magic",
           },
           {
-            "id": "no-estus",
-          },
-          {
-            "id": "bow-only",
+            "id": "boss-weapons-only",
           },
         ],
         "difficulty": "chosen",
@@ -183,9 +197,9 @@ describe("generated runs", () => {
         },
         "includeDlc": true,
         "objective": "all-bosses",
-        "rulesetVersion": 2,
-        "seed": "dsr-2-68u-praisethesun",
-        "startingClass": "sorcerer",
+        "rulesetVersion": 3,
+        "seed": "dsr-3-68u-praisethesun",
+        "startingClass": "thief",
       }
     `);
   });

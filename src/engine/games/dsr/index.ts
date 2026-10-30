@@ -5,7 +5,7 @@ import type { DsrData } from "./schema";
 
 export const dsrModule: GameModule<DsrData, DsrPools> = {
   id: "dsr",
-  rulesetVersion: 2,
+  rulesetVersion: 3,
   data: dsrData,
   catalog: {
     classes: dsrData.classes,
@@ -15,13 +15,11 @@ export const dsrModule: GameModule<DsrData, DsrPools> = {
   },
   constraints: dsrConstraints,
   objectives: [{ id: "main-bosses" }, { id: "all-bosses" }],
-  // Missable items are never offered: a run must not hinge on an item the
-  // player may already have lost.
+  // Missable armor is never offered: cosplay must not hinge on a set the
+  // player may already have lost. Weapons are filtered in the resolver.
   createPools: (preferences) => ({
     classes: dsrData.classes,
-    weapons: dsrData.weapons.filter(
-      (w) => !w.missable && (preferences.includeDlc || !w.dlc),
-    ),
+    weapons: dsrData.weapons.filter((w) => preferences.includeDlc || !w.dlc),
     armorSets: dsrData.armorSets.filter(
       (s) => !s.missable && (preferences.includeDlc || !s.dlc),
     ),

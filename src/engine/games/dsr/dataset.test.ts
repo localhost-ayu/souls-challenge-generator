@@ -39,6 +39,31 @@ describe("dsr dataset", () => {
     );
   });
 
+  it("marks boss and tail weapons as missable", () => {
+    // A boss soul can be spent on something else and a tail is cut only once.
+    for (const weapon of dsrData.weapons) {
+      if (weapon.sources.includes("boss-soul") || weapon.sources.includes("tail-cut")) {
+        expect(weapon.missable, weapon.id).toBe(true);
+      }
+    }
+  });
+
+  it("only reinforces catalysts and talismans never, boss weapons up to +5", () => {
+    for (const weapon of dsrData.weapons) {
+      if (weapon.category === "catalyst" || weapon.category === "talisman") {
+        expect(weapon.maxUpgrade, weapon.id).toBe(0);
+      } else if (weapon.sources.includes("boss-soul")) {
+        expect(weapon.maxUpgrade, weapon.id).toBe(5);
+      }
+    }
+  });
+
+  it("lists sources without duplicates", () => {
+    for (const weapon of dsrData.weapons) {
+      expect(new Set(weapon.sources).size, weapon.id).toBe(weapon.sources.length);
+    }
+  });
+
   it("lets every class wield its own starting weapons one-handed", () => {
     const weaponsById = new Map(dsrData.weapons.map((w) => [w.id, w]));
 

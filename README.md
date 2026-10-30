@@ -18,7 +18,7 @@ Made by a fan, for fans.
 
 - **Coherent runs.** Conflicting rules never appear together, and picks respect the rest of the
   run: under Soul Level 1, the weapon is always usable with the class's starting attributes.
-- **Reproducible seeds.** A short, URL-safe seed such as `dsr-2-68u-praisethesun` rebuilds the same
+- **Reproducible seeds.** A short, URL-safe seed such as `dsr-3-68u-praisethesun` rebuilds the same
   run on any device. Share the seed or a link.
 - **Your difficulty, or luck.** Pick Hollow to Lord of Cinder, the objective (required bosses or
   every boss, with or without the DLC) and the kinds of rules allowed, or press _I'm feeling lucky_.
@@ -39,7 +39,7 @@ Everything a run needs lives in its seed: `<game>-<ruleset>-<preferences>-<key>`
 
 ```mermaid
 flowchart TD
-    seed["Seed<br/>dsr-2-68u-praisethesun"] --> decode["Decode and validate<br/>(Zod, ruleset check)"]
+    seed["Seed<br/>dsr-3-68u-praisethesun"] --> decode["Decode and validate<br/>(Zod, ruleset check)"]
     decode --> rng["Seeded PRNG<br/>mulberry32(hash(seed))"]
     rng --> select["Pick rules by difficulty<br/>no conflicts, one per exclusive group"]
     select --> narrow["Narrow the pools<br/>classes, weapons, armor sets"]

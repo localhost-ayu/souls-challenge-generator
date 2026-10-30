@@ -86,8 +86,12 @@ describe("dsr constraint definitions", () => {
       (c) => c.exclusiveGroup === "weapon-rule",
     );
     expect(weaponRules.map((c) => c.id).sort()).toEqual([
+      "boss-weapons-only",
       "bow-only",
+      "enemy-drops-only",
+      "region-weapons",
       "specific-weapon",
+      "tail-weapons-only",
       "weapon-category",
     ]);
   });
@@ -169,6 +173,42 @@ describe("resolveDsrLoadout", () => {
       (l) => armorSetById(String(l?.params.cosplay?.armorSet))?.dlc,
     );
     expect(dlcPicked).toBe(true);
+  });
+
+  it("never needs a purchase without buying, unless the class starts with it", () => {
+    for (const loadout of resolveMany(["no-buying", "specific-weapon"])) {
+      const weapon = weaponById(String(loadout!.params["specific-weapon"]!.weapon));
+      const owned = classById(loadout!.startingClass).startingEquipment.weapons;
+      const free = weapon.sources.some((source) => source !== "merchant");
+      expect(free || owned.includes(weapon.id), weapon.id).toBe(true);
+    }
+  });
+
+  it("draws a region with weapons obtainable there", () => {
+    for (const loadout of resolveMany(["region-weapons", "sl1"])) {
+      const region = loadout!.params["region-weapons"]!.region;
+      const startingClass = classById(loadout!.startingClass);
+      const local = dsrData.weapons.filter(
+        (w) =>
+          w.region === region &&
+          !w.dlc &&
+          w.sources.some((s) => s !== "boss-soul" && s !== "tail-cut" && s !== "npc") &&
+          canWieldAtBaseStats(startingClass, w),
+      );
+      expect(local.length, String(region)).toBeGreaterThan(0);
+    }
+  });
+
+  it("only caps upgrades below what the drawn weapon can reach", () => {
+    for (const loadout of resolveMany(["upgrade-cap", "specific-weapon"])) {
+      const weapon = weaponById(String(loadout!.params["specific-weapon"]!.weapon));
+      expect(loadout!.params["upgrade-cap"]!.upgradeCap).toBeLessThan(weapon.maxUpgrade);
+    }
+  });
+
+  it("finds tail weapons usable at sl1, even for the Deprived", () => {
+    // The Drake Sword needs 16 STR (two-handed) and 10 DEX.
+    expect(resolveWith(["sl1", "tail-weapons-only", "naked-start"], 1)).not.toBeNull();
   });
 
   it("only draws parameters for the rules that need them", () => {

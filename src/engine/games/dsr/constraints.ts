@@ -7,14 +7,20 @@ import type {
 } from "../../core/types";
 import type {
   ArmorSet,
+  Region,
   StartingClass,
   Weapon,
   WeaponCategory,
+  WeaponSource,
 } from "./schema";
 
 export interface DsrPools {
   classes: readonly StartingClass[];
-  /** Candidates for the run's main weapon. */
+  /**
+   * Weapons the run may rely on. Missable ones are included: a fresh run
+   * has not lost them yet, and rules such as "boss weapons only" need them.
+   * Picking one specific weapon still avoids them.
+   */
   weapons: readonly Weapon[];
   /** Candidates for cosplay. */
   armorSets: readonly ArmorSet[];
@@ -27,6 +33,23 @@ const MAGIC_CATEGORIES: ReadonlySet<WeaponCategory> = new Set([
 ]);
 
 const BOW_CATEGORIES: ReadonlySet<WeaponCategory> = new Set(["bow", "greatbow"]);
+
+/** Ways of getting a weapon that tie it to the place where it is obtained. */
+const REGIONAL_SOURCES: ReadonlySet<WeaponSource> = new Set([
+  "found",
+  "merchant",
+  "enemy-drop",
+]);
+
+/** Ceilings an upgrade cap can impose; +15 is no cap at all. */
+export const UPGRADE_CAPS = [0, 5, 10] as const;
+
+function onlyFrom(source: WeaponSource) {
+  return (pools: DsrPools): DsrPools => ({
+    ...pools,
+    weapons: pools.weapons.filter((w) => w.sources.includes(source)),
+  });
+}
 
 /**
  * Whether a class meets a weapon's requirements with its base attributes.
@@ -124,6 +147,36 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
     exclusiveGroup: "weapon-rule",
   },
   {
+    id: "boss-weapons-only",
+    category: "equipment",
+    difficulty: 2,
+    exclusiveGroup: "weapon-rule",
+    narrow: onlyFrom("boss-soul"),
+  },
+  {
+    id: "tail-weapons-only",
+    category: "equipment",
+    difficulty: 2,
+    exclusiveGroup: "weapon-rule",
+    narrow: onlyFrom("tail-cut"),
+  },
+  {
+    id: "enemy-drops-only",
+    category: "equipment",
+    difficulty: 1,
+    exclusiveGroup: "weapon-rule",
+    narrow: onlyFrom("enemy-drop"),
+  },
+  {
+    id: "region-weapons",
+    category: "equipment",
+    difficulty: 1,
+    exclusiveGroup: "weapon-rule",
+  },
+  { id: "upgrade-cap", category: "equipment", difficulty: 2 },
+  // Starting equipment counts as owned, not bought.
+  { id: "no-buying", category: "resource", difficulty: 2 },
+  {
     id: "cosplay",
     category: "style",
     difficulty: 1,
@@ -142,7 +195,8 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
 /**
  * Tries classes in random order and returns the first one for which every
  * selected rule can be met. Under SL1 only weapons usable at base stats
- * count, and a class with no usable weapon at all is never picked.
+ * count, without buying only weapons the class can get for free, and a class
+ * left with no usable weapon at all is never picked.
  */
 export function resolveDsrLoadout(
   pools: DsrPools,
@@ -153,18 +207,54 @@ export function resolveDsrLoadout(
   if (has("cosplay") && pools.armorSets.length === 0) return null;
 
   for (const startingClass of shuffle(ctx.rng, pools.classes)) {
-    const usable = has("sl1")
-      ? pools.weapons.filter((w) => canWieldAtBaseStats(startingClass, w))
-      : pools.weapons;
-    if (usable.length === 0) continue;
+    let usable = pools.weapons;
+    if (has("sl1")) {
+      usable = usable.filter((w) => canWieldAtBaseStats(startingClass, w));
+    }
+    if (has("no-buying")) {
+      const owned = new Set(startingClass.startingEquipment.weapons);
+      usable = usable.filter(
+        (w) => owned.has(w.id) || w.sources.some((source) => source !== "merchant"),
+      );
+    }
 
     const params: Record<string, ConstraintParams> = {};
+    if (has("region-weapons")) {
+      const regional = usable.filter(
+        (w) => w.region && w.sources.some((source) => REGIONAL_SOURCES.has(source)),
+      );
+      const regions = [...new Set(regional.map((w) => w.region as Region))];
+      if (regions.length === 0) continue;
+      const region = pick(ctx.rng, regions);
+      usable = regional.filter((w) => w.region === region);
+      params["region-weapons"] = { region };
+    }
+    if (usable.length === 0) continue;
+
+    // A single drawn weapon must not be one the player could lose for good.
+    let candidates = usable.filter((w) => !w.missable);
+    if (has("upgrade-cap")) candidates = candidates.filter((w) => w.maxUpgrade > 0);
+
+    let ruleWeapons = usable;
     if (has("specific-weapon")) {
-      params["specific-weapon"] = { weapon: pick(ctx.rng, usable).id };
+      if (candidates.length === 0) continue;
+      const weapon = pick(ctx.rng, candidates);
+      params["specific-weapon"] = { weapon: weapon.id };
+      ruleWeapons = [weapon];
     }
     if (has("weapon-category")) {
-      const categories = [...new Set(usable.map((w) => w.category))];
-      params["weapon-category"] = { weaponCategory: pick(ctx.rng, categories) };
+      const categories = [...new Set(candidates.map((w) => w.category))];
+      if (categories.length === 0) continue;
+      const weaponCategory = pick(ctx.rng, categories);
+      params["weapon-category"] = { weaponCategory };
+      ruleWeapons = usable.filter((w) => w.category === weaponCategory);
+    }
+    if (has("upgrade-cap")) {
+      // Only caps below what the allowed weapons can reach change anything.
+      const ceiling = Math.max(...ruleWeapons.map((w) => w.maxUpgrade));
+      const caps = UPGRADE_CAPS.filter((cap) => cap < ceiling);
+      if (caps.length === 0) continue;
+      params["upgrade-cap"] = { upgradeCap: pick(ctx.rng, caps) };
     }
     if (has("cosplay")) {
       params.cosplay = { armorSet: pick(ctx.rng, pools.armorSets).id };
