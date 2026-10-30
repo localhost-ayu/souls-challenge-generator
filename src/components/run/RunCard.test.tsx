@@ -73,9 +73,31 @@ describe("RunCard", () => {
       </I18nProvider>,
     );
 
-    expect(screen.getByText("Weapon").nextSibling?.textContent).toBe("Claymore");
+    expect(screen.getByText("Weapon").nextSibling?.textContent).toMatch(/^Claymore/);
+    expect(
+      screen.getByRole("link", { name: "Claymore on Wikidot (opens in a new tab)" }),
+    ).toHaveProperty("href", "https://darksouls.wikidot.com/claymore");
     expect(screen.getByText("Region").nextSibling?.textContent).toBe("Undead Burg");
     expect(screen.getAllByText("Upgrade limit")[0]!.nextSibling?.textContent).toBe("+5");
+  });
+
+  it("lists a weapon roulette in order", () => {
+    render(
+      <I18nProvider>
+        <RunCard
+          run={{
+            ...run,
+            constraints: [
+              { id: "weapon-roulette", params: { weapons: ["zweihander", "club", "rapier"] } },
+            ],
+          }}
+        />
+      </I18nProvider>,
+    );
+
+    const order = screen.getByText("Weapon order").nextSibling as HTMLElement;
+    const items = [...order.querySelectorAll("li")].map((li) => li.firstChild?.textContent);
+    expect(items).toEqual(["Zweihander", "Club", "Rapier"]);
   });
 
   it("follows the language while keeping game names untranslated", () => {

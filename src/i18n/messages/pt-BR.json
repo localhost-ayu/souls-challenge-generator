@@ -78,7 +78,9 @@
     "seedSubmit": "Abrir run",
     "houseRulesLegend": "Regras da casa",
     "houseRulesHint": "Regras de base de toda run, mostradas na carta para ninguém precisar adivinhar.",
-    "needsGlitches": "Permita glitches para escolher este objetivo."
+    "needsGlitches": "Permita glitches para escolher este objetivo.",
+    "customizeTitle": "Personalizar regras",
+    "customizeSummary": "{count} de {total} tipos de regra permitidos"
   },
   "difficulties": {
     "hollow": {
@@ -423,7 +425,8 @@
       "school": "Escola de magia",
       "weapons": "Ordem das armas",
       "scope": "Vale para"
-    }
+    },
+    "wikiLink": "{name} na {wiki} (abre em nova aba)"
   },
   "history": {
     "title": "Suas runs",
