@@ -1,67 +1,77 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Icon } from "@/components/icons/Icon";
 import { useTranslation } from "@/i18n/useTranslation";
 import { AUTHOR, REPOSITORY_URL } from "@/lib/site";
-
-const linkClass =
-  "underline decoration-stone-600 underline-offset-4 transition-colors duration-200 hover:text-bone hover:decoration-ember";
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="mt-14">
-      <h2 className="font-display text-heading font-medium text-bone">{title}</h2>
-      <div className="mt-4 space-y-4 text-parchment">{children}</div>
-    </section>
-  );
-}
 
 export function AboutContent() {
   const { t } = useTranslation();
 
   return (
-    <article className="mx-auto max-w-prose px-5 pt-12 pb-16 sm:px-0 sm:pt-20">
-      <h1 className="font-display text-title font-medium text-bone">{t("about.title")}</h1>
-      <p className="mt-8 text-lead text-parchment">{t("about.intro")}</p>
+    <div className="page max-w-article pt-14">
+      <article className="prose">
+        <p className="eyebrow">{t("about.eyebrow")}</p>
+        <h1 className="display page-title mt-2.5 mb-6">{t("about.title")}</h1>
+        <p className="intro">{t("about.intro")}</p>
 
-      <Section title={t("about.coherenceTitle")}>
+        <div className="divider mt-10" aria-hidden="true">
+          <Icon name="diamond" size={14} />
+        </div>
+
+        <h2>{t("about.coherenceTitle")}</h2>
         <p>{t("about.coherence")}</p>
-      </Section>
 
-      <Section title={t("about.dataTitle")}>
+        <h2>{t("about.dataTitle")}</h2>
         <p>{t("about.data")}</p>
-      </Section>
 
-      <Section title={t("about.disclaimerTitle")}>
-        <p className="border-l-2 border-ember pl-5">{t("about.disclaimer")}</p>
-      </Section>
+        <section className="legal" aria-labelledby="legal-title">
+          <h2 id="legal-title">
+            <Icon name="shield" size={24} className="text-ember-glow" />
+            {t("about.disclaimerTitle")}
+          </h2>
+          <p>{t("about.disclaimer")}</p>
+        </section>
 
-      <Section title={t("about.creditsTitle")}>
-        <p>
-          {t("about.credits")} <strong className="font-semibold text-bone">{AUTHOR.name}</strong>
-        </p>
-        <ul className="flex gap-6 font-sans text-base">
-          <li>
-            <a href={AUTHOR.githubUrl} className={linkClass} rel="noopener noreferrer" target="_blank">
+        <h2>{t("about.creditsTitle")}</h2>
+        <div className="credit">
+          <div className="who">
+            <span className="eyebrow mb-1 block">{t("about.credits")}</span>
+            {AUTHOR.name}
+          </div>
+          <div className="links">
+            <a
+              href={AUTHOR.githubUrl}
+              className="btn btn-sm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Icon name="code" size={18} />
               {t("footer.github")}
             </a>
-          </li>
-          <li>
-            <a href={AUTHOR.portfolioUrl} className={linkClass} rel="noopener noreferrer" target="_blank">
+            <a
+              href={AUTHOR.portfolioUrl}
+              className="btn btn-sm"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <Icon name="globe" size={18} />
               {t("footer.portfolio")}
             </a>
-          </li>
-        </ul>
-      </Section>
+          </div>
+        </div>
 
-      <Section title={t("about.licenseTitle")}>
+        <h2>{t("about.licenseTitle")}</h2>
         <p>{t("about.license")}</p>
-        <p className="font-sans text-base">
-          <a href={REPOSITORY_URL} className={linkClass} rel="noopener noreferrer" target="_blank">
-            {t("about.sourceCode")}
-          </a>
-        </p>
-      </Section>
-    </article>
+        <a
+          href={REPOSITORY_URL}
+          className="btn mt-2"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {t("about.sourceCode")}
+          <Icon name="external" size={18} />
+        </a>
+      </article>
+    </div>
   );
 }

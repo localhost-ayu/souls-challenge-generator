@@ -28,7 +28,10 @@
     "step3Title": "Share the seed",
     "step3": "Every run has a seed. Send it to a friend and they get exactly the same challenge.",
     "exampleTitle": "An example run",
-    "exampleOpen": "Open this run"
+    "exampleOpen": "Open this run",
+    "eyebrow": "Made by a fan, for fans · Dark Souls Remastered",
+    "exampleEyebrow": "Example",
+    "exampleBody": "Every seed deals a card like this one. Open it to see every rule and copy the link."
   },
   "footer": {
     "madeBy": "Made by a fan, for fans, by",
@@ -50,7 +53,8 @@
     "credits": "Designed and built by",
     "licenseTitle": "License",
     "license": "The source code is available under the MIT license, which covers only the original code and assets of this project.",
-    "sourceCode": "View the source code"
+    "sourceCode": "View the source code",
+    "eyebrow": "Made by a fan, for fans"
   },
   "games": {
     "dsr": "Dark Souls Remastered",
@@ -80,7 +84,12 @@
     "houseRulesHint": "Baseline rules for every run, shown on the card so nobody has to guess.",
     "needsGlitches": "Allow glitches to pick this objective.",
     "customizeTitle": "Customize rules",
-    "customizeSummary": "{count} of {total} rule types allowed"
+    "customizeSummary": "{count} of {total} rule types allowed",
+    "eyebrow": "New challenge",
+    "lead": "Pick the game and the difficulty. The seed decides the rest.",
+    "dsrScope": "Base game + Artorias of the Abyss",
+    "allowGlitches": "Allow glitches",
+    "houseSummary": "{count} of {total} house rules allowed"
   },
   "difficulties": {
     "hollow": {
@@ -426,7 +435,11 @@
       "weapons": "Weapon order",
       "scope": "Applies to"
     },
-    "wikiLink": "{name} on {wiki} (opens in a new tab)"
+    "wikiLink": "{name} on {wiki} (opens in a new tab)",
+    "drawn": "Drawn values",
+    "includesDlc": "Includes Artorias of the Abyss",
+    "seedMeta": "Ruleset {version} · same seed, same run",
+    "actions": "Run actions"
   },
   "history": {
     "title": "Your runs",
@@ -440,16 +453,17 @@
     "openedAt": "Opened {date}",
     "savedAt": "Saved {date}",
     "unavailable": "This seed is from another version and can no longer be rebuilt.",
-    "label": "Label",
     "labelPlaceholder": "Add a label",
-    "remove": "Remove",
     "removeNamed": "Remove {name}",
     "clearHistory": "Clear history",
     "clearFavorites": "Clear favorites",
     "confirmClearHistory": "Remove all {count} runs from your history?",
     "confirmClearFavorites": "Remove all {count} favorites?",
     "confirm": "Yes, clear",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "eyebrow": "Saved in this browser only",
+    "labelFor": "Label for {name}",
+    "open": "Open run"
   },
   "notFound": {
     "title": "This path leads nowhere",

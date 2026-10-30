@@ -13,7 +13,7 @@ import { useTranslation } from "@/i18n/useTranslation";
 import { historyItem } from "@/lib/storage/items";
 import { addToHistory } from "@/lib/storage/saved-runs";
 import { getItemValue, setItemValue } from "@/lib/storage/store";
-import { RunActions, CopySeedButton } from "./RunActions";
+import { RunActions } from "./RunActions";
 import { RunCard } from "./RunCard";
 import { RunMessage } from "./RunMessage";
 
@@ -57,43 +57,54 @@ export function RunView() {
   }, [readySeed]);
 
   return (
-    <div className="mx-auto max-w-3xl px-5 pt-10 pb-16 sm:px-8 sm:pt-16">
+    <div className="page pt-12">
       {state.kind === "ready" && (
         <>
-          <h1 className="sr-only">{t("run.title")}</h1>
-          <RunCard
-            key={state.run.seed}
-            run={state.run}
-            animate
-            footer={<CopySeedButton seed={state.run.seed} />}
-          />
-          <RunActions run={state.run} />
+          <div className="mb-8 flex flex-col gap-2">
+            <p className="eyebrow">{t(`games.${state.run.gameId}`)}</p>
+            <h1 className="display page-title">{t("run.title")}</h1>
+          </div>
+          <div className="run-layout">
+            <RunCard key={state.run.seed} run={state.run} animate />
+            <RunActions run={state.run} />
+          </div>
         </>
       )}
-      {state.kind === "missing" && (
-        <RunMessage title={t("run.errors.missingTitle")} body={t("run.errors.missing")} />
-      )}
-      {state.kind === "invalid" && (
-        <RunMessage
-          title={t("run.errors.invalidTitle")}
-          body={t("run.errors.invalid", { example: SEED_EXAMPLE })}
-        />
-      )}
-      {(state.kind === "outdated" || state.kind === "newer") && (
-        <RunMessage
-          title={t(`run.errors.${state.kind}Title`)}
-          body={t(`run.errors.${state.kind}`, {
-            seedVersion: state.seedVersion,
-            currentVersion: state.currentVersion,
-          })}
-        />
-      )}
-      {state.kind === "generation" && (
-        <RunMessage
-          title={t("run.errors.generationTitle")}
-          body={t("run.errors.generation")}
-        />
-      )}
+      <div className="mx-auto max-w-form">
+        {state.kind === "missing" && (
+          <RunMessage
+            icon="embers"
+            title={t("run.errors.missingTitle")}
+            body={t("run.errors.missing")}
+          />
+        )}
+        {state.kind === "invalid" && (
+          <RunMessage
+            icon="cracked"
+            tone="bad"
+            title={t("run.errors.invalidTitle")}
+            body={t("run.errors.invalid", { example: SEED_EXAMPLE })}
+          />
+        )}
+        {(state.kind === "outdated" || state.kind === "newer") && (
+          <RunMessage
+            icon="hourglass"
+            tone="warn"
+            title={t(`run.errors.${state.kind}Title`)}
+            body={t(`run.errors.${state.kind}`, {
+              seedVersion: state.seedVersion,
+              currentVersion: state.currentVersion,
+            })}
+          />
+        )}
+        {state.kind === "generation" && (
+          <RunMessage
+            icon="bonfire"
+            title={t("run.errors.generationTitle")}
+            body={t("run.errors.generation")}
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -105,7 +116,7 @@ export function RunView() {
 export function RunLoading() {
   const { t } = useTranslation();
   return (
-    <p className="mx-auto min-h-dvh max-w-3xl px-5 pt-16 font-sans text-lg text-parchment sm:px-8">
+    <p className="page min-h-dvh pt-12 font-sans text-lg text-parchment">
       {t("run.loading")}
     </p>
   );

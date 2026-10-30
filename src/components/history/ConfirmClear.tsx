@@ -1,54 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "@/i18n/useTranslation";
 import { Button } from "@/components/ui/Button";
 
-/** A destructive action that asks inline before running. */
+/** The inline question shown before a destructive action runs. */
 export function ConfirmClear({
-  label,
   question,
   onConfirm,
+  onCancel,
 }: {
-  label: string;
   question: string;
   onConfirm: () => void;
+  onCancel: () => void;
 }) {
   const { t } = useTranslation();
-  const [asking, setAsking] = useState(false);
   const confirmRef = useRef<HTMLButtonElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const wasAsking = useRef(false);
 
-  // Move focus into the question, and back to the trigger when cancelled.
-  useEffect(() => {
-    if (asking) confirmRef.current?.focus();
-    else if (wasAsking.current) triggerRef.current?.focus();
-    wasAsking.current = asking;
-  }, [asking]);
-
-  if (!asking) {
-    return (
-      <Button ref={triggerRef} variant="quiet" onClick={() => setAsking(true)}>
-        {label}
-      </Button>
-    );
-  }
+  // Move focus into the question so keyboard users land on the choice.
+  useEffect(() => confirmRef.current?.focus(), []);
 
   return (
-    <div role="group" aria-label={label} className="flex flex-wrap items-center gap-3">
-      <p className="font-sans text-base text-bone">{question}</p>
-      <Button
-        ref={confirmRef}
-        onClick={() => {
-          onConfirm();
-          setAsking(false);
-        }}
-        className="border-blood text-bone hover:border-blood hover:bg-blood hover:text-bone"
-      >
+    <div role="alert" className="confirm">
+      <p>{question}</p>
+      <Button ref={confirmRef} variant="danger" className="btn-sm" onClick={onConfirm}>
         {t("history.confirm")}
       </Button>
-      <Button variant="quiet" onClick={() => setAsking(false)}>
+      <Button className="btn-sm" onClick={onCancel}>
         {t("history.cancel")}
       </Button>
     </div>

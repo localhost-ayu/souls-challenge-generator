@@ -95,8 +95,8 @@ describe("RunCard", () => {
       </I18nProvider>,
     );
 
-    const order = screen.getByText("Weapon order").nextSibling as HTMLElement;
-    const items = [...order.querySelectorAll("li")].map((li) => li.firstChild?.textContent);
+    const order = screen.getByRole("heading", { name: "Weapon order" }).nextSibling as HTMLElement;
+    const items = [...order.querySelectorAll("li .w")].map((name) => name.textContent);
     expect(items).toEqual(["Zweihander", "Club", "Rapier"]);
   });
 

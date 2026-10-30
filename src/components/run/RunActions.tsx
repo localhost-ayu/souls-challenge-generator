@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createSeed, parseSeed, type ChallengeRun } from "@/engine";
+import { Icon } from "@/components/icons/Icon";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import { useTranslation } from "@/i18n/useTranslation";
 import type { MessageKey } from "@/i18n/translate";
 import { copyText } from "@/lib/clipboard";
@@ -11,7 +13,6 @@ import { runPath, runUrl } from "@/lib/run-link";
 import { favoritesItem } from "@/lib/storage/items";
 import { isFavorite, toggleFavorite } from "@/lib/storage/saved-runs";
 import { setItemValue, useStorageItem } from "@/lib/storage/store";
-import { Button, ButtonLink } from "@/components/ui/Button";
 
 export function RunActions({ run }: { run: ChallengeRun }) {
   const { t } = useTranslation();
@@ -49,61 +50,36 @@ export function RunActions({ run }: { run: ChallengeRun }) {
   }
 
   return (
-    <div className="mt-6">
-      <div className="flex flex-wrap gap-3">
-        <Button variant="primary" onClick={generateAnother}>
-          {t("run.another")}
+    <aside className="run-actions" aria-label={t("run.actions")}>
+      <div className="group pair">
+        <Button className="btn-block" onClick={() => copy(run.seed, "run.seedCopied")}>
+          <Icon name="copy" />
+          {t("run.copySeed")}
         </Button>
-        <Button onClick={() => copy(runUrl(run.seed), "run.linkCopied")}>
+        <Button className="btn-block" onClick={() => copy(runUrl(run.seed), "run.linkCopied")}>
+          <Icon name="link" />
           {t("run.copyLink")}
         </Button>
-        <Button onClick={share}>{t("run.share")}</Button>
-        <Button aria-pressed={favorite} onClick={toggle}>
-          <StarIcon filled={favorite} />
+        <Button className="btn-block" onClick={share}>
+          <Icon name="share" />
+          {t("run.share")}
+        </Button>
+        <Button className="btn-block" aria-pressed={favorite} onClick={toggle}>
+          <Icon name="star" filled={favorite} />
           {t("run.favorite")}
         </Button>
-        <ButtonLink href="/play" variant="quiet" className="ml-auto">
-          {t("run.newSettings")}
-        </ButtonLink>
       </div>
-      <p aria-live="polite" className="mt-3 min-h-7 font-sans text-base text-parchment">
+      <p className="status" aria-live="polite">
         {status && t(status)}
       </p>
-    </div>
-  );
-}
-
-export function CopySeedButton({ seed }: { seed: string }) {
-  const { t } = useTranslation();
-  const [status, setStatus] = useState<MessageKey | null>(null);
-
-  return (
-    <div className="flex flex-col items-end gap-1">
-      <Button
-        onClick={async () =>
-          setStatus((await copyText(seed)) ? "run.seedCopied" : "run.copyFailed")
-        }
-      >
-        {t("run.copySeed")}
+      <Button variant="primary" className="btn-block" onClick={generateAnother}>
+        <Icon name="reroll" />
+        {t("run.another")}
       </Button>
-      <span aria-live="polite" className="font-sans text-sm text-parchment">
-        {status && t(status)}
-      </span>
-    </div>
-  );
-}
-
-function StarIcon({ filled }: { filled: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={`size-5 ${filled ? "fill-ember text-ember" : "fill-none"}`}
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-    >
-      <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z" />
-    </svg>
+      <ButtonLink href="/play" variant="ghost" className="btn-block">
+        <Icon name="settings" />
+        {t("run.newSettings")}
+      </ButtonLink>
+    </aside>
   );
 }
