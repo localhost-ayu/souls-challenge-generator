@@ -58,6 +58,18 @@ export const regionSchema = z.enum([
   "oolacile-township",
 ]);
 
+/** Every way a weapon can be obtained in one playthrough. */
+export const weaponSourceSchema = z.enum([
+  "found",
+  "merchant",
+  "enemy-drop",
+  // Ascended from a boss soul (or a golem core) at a blacksmith.
+  "boss-soul",
+  "tail-cut",
+  // Given, dropped or traded by a named NPC, or tied to a questline.
+  "npc",
+]);
+
 export const startingClassSchema = z.strictObject({
   id: idSchema,
   name: z.string().min(1),
@@ -89,6 +101,10 @@ export const weaponSchema = z.strictObject({
     int: requirementSchema,
     fai: requirementSchema,
   }),
+  sources: z.array(weaponSourceSchema).min(1),
+  // Highest reinforcement level: 15 on the regular path, 5 for unique, dragon
+  // and boss weapons, 0 for what cannot be reinforced (catalysts, talismans).
+  maxUpgrade: z.union([z.literal(0), z.literal(5), z.literal(15)]),
   // Approximate area where it is first obtainable; omitted for starting
   // items and drops spread across many areas.
   region: regionSchema.optional(),
@@ -179,4 +195,5 @@ export type WeaponCategory = z.infer<typeof weaponCategorySchema>;
 export type ArmorSet = z.infer<typeof armorSetSchema>;
 export type Boss = z.infer<typeof bossSchema>;
 export type Region = z.infer<typeof regionSchema>;
+export type WeaponSource = z.infer<typeof weaponSourceSchema>;
 export type DsrData = z.infer<typeof dsrDataSchema>;
