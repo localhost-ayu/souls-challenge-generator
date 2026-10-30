@@ -49,7 +49,8 @@ export function PlayForm() {
   const { t } = useTranslation();
   const router = useRouter();
   const preferences = useStorageItem(preferencesItem) ?? DEFAULT_PREFERENCES;
-  const noCategory = !Object.values(preferences.categories).some(Boolean);
+  const activeCategories = Object.values(preferences.categories).filter(Boolean).length;
+  const noCategory = activeCategories === 0;
 
   // Saved on every change so the form comes back as the player left it.
   function update(patch: Partial<Preferences>) {
@@ -157,68 +158,88 @@ export function PlayForm() {
         </label>
       </Fieldset>
 
-      <Fieldset legend={t("play.houseRulesLegend")} hint={t("play.houseRulesHint")}>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {HOUSE_RULES.map((rule) => (
-            <label key={rule} className="flex cursor-pointer items-start gap-3">
-              <input
-                type="checkbox"
-                checked={preferences.houseRules[rule]}
-                onChange={(event) => {
-                  const houseRules = { ...preferences.houseRules, [rule]: event.target.checked };
-                  // Forbidding what the objective needs falls back to the default one.
-                  const objective = isObjectiveAllowed(preferences.objective, houseRules)
-                    ? preferences.objective
-                    : "main-bosses";
-                  update({ houseRules, objective });
-                }}
-                className="mt-1.5 size-5 accent-ember"
-              />
-              <span>
-                <span className="block font-sans text-lg text-bone">
-                  {t(`houseRules.${rule}.name`)}
-                </span>
-                <span className="block font-sans text-base text-stone-400">
-                  {t(`houseRules.${rule}.description`)}
-                </span>
-              </span>
-            </label>
-          ))}
-        </div>
-      </Fieldset>
+      <details className="group mt-12 rounded-sm border border-stone-800 bg-stone-900/40">
+        <summary className="flex cursor-pointer list-none items-baseline justify-between gap-4 p-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-glow [&::-webkit-details-marker]:hidden">
+          <span className="font-display text-heading text-bone">{t("play.customizeTitle")}</span>
+          <span className="font-sans text-base text-stone-400">
+            {t("play.customizeSummary", {
+              count: activeCategories,
+              total: CONSTRAINT_CATEGORIES.length,
+            })}
+            <span
+              aria-hidden="true"
+              className="ml-2 inline-block transition-transform group-open:rotate-90"
+            >
+              ›
+            </span>
+          </span>
+        </summary>
+        <div className="px-5 pb-8 [&>fieldset:first-child]:mt-2">
+          <Fieldset legend={t("play.houseRulesLegend")} hint={t("play.houseRulesHint")}>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {HOUSE_RULES.map((rule) => (
+                <label key={rule} className="flex cursor-pointer items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={preferences.houseRules[rule]}
+                    onChange={(event) => {
+                      const houseRules = { ...preferences.houseRules, [rule]: event.target.checked };
+                      // Forbidding what the objective needs falls back to the default one.
+                      const objective = isObjectiveAllowed(preferences.objective, houseRules)
+                        ? preferences.objective
+                        : "main-bosses";
+                      update({ houseRules, objective });
+                    }}
+                    className="mt-1.5 size-5 accent-ember"
+                  />
+                  <span>
+                    <span className="block font-sans text-lg text-bone">
+                      {t(`houseRules.${rule}.name`)}
+                    </span>
+                    <span className="block font-sans text-base text-stone-400">
+                      {t(`houseRules.${rule}.description`)}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </Fieldset>
 
-      <Fieldset legend={t("play.categoriesLegend")} hint={t("play.categoriesHint")}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {CONSTRAINT_CATEGORIES.map((category) => (
-            <label key={category} className="flex cursor-pointer items-start gap-3">
-              <input
-                type="checkbox"
-                checked={preferences.categories[category]}
-                onChange={(event) =>
-                  update({
-                    categories: { ...preferences.categories, [category]: event.target.checked },
-                  })
-                }
-                aria-describedby={noCategory ? "categories-error" : undefined}
-                className="mt-1.5 size-5 accent-ember"
-              />
-              <span>
-                <span className="block font-sans text-lg text-bone">
-                  {t(`categories.${category}.name`)}
-                </span>
-                <span className="block font-sans text-base text-stone-400">
-                  {t(`categories.${category}.description`)}
-                </span>
-              </span>
-            </label>
-          ))}
+          <Fieldset legend={t("play.categoriesLegend")} hint={t("play.categoriesHint")}>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {CONSTRAINT_CATEGORIES.map((category) => (
+                <label key={category} className="flex cursor-pointer items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={preferences.categories[category]}
+                    onChange={(event) =>
+                      update({
+                        categories: { ...preferences.categories, [category]: event.target.checked },
+                      })
+                    }
+                    aria-describedby={noCategory ? "categories-error" : undefined}
+                    className="mt-1.5 size-5 accent-ember"
+                  />
+                  <span>
+                    <span className="block font-sans text-lg text-bone">
+                      {t(`categories.${category}.name`)}
+                    </span>
+                    <span className="block font-sans text-base text-stone-400">
+                      {t(`categories.${category}.description`)}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </Fieldset>
         </div>
-        {noCategory && (
-          <p id="categories-error" role="alert" className="mt-4 font-sans text-base text-ember-glow">
-            {t("play.categoriesEmpty")}
-          </p>
-        )}
-      </Fieldset>
+      </details>
+
+      {noCategory && (
+        <p id="categories-error" role="alert" className="mt-6 font-sans text-base text-ember-glow">
+          {t("play.categoriesEmpty")}
+        </p>
+      )}
 
       <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-4">
         <Button type="submit" variant="primary" disabled={noCategory}>
