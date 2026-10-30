@@ -3,7 +3,7 @@
 # Souls Challenge Generator
 
 [![CI](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml)
-[![Licença: MIT](https://img.shields.io/github/license/localhost-ayu/souls-challenge-generator)](LICENSE)
+[![Licença: MIT](https://img.shields.io/badge/license-MIT-d4873a)](LICENSE)
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fsouls.grazzioli.dev&label=site&logo=vercel)](https://souls.grazzioli.dev)
 
 Challenge runs de Dark Souls Remastered que fazem sentido: uma classe inicial, um conjunto de
@@ -12,7 +12,7 @@ Feito de fã para fã.
 
 **Site:** https://souls.grazzioli.dev
 
-![A página inicial: o título do site, o botão para começar um desafio e uma carta de exemplo para um Wanderer com Soul Level 1, Sem rolar, Sem Estus e Sem magia.](docs/screenshot.jpg)
+![A página inicial: o título do site sobre um fundo escuro, o botão "Começar desafio", uma espada fincada num brilho de brasa e os três passos de como funciona.](docs/screenshots/home.jpg)
 
 ## Funcionalidades
 
@@ -27,6 +27,12 @@ Feito de fã para fã.
 - **Regras da casa em toda carta.** Buffs, invocações e glitches aparecem como permitidos ou
   proibidos, para nenhuma run deixar isso em aberto.
 - **Histórico e favoritos** guardados no seu navegador. Sem conta e sem backend.
+
+## Capturas de tela
+
+| Uma run | O gerador |
+| --- | --- |
+| ![A carta de uma run para um Bandit na dificuldade Morto-vivo Escolhido: soul level máximo 30, quatro regras com os ícones de categoria, o objetivo de todos os chefes e as regras da casa com invocações e glitches proibidos, acima da seed.](docs/screenshots/run.jpg) | ![O formulário do gerador: cartões de jogo com os próximos jogos marcados como em breve, quatro cartões de dificuldade, três objetivos com o de mínimo de chefes travado até permitir glitches, e os botões para gerar uma run ou tentar a sorte.](docs/screenshots/play.jpg) |
 
 ## Como funciona
 

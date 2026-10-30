@@ -3,7 +3,7 @@
 # Souls Challenge Generator
 
 [![CI](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/localhost-ayu/souls-challenge-generator/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/github/license/localhost-ayu/souls-challenge-generator)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-d4873a)](LICENSE)
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fsouls.grazzioli.dev&label=site&logo=vercel)](https://souls.grazzioli.dev)
 
 Challenge runs for Dark Souls Remastered that hold together: a starting class, a set of rules and
@@ -12,7 +12,7 @@ Made by a fan, for fans.
 
 **Live site:** https://souls.grazzioli.dev
 
-![The home page: the site title, a call to start a challenge, and an example run card for a Wanderer with Soul Level 1, No rolling, No Estus and No magic.](docs/screenshot.jpg)
+![The home page: the site title over a dark backdrop, a "Start a challenge" button, a planted sword in an ember glow and the three steps of how it works.](docs/screenshots/home.jpg)
 
 ## Features
 
@@ -26,6 +26,12 @@ Made by a fan, for fans.
   a run never leaves them to guess.
 - **English and Portuguese**, switched instantly without reloading.
 - **History and favorites**, kept in your browser. No account, no backend.
+
+## Screenshots
+
+| A run card | The generator |
+| --- | --- |
+| ![A run card for a Bandit at Chosen Undead difficulty: max soul level 30, four rules with their category icons, the every-boss objective and house rules with summons and glitches forbidden, above the seed.](docs/screenshots/run.jpg) | ![The generator form: game cards with upcoming games marked coming soon, four difficulty cards, three objectives with the fewest-bosses one locked until glitches are allowed, and the buttons to generate a run or feel lucky.](docs/screenshots/play.jpg) |
 
 ## How it works
 
