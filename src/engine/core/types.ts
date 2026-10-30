@@ -11,6 +11,7 @@ export const CONSTRAINT_CATEGORIES = [
   "combat",
   "resource",
   "style",
+  "absurd",
 ] as const;
 export type ConstraintCategory = (typeof CONSTRAINT_CATEGORIES)[number];
 
@@ -43,9 +44,11 @@ export interface ObjectiveDefinition {
 /**
  * Values a constraint draws for one run, e.g. `{ weapon: "claymore" }`.
  * The key tells the UI how to display the value (an id to look up in the
- * catalog, a translated category, or a plain number).
+ * catalog, a translated category, a plain number, or an ordered list of ids).
  */
-export type ConstraintParams = Readonly<Record<string, string | number>>;
+export type ConstraintParams = Readonly<
+  Record<string, string | number | readonly string[]>
+>;
 
 export interface AppliedConstraint {
   id: string;

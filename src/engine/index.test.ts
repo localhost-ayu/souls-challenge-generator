@@ -23,6 +23,7 @@ const preferences: Preferences = {
     combat: true,
     resource: true,
     style: true,
+    absurd: true,
   },
 };
 
@@ -31,7 +32,7 @@ describe("engine public api", () => {
     const seed = createSeed({ gameId: "dsr", preferences, key: "praisethesun" });
     const run = generateRun(seed);
 
-    expect(seed).toMatch(/^dsr-5-/);
+    expect(seed).toMatch(/^dsr-6-/);
     expect(run.seed).toBe(seed);
     expect(run.gameId).toBe("dsr");
     expect(parseSeed(seed).preferences).toEqual(preferences);
@@ -41,6 +42,31 @@ describe("engine public api", () => {
     const seed = createSeed({ gameId: "dsr", preferences, key: "abc" });
 
     expect(generateRun(` ${seed.toUpperCase()} `)).toEqual(generateRun(seed));
+  });
+
+  it("only builds fewest-bosses runs when glitches are allowed", () => {
+    const seedWith = (glitches: boolean) =>
+      createSeed({
+        gameId: "dsr",
+        key: "abc",
+        preferences: {
+          ...preferences,
+          objective: "min-bosses",
+          houseRules: { ...preferences.houseRules, glitches },
+        },
+      });
+
+    expect(generateRun(seedWith(true)).objective).toBe("min-bosses");
+    expect(() => generateRun(seedWith(false))).toThrow(
+      expect.objectContaining({ reason: "objective-needs-house-rule" }),
+    );
+  });
+
+  it("never draws an objective that lucky runs cannot meet", () => {
+    for (let i = 0; i < 200; i++) {
+      const { objective } = parseSeed(createLuckySeed({ gameId: "dsr", key: `l${i}` })).preferences;
+      expect(objective).not.toBe("min-bosses");
+    }
   });
 
   it("surfaces typed errors", () => {
@@ -59,6 +85,7 @@ describe("engine public api", () => {
           combat: false,
           resource: false,
           style: false,
+          absurd: false,
         },
       },
     });

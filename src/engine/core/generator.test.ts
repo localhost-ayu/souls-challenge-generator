@@ -24,6 +24,7 @@ const everything: Preferences["categories"] = {
   combat: true,
   resource: true,
   style: true,
+  absurd: true,
 };
 
 function makeModule(constraints: Definition[]): GameModule<null, Pools> {
@@ -165,6 +166,7 @@ describe("generateFromModule", () => {
       combat: false,
       resource: false,
       style: false,
+      absurd: false,
     };
     const reason = generationErrorReason(() =>
       generateFromModule(makeModule(basic), makeParts({ categories })),

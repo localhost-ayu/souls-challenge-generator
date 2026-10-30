@@ -14,6 +14,8 @@ import {
   ATTRIBUTES,
   dsrConstraints,
   LEVEL_CAPS,
+  ONE_SHOT_SCOPES,
+  ROULETTE_LENGTH,
 } from "./constraints";
 import { dsrData } from "./dataset";
 import type { StartingClass, Weapon } from "./schema";
@@ -33,6 +35,8 @@ const PARAMETERIZED = [
   "level-cap",
   "single-stat",
   "spell-school-only",
+  "weapon-roulette",
+  "one-shot",
 ];
 const SOURCE_RULES: Record<string, string> = {
   "boss-weapons-only": "boss-soul",
@@ -172,6 +176,21 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   }
 
   let ruleWeapons = allowed;
+  const roulette = paramsOf("weapon-roulette")?.weapons;
+  expect(roulette !== undefined).toBe(has("weapon-roulette"));
+  if (roulette !== undefined) {
+    expect(Array.isArray(roulette)).toBe(true);
+    const ids = roulette as readonly string[];
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.length).toBeGreaterThanOrEqual(2);
+    expect(ids.length).toBeLessThanOrEqual(ROULETTE_LENGTH);
+    ruleWeapons = ids.map((id) => allowed.find((w) => w.id === id)!);
+    expect(ruleWeapons.every((w) => w !== undefined && !w.missable)).toBe(true);
+  }
+
+  const scope = paramsOf("one-shot")?.scope;
+  expect(scope !== undefined).toBe(has("one-shot"));
+  if (scope !== undefined) expect(ONE_SHOT_SCOPES).toContain(scope);
   if (weaponId !== undefined) {
     const weapon = allowed.find((w) => w.id === weaponId);
     expect(weapon, String(weaponId)).toBeDefined();
@@ -232,6 +251,7 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
         combat: true,
         resource: true,
         style: true,
+        absurd: true,
       },
     };
 
@@ -252,20 +272,23 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
 describe("generated runs", () => {
   it("are locked for a known seed", () => {
     // Regression guard: if this changes, the ruleset version must be bumped.
-    expect(generateRun("dsr-5-68u-praisethesun")).toMatchInlineSnapshot(`
+    expect(generateRun("dsr-6-chi-praisethesun")).toMatchInlineSnapshot(`
       {
         "constraints": [
           {
-            "id": "no-sprinting",
+            "id": "level-cap",
+            "params": {
+              "maxLevel": 30,
+            },
           },
           {
-            "id": "no-estus",
+            "id": "no-kindling",
           },
           {
-            "id": "tail-weapons-only",
+            "id": "permadeath",
           },
           {
-            "id": "no-buying",
+            "id": "boss-weapons-only",
           },
         ],
         "difficulty": "chosen",
@@ -277,8 +300,8 @@ describe("generated runs", () => {
         },
         "includeDlc": true,
         "objective": "all-bosses",
-        "rulesetVersion": 5,
-        "seed": "dsr-5-68u-praisethesun",
+        "rulesetVersion": 6,
+        "seed": "dsr-6-chi-praisethesun",
         "startingClass": "bandit",
       }
     `);

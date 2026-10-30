@@ -13,8 +13,9 @@ export const localeItem = defineStorageItem({
 /** The last preferences used in the generator form. */
 export const preferencesItem = defineStorageItem({
   key: "preferences",
-  // v2 added house rules and the combat category.
-  version: 2,
+  // v2 added house rules and the combat category; v3 the absurd category
+  // and the fewest-bosses objective.
+  version: 3,
   schema: preferencesSchema.nullable(),
   fallback: null,
 });

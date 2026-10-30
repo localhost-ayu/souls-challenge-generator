@@ -77,7 +77,8 @@
     "seedLabel": "Seed",
     "seedSubmit": "Abrir run",
     "houseRulesLegend": "Regras da casa",
-    "houseRulesHint": "Regras de base de toda run, mostradas na carta para ninguém precisar adivinhar."
+    "houseRulesHint": "Regras de base de toda run, mostradas na carta para ninguém precisar adivinhar.",
+    "needsGlitches": "Permita glitches para escolher este objetivo."
   },
   "difficulties": {
     "hollow": {
@@ -105,6 +106,10 @@
     "all-bosses": {
       "name": "Todos os bosses",
       "description": "Derrote todos os {count} bosses."
+    },
+    "min-bosses": {
+      "name": "Mínimo de chefes",
+      "description": "Chegue ao final derrotando o menor número de chefes possível. Skips e glitches valem."
     }
   },
   "categories": {
@@ -131,6 +136,10 @@
     "style": {
       "name": "Estilo",
       "description": "Estilo de jogo e como você começa."
+    },
+    "absurd": {
+      "name": "Absurdas",
+      "description": "Runs ridículas para veteranos. Desligado por padrão."
     }
   },
   "constraints": {
@@ -265,6 +274,38 @@
     "spell-school-only": {
       "name": "Só magias",
       "description": "Cause dano apenas com magias da escola indicada nesta carta. Nada de ataques com armas nem magias de outras escolas."
+    },
+    "weapon-roulette": {
+      "name": "Roleta de armas",
+      "description": "Use a primeira arma da lista e troque para a próxima a cada chefe derrotado. Depois da última, recomece."
+    },
+    "consumables-only": {
+      "name": "Só consumíveis",
+      "description": "Cause dano apenas com itens arremessáveis e de uso: firebombs, facas, dung pies e afins."
+    },
+    "firebombs-only": {
+      "name": "Só firebombs",
+      "description": "Firebombs e Black Firebombs são sua única fonte de dano."
+    },
+    "throwing-knives-only": {
+      "name": "Só facas de arremesso",
+      "description": "Facas de arremesso de qualquer tipo são sua única fonte de dano."
+    },
+    "poison-only": {
+      "name": "Só veneno",
+      "description": "Só veneno e tóxico podem ferir os inimigos. Qualquer dano direto tem que ser sem querer."
+    },
+    "thorns-only": {
+      "name": "Armadura de Espinhos",
+      "description": "Seu único dano vem de rolar contra inimigos usando a Armor of Thorns."
+    },
+    "shield-only": {
+      "name": "Só escudo",
+      "description": "Escudos são suas únicas armas. Abra caminho no empurrão."
+    },
+    "one-shot": {
+      "name": "Um golpe só",
+      "description": "Cada abate no alcance indicado nesta carta exige um único comando de ataque, com buffs e ataques em queda valendo. Se sobreviver, morra ou saia e tente de novo."
     }
   },
   "weaponCategories": {
@@ -331,6 +372,10 @@
     "miracle": "Milagres",
     "pyromancy": "Piromancias"
   },
+  "oneShotScopes": {
+    "bosses": "Chefes",
+    "everything": "Todos os inimigos"
+  },
   "run": {
     "title": "Sua challenge run",
     "loading": "Gerando sua run…",
@@ -375,7 +420,9 @@
       "upgradeCap": "Limite de reforço",
       "maxLevel": "Soul level máximo",
       "stat": "Único atributo",
-      "school": "Escola de magia"
+      "school": "Escola de magia",
+      "weapons": "Ordem das armas",
+      "scope": "Vale para"
     }
   },
   "history": {

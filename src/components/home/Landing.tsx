@@ -21,6 +21,7 @@ const EXAMPLE_PREFERENCES: Preferences = {
     combat: true,
     resource: true,
     style: true,
+    absurd: false,
   },
 };
 const exampleRun = generateRun(

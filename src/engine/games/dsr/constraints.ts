@@ -136,6 +136,25 @@ export function castingRequirements(tool: Weapon, spell: Spell): Requirements {
 
 const LEVEL_RULES = ["level-cap", "single-stat", "no-vitality"];
 
+/** Weapons in a roulette run, switched after each boss. */
+export const ROULETTE_LENGTH = 5;
+
+export const ONE_SHOT_SCOPES = ["bosses", "everything"] as const;
+
+/**
+ * Rules where damage comes from items bought from merchants, so they cannot
+ * coexist with a ban on shopping, and where weapon upgrades mean nothing.
+ */
+function itemDamageRule(id: string): ConstraintDefinition<DsrPools> {
+  return {
+    id,
+    category: "absurd",
+    difficulty: 3,
+    exclusiveGroup: "weapon-rule",
+    conflictsWith: ["no-buying", "no-spending-souls", "upgrade-cap"],
+  };
+}
+
 export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
   {
     id: "sl1",
@@ -275,6 +294,35 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
     conflictsWith: ["no-magic", "no-buying", "no-spending-souls"],
   },
   {
+    // Switch to the next listed weapon after each boss.
+    id: "weapon-roulette",
+    category: "equipment",
+    difficulty: 2,
+    exclusiveGroup: "weapon-rule",
+  },
+  itemDamageRule("consumables-only"),
+  itemDamageRule("firebombs-only"),
+  itemDamageRule("throwing-knives-only"),
+  itemDamageRule("poison-only"),
+  {
+    // The Armor of Thorns hurts what it rolls into.
+    id: "thorns-only",
+    category: "absurd",
+    difficulty: 3,
+    exclusiveGroup: "weapon-rule",
+    conflictsWith: ["no-rolling", "no-armor", "cosplay", "upgrade-cap"],
+  },
+  {
+    // Every starting class carries a shield it can use.
+    id: "shield-only",
+    category: "absurd",
+    difficulty: 3,
+    exclusiveGroup: "weapon-rule",
+    conflictsWith: ["no-shield"],
+  },
+  // Every kill (of the drawn scope) must come from a single attack input.
+  { id: "one-shot", category: "absurd", difficulty: 3 },
+  {
     id: "cosplay",
     category: "style",
     difficulty: 1,
@@ -369,6 +417,15 @@ export function resolveDsrLoadout(
     if (has("upgrade-cap")) candidates = candidates.filter((w) => w.maxUpgrade > 0);
 
     let ruleWeapons = usable;
+    if (has("weapon-roulette")) {
+      if (candidates.length < 2) continue;
+      const order = shuffle(ctx.rng, candidates).slice(0, ROULETTE_LENGTH);
+      params["weapon-roulette"] = { weapons: order.map((w) => w.id) };
+      ruleWeapons = order;
+    }
+    if (has("one-shot")) {
+      params["one-shot"] = { scope: pick(ctx.rng, ONE_SHOT_SCOPES) };
+    }
     if (has("specific-weapon")) {
       if (candidates.length === 0) continue;
       const weapon = pick(ctx.rng, candidates);

@@ -77,7 +77,8 @@
     "seedLabel": "Seed",
     "seedSubmit": "Open run",
     "houseRulesLegend": "House rules",
-    "houseRulesHint": "Baseline rules for every run, shown on the card so nobody has to guess."
+    "houseRulesHint": "Baseline rules for every run, shown on the card so nobody has to guess.",
+    "needsGlitches": "Allow glitches to pick this objective."
   },
   "difficulties": {
     "hollow": {
@@ -105,6 +106,10 @@
     "all-bosses": {
       "name": "Every boss",
       "description": "Defeat all {count} bosses."
+    },
+    "min-bosses": {
+      "name": "Fewest bosses",
+      "description": "Reach the ending while defeating as few bosses as you can. Skips and glitches are fair game."
     }
   },
   "categories": {
@@ -131,6 +136,10 @@
     "style": {
       "name": "Style",
       "description": "Playstyle and how you start."
+    },
+    "absurd": {
+      "name": "Absurd",
+      "description": "Ridiculous runs for veterans. Off by default."
     }
   },
   "constraints": {
@@ -265,6 +274,38 @@
     "spell-school-only": {
       "name": "Spells only",
       "description": "Deal damage only with spells of the school shown on this card. No weapon attacks and no spells from other schools."
+    },
+    "weapon-roulette": {
+      "name": "Weapon roulette",
+      "description": "Use the first weapon on the list, and switch to the next one after each boss you defeat. After the last, start over."
+    },
+    "consumables-only": {
+      "name": "Consumables only",
+      "description": "Deal damage only with thrown and used items: firebombs, knives, dung pies and the like."
+    },
+    "firebombs-only": {
+      "name": "Firebombs only",
+      "description": "Firebombs and Black Firebombs are your only source of damage."
+    },
+    "throwing-knives-only": {
+      "name": "Throwing knives only",
+      "description": "Throwing knives of any kind are your only source of damage."
+    },
+    "poison-only": {
+      "name": "Poison only",
+      "description": "Only poison and toxic may hurt your enemies. Any direct damage you deal must be by accident."
+    },
+    "thorns-only": {
+      "name": "Armor of Thorns",
+      "description": "Your only damage comes from rolling into enemies while wearing the Armor of Thorns."
+    },
+    "shield-only": {
+      "name": "Shield only",
+      "description": "Shields are your only weapons. Bash your way through."
+    },
+    "one-shot": {
+      "name": "One shot",
+      "description": "Every kill in the scope shown on this card takes a single attack input, buffs and plunges included. If it survives, die or quit and try again."
     }
   },
   "weaponCategories": {
@@ -331,6 +372,10 @@
     "miracle": "Miracles",
     "pyromancy": "Pyromancies"
   },
+  "oneShotScopes": {
+    "bosses": "Bosses",
+    "everything": "Every enemy"
+  },
   "run": {
     "title": "Your challenge run",
     "loading": "Generating your run…",
@@ -375,7 +420,9 @@
       "upgradeCap": "Upgrade limit",
       "maxLevel": "Max soul level",
       "stat": "Only attribute",
-      "school": "Spell school"
+      "school": "Spell school",
+      "weapons": "Weapon order",
+      "scope": "Applies to"
     }
   },
   "history": {

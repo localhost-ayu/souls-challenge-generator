@@ -13,7 +13,7 @@ import { CONSTRAINT_CATEGORIES, GAME_IDS, type GameId } from "./types";
  * e.g. dsr-2-9zk-0k3j9x2
  *
  * - preferences: a bit field written as fixed-width base36
- *     bits 0-1 difficulty index, bit 2 objective, bit 3 include dlc,
+ *     bits 0-1 difficulty index, bits 2-3 objective index, bit 4 include dlc,
  *     then one bit per house rule (HOUSE_RULES order, set = allowed),
  *     then one bit per allowed constraint category (CONSTRAINT_CATEGORIES order)
  * - key: 1-16 base36 chars; the source of randomness. Any word works, so
@@ -23,7 +23,7 @@ import { CONSTRAINT_CATEGORIES, GAME_IDS, type GameId } from "./types";
  * rulesetVersion, which already invalidates older seeds.
  */
 
-const HOUSE_RULES_SHIFT = 4;
+const HOUSE_RULES_SHIFT = 5;
 const CATEGORIES_SHIFT = HOUSE_RULES_SHIFT + HOUSE_RULES.length;
 const PREFERENCE_BITS = CATEGORIES_SHIFT + CONSTRAINT_CATEGORIES.length;
 /** Smallest number of base36 digits that holds every preference bit. */
@@ -125,7 +125,7 @@ export function decodeSeed(
 function encodePreferences(preferences: Preferences): string {
   let bits = DIFFICULTIES.indexOf(preferences.difficulty);
   bits |= OBJECTIVES.indexOf(preferences.objective) << 2;
-  bits |= (preferences.includeDlc ? 1 : 0) << 3;
+  bits |= (preferences.includeDlc ? 1 : 0) << 4;
   HOUSE_RULES.forEach((rule, index) => {
     if (preferences.houseRules[rule]) bits |= 1 << (HOUSE_RULES_SHIFT + index);
   });
@@ -138,11 +138,13 @@ function encodePreferences(preferences: Preferences): string {
 function decodePreferences(encoded: string): Preferences | undefined {
   const bits = parseInt(encoded, 36);
   if (bits >= 1 << PREFERENCE_BITS) return undefined;
+  const objective = OBJECTIVES[(bits >> 2) & 0b11];
+  if (objective === undefined) return undefined;
 
   return {
     difficulty: DIFFICULTIES[bits & 0b11]!,
-    objective: OBJECTIVES[(bits >> 2) & 1]!,
-    includeDlc: ((bits >> 3) & 1) === 1,
+    objective,
+    includeDlc: ((bits >> 4) & 1) === 1,
     houseRules: Object.fromEntries(
       HOUSE_RULES.map((rule, index) => [
         rule,

@@ -43,7 +43,7 @@ describe("encodeSeed", () => {
   it("produces a short, url-safe seed", () => {
     const seed = encodeSeed(parts);
 
-    expect(seed).toBe("dsr-1-68u-0k3j9x2");
+    expect(seed).toBe("dsr-1-p4m-0k3j9x2");
     expect(encodeURIComponent(seed)).toBe(seed);
   });
 
@@ -103,26 +103,28 @@ describe("decodeSeed", () => {
   });
 
   it("accepts custom word keys", () => {
-    expect(decode("dsr-1-68u-praisethesun").key).toBe("praisethesun");
+    expect(decode("dsr-1-p4m-praisethesun").key).toBe("praisethesun");
   });
 
   it("ignores surrounding whitespace and letter case", () => {
-    expect(decode("  DSR-1-68U-0K3J9X2\n")).toEqual(parts);
+    expect(decode("  DSR-1-P4M-0K3J9X2\n")).toEqual(parts);
   });
 
   it.each([
     ["empty input", ""],
     ["random text", "hello world"],
-    ["missing key", "dsr-1-68u-"],
+    ["missing key", "dsr-1-p4m-"],
     ["missing segment", "dsr-1-0k3j9x2"],
-    ["extra segment", "dsr-1-68u-0k3j9x2-extra"],
-    ["non-numeric ruleset", "dsr-x-68u-0k3j9x2"],
-    ["zero-padded ruleset", "dsr-01-68u-0k3j9x2"],
+    ["extra segment", "dsr-1-p4m-0k3j9x2-extra"],
+    ["non-numeric ruleset", "dsr-x-p4m-0k3j9x2"],
+    ["zero-padded ruleset", "dsr-01-p4m-0k3j9x2"],
     ["two-char preferences", "dsr-1-e6-0k3j9x2"],
-    ["key too long", `dsr-1-68u-${"a".repeat(17)}`],
-    ["symbols in key", "dsr-1-68u-0k3j_x2"],
-    ["unknown game", "ds9-1-68u-0k3j9x2"],
+    ["key too long", `dsr-1-p4m-${"a".repeat(17)}`],
+    ["symbols in key", "dsr-1-p4m-0k3j_x2"],
+    ["unknown game", "ds9-1-p4m-0k3j9x2"],
     ["preferences out of range", "dsr-1-zzz-0k3j9x2"],
+    // Bits 2-3 set to 3: there is no fourth objective.
+    ["unknown objective", "dsr-1-00c-0k3j9x2"],
   ])("rejects %s", (_, seed) => {
     expect(() => decode(seed)).toThrow(InvalidSeedError);
   });
@@ -130,7 +132,7 @@ describe("decodeSeed", () => {
   it("rejects seeds from another ruleset version with details", () => {
     let error: unknown;
     try {
-      decode("dsr-2-68u-0k3j9x2");
+      decode("dsr-2-p4m-0k3j9x2");
     } catch (caught) {
       error = caught;
     }
