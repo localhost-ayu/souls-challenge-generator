@@ -18,10 +18,11 @@ const preferences: Preferences = {
     combat: true,
     resource: true,
     style: true,
+    absurd: false,
   },
 };
 
-// Locked by the engine snapshot: Bandit with no-sprinting, no-estus, tail-weapons-only, no-buying.
+// Locked by the engine snapshot: Bandit with level-cap, no-kindling, permadeath, boss-weapons-only.
 const run = generateRun(createSeed({ gameId: "dsr", preferences, key: "praisethesun" }));
 
 function renderCard() {
@@ -40,8 +41,8 @@ describe("RunCard", () => {
     renderCard();
 
     expect(screen.getByRole("heading", { name: "Bandit" })).toBeTruthy();
-    expect(screen.getByText("No sprinting")).toBeTruthy();
-    expect(screen.getByText("Never drink from the Estus Flask.")).toBeTruthy();
+    expect(screen.getByText("Permadeath")).toBeTruthy();
+    expect(screen.getByText("Never kindle a bonfire.")).toBeTruthy();
     expect(screen.getByText("Every boss")).toBeTruthy();
     expect(screen.getByText("Defeat all 26 bosses.")).toBeTruthy();
     expect(screen.getByText(run.seed)).toBeTruthy();
@@ -82,7 +83,7 @@ describe("RunCard", () => {
 
     act(() => setLocale("pt-BR"));
 
-    expect(screen.getByText("Sem correr")).toBeTruthy();
+    expect(screen.getByText("Morte permanente")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Regras da casa" })).toBeTruthy();
     expect(screen.getByText("Derrote todos os 26 bosses.")).toBeTruthy();
     expect(screen.getByText("Morto-vivo Escolhido")).toBeTruthy();

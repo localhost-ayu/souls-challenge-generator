@@ -60,6 +60,8 @@ export {
   DEFAULT_PREFERENCES,
   DIFFICULTIES,
   HOUSE_RULES,
+  isObjectiveAllowed,
+  OBJECTIVE_REQUIREMENTS,
   OBJECTIVES,
   preferencesSchema,
   type Difficulty,

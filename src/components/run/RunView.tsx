@@ -17,7 +17,7 @@ import { RunActions, CopySeedButton } from "./RunActions";
 import { RunCard } from "./RunCard";
 import { RunMessage } from "./RunMessage";
 
-export const SEED_EXAMPLE = "dsr-5-68u-praisethesun";
+export const SEED_EXAMPLE = "dsr-6-chi-praisethesun";
 
 type RunState =
   | { kind: "ready"; run: ChallengeRun }

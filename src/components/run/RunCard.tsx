@@ -29,10 +29,16 @@ function bossCount(run: ChallengeRun, catalog: GameCatalog): number {
  */
 function formatParam(
   key: string,
-  value: string | number,
+  value: string | number | readonly string[],
   catalog: GameCatalog,
   t: ReturnType<typeof useTranslation>["t"],
 ): string {
+  if (typeof value === "object") {
+    // The order matters (e.g. a weapon roulette), so it is kept and numbered.
+    return value
+      .map((id, index) => `${index + 1}. ${nameOf(catalog.weapons, id)}`)
+      .join(" · ");
+  }
   const id = String(value);
   switch (key) {
     case "weapon":
@@ -47,6 +53,8 @@ function formatParam(
       return t(`attributes.${id}` as MessageKey);
     case "school":
       return t(`spellSchools.${id}` as MessageKey);
+    case "scope":
+      return t(`oneShotScopes.${id}` as MessageKey);
     case "upgradeCap":
       return `+${id}`;
     default:

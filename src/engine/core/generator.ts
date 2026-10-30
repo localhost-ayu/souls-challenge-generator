@@ -1,5 +1,5 @@
 import { isCompatible } from "./compatibility";
-import type { Difficulty, Preferences } from "./preferences";
+import { isObjectiveAllowed, type Difficulty, type Preferences } from "./preferences";
 import { createRng, hashString, nextInt, weightedPick, type Rng } from "./rng";
 import { encodeSeed, type SeedParts } from "./seed";
 import type {
@@ -39,6 +39,7 @@ export const MAX_ATTEMPTS = 50;
 export type GenerationErrorReason =
   | "no-eligible-constraints"
   | "unknown-objective"
+  | "objective-needs-house-rule"
   | "attempts-exhausted";
 
 export class GenerationError extends Error {
@@ -68,6 +69,13 @@ export function generateFromModule<TData, TPools>(
     throw new GenerationError(
       "unknown-objective",
       `${module.id} does not support the "${preferences.objective}" objective`,
+    );
+  }
+
+  if (!isObjectiveAllowed(preferences.objective, preferences.houseRules)) {
+    throw new GenerationError(
+      "objective-needs-house-rule",
+      `the "${preferences.objective}" objective needs house rules the seed forbids`,
     );
   }
 

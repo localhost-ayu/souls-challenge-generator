@@ -24,6 +24,7 @@ const preferences: Preferences = {
     combat: true,
     resource: true,
     style: true,
+    absurd: true,
   },
 };
 
@@ -97,9 +98,16 @@ describe("dsr constraint definitions", () => {
       "region-weapons",
       "specific-weapon",
       "spell-school-only",
+      "consumables-only",
+      "firebombs-only",
+      "poison-only",
+      "shield-only",
       "tail-weapons-only",
+      "thorns-only",
+      "throwing-knives-only",
       "weapon-category",
-    ]);
+      "weapon-roulette",
+    ].sort());
   });
 });
 
@@ -261,6 +269,26 @@ describe("resolveDsrLoadout", () => {
     // The cheapest damaging miracle without a covenant, Emit Force, needs 18 FAI.
     for (const loadout of resolveMany(["sl1", "spell-school-only"])) {
       expect(loadout?.params["spell-school-only"]?.school).not.toBe("miracle");
+    }
+  });
+
+  it("lists distinct, non-missable weapons the class can use for a roulette", () => {
+    for (const loadout of resolveMany(["weapon-roulette", "sl1"])) {
+      const weapons = loadout!.params["weapon-roulette"]!.weapons as readonly string[];
+      expect(new Set(weapons).size).toBe(weapons.length);
+      expect(weapons.length).toBeGreaterThanOrEqual(2);
+      for (const id of weapons) {
+        const weapon = weaponById(id);
+        expect(weapon.missable, id).toBe(false);
+        expect(canWieldAtBaseStats(classById(loadout!.startingClass), weapon), id).toBe(true);
+      }
+    }
+  });
+
+  it("never pairs the Armor of Thorns with rules that keep it from rolling or being worn", () => {
+    const byId = (id: string) => dsrConstraints.find((c) => c.id === id)!;
+    for (const other of ["no-rolling", "no-armor", "cosplay"]) {
+      expect(isCompatible([byId("thorns-only"), byId(other)]), other).toBe(false);
     }
   });
 

@@ -13,6 +13,8 @@ const PATHS: Record<ConstraintCategory, string> = {
   combat: "M5 5l14 14M19 5 5 19M5 5h3M5 5v3M19 5h-3M19 5v3M8 19l-3-3M16 19l3-3",
   // A flask.
   resource: "M10 3h4M10.5 3v5L6.5 15a4 4 0 0 0 3.5 6h4a4 4 0 0 0 3.5-6l-4-7V3M8 15h8",
+  // A spiral.
+  absurd: "M12 12a1 1 0 0 1 2 0 3 3 0 0 1-6 0 5 5 0 0 1 10 0 7 7 0 0 1-14 0",
   // A mask.
   style:
     "M5 6c4.5-1.5 9.5-1.5 14 0 0 7-3 12-7 12S5 13 5 6Zm3.5 4.5h2.5M13 10.5h2.5M10 14.5c1.3.8 2.7.8 4 0",

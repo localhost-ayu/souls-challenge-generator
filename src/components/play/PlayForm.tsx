@@ -9,6 +9,7 @@ import {
   DEFAULT_PREFERENCES,
   DIFFICULTIES,
   HOUSE_RULES,
+  isObjectiveAllowed,
   OBJECTIVES,
   type Preferences,
 } from "@/engine";
@@ -24,7 +25,7 @@ const UPCOMING_GAMES = ["ds2", "ds3", "bb", "er", "sote"] as const;
 // Native inputs stay in the DOM (visually hidden) so keyboard and screen
 // reader behaviour comes for free; the label carries the visual state.
 const optionClass =
-  "relative block cursor-pointer rounded-sm border border-stone-600 bg-stone-900/70 p-4 transition-colors duration-200 hover:border-stone-400 has-checked:border-ember has-checked:bg-stone-800 has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ember-glow";
+  "relative block cursor-pointer rounded-sm border border-stone-600 bg-stone-900/70 p-4 transition-colors duration-200 hover:border-stone-400 has-checked:border-ember has-checked:bg-stone-800 has-disabled:cursor-not-allowed has-disabled:border-dashed has-disabled:opacity-60 has-focus-visible:outline-2 has-focus-visible:outline-offset-3 has-focus-visible:outline-ember-glow";
 
 function Fieldset({
   legend,
@@ -110,22 +111,35 @@ export function PlayForm() {
       </Fieldset>
 
       <Fieldset legend={t("play.objectiveLegend")}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {OBJECTIVES.map((objective) => (
-            <label key={objective} className={optionClass}>
-              <input
-                type="radio"
-                name="objective"
-                value={objective}
-                checked={preferences.objective === objective}
-                onChange={() => update({ objective })}
-                className="sr-only"
-              />
-              <span className="font-sans text-lg font-medium text-bone">
-                {t(`objectives.${objective}.name`)}
-              </span>
-            </label>
-          ))}
+        <div className="grid gap-3 sm:grid-cols-3">
+          {OBJECTIVES.map((objective) => {
+            const allowed = isObjectiveAllowed(objective, preferences.houseRules);
+            return (
+              <label key={objective} className={optionClass}>
+                <input
+                  type="radio"
+                  name="objective"
+                  value={objective}
+                  checked={preferences.objective === objective}
+                  disabled={!allowed}
+                  onChange={() => update({ objective })}
+                  aria-describedby={allowed ? undefined : `${objective}-locked`}
+                  className="sr-only"
+                />
+                <span className="font-sans text-lg font-medium text-bone">
+                  {t(`objectives.${objective}.name`)}
+                </span>
+                {!allowed && (
+                  <span
+                    id={`${objective}-locked`}
+                    className="mt-1 block font-sans text-sm text-stone-400"
+                  >
+                    {t("play.needsGlitches")}
+                  </span>
+                )}
+              </label>
+            );
+          })}
         </div>
         <label className="mt-5 flex cursor-pointer items-start gap-3">
           <input
@@ -150,11 +164,14 @@ export function PlayForm() {
               <input
                 type="checkbox"
                 checked={preferences.houseRules[rule]}
-                onChange={(event) =>
-                  update({
-                    houseRules: { ...preferences.houseRules, [rule]: event.target.checked },
-                  })
-                }
+                onChange={(event) => {
+                  const houseRules = { ...preferences.houseRules, [rule]: event.target.checked };
+                  // Forbidding what the objective needs falls back to the default one.
+                  const objective = isObjectiveAllowed(preferences.objective, houseRules)
+                    ? preferences.objective
+                    : "main-bosses";
+                  update({ houseRules, objective });
+                }}
                 className="mt-1.5 size-5 accent-ember"
               />
               <span>
