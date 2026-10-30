@@ -13,7 +13,8 @@ export const localeItem = defineStorageItem({
 /** The last preferences used in the generator form. */
 export const preferencesItem = defineStorageItem({
   key: "preferences",
-  version: 1,
+  // v2 added house rules and the combat category.
+  version: 2,
   schema: preferencesSchema.nullable(),
   fallback: null,
 });

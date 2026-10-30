@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   DIFFICULTIES,
+  HOUSE_RULES,
   OBJECTIVES,
   preferencesSchema,
   type Preferences,
@@ -9,21 +10,29 @@ import { CONSTRAINT_CATEGORIES, GAME_IDS, type GameId } from "./types";
 
 /*
  * Seed format: <gameId>-<rulesetVersion>-<preferences>-<key>
- * e.g. dsr-1-e6-0k3j9x2
+ * e.g. dsr-2-9zk-0k3j9x2
  *
- * - preferences: a 9-bit field written as 2 base36 chars
+ * - preferences: a bit field written as fixed-width base36
  *     bits 0-1 difficulty index, bit 2 objective, bit 3 include dlc,
- *     bits 4-8 allowed constraint categories (CONSTRAINT_CATEGORIES order)
+ *     then one bit per house rule (HOUSE_RULES order, set = allowed),
+ *     then one bit per allowed constraint category (CONSTRAINT_CATEGORIES order)
  * - key: 1-16 base36 chars; the source of randomness. Any word works, so
- *   players can make memorable seeds such as dsr-1-e6-praisethesun.
+ *   players can make memorable seeds such as dsr-2-9zk-praisethesun.
  *
  * The bit layout is part of the ruleset: changing it requires bumping
  * rulesetVersion, which already invalidates older seeds.
  */
 
+const HOUSE_RULES_SHIFT = 4;
+const CATEGORIES_SHIFT = HOUSE_RULES_SHIFT + HOUSE_RULES.length;
+const PREFERENCE_BITS = CATEGORIES_SHIFT + CONSTRAINT_CATEGORIES.length;
+/** Smallest number of base36 digits that holds every preference bit. */
+const PREFERENCE_WIDTH = Math.ceil(PREFERENCE_BITS / Math.log2(36));
+
 const KEY_PATTERN = /^[0-9a-z]{1,16}$/;
-const SEED_PATTERN = /^([a-z0-9]+)-([1-9]\d{0,3})-([0-9a-z]{2})-([0-9a-z]{1,16})$/;
-const PREFERENCE_BITS = 4 + CONSTRAINT_CATEGORIES.length;
+const SEED_PATTERN = new RegExp(
+  `^([a-z0-9]+)-([1-9]\\d{0,3})-([0-9a-z]{${PREFERENCE_WIDTH}})-([0-9a-z]{1,16})$`,
+);
 const KEY_LENGTH = 7; // enough base36 digits for any uint32
 
 export const seedPartsSchema = z.strictObject({
@@ -117,10 +126,13 @@ function encodePreferences(preferences: Preferences): string {
   let bits = DIFFICULTIES.indexOf(preferences.difficulty);
   bits |= OBJECTIVES.indexOf(preferences.objective) << 2;
   bits |= (preferences.includeDlc ? 1 : 0) << 3;
-  CONSTRAINT_CATEGORIES.forEach((category, index) => {
-    if (preferences.categories[category]) bits |= 1 << (4 + index);
+  HOUSE_RULES.forEach((rule, index) => {
+    if (preferences.houseRules[rule]) bits |= 1 << (HOUSE_RULES_SHIFT + index);
   });
-  return bits.toString(36).padStart(2, "0");
+  CONSTRAINT_CATEGORIES.forEach((category, index) => {
+    if (preferences.categories[category]) bits |= 1 << (CATEGORIES_SHIFT + index);
+  });
+  return bits.toString(36).padStart(PREFERENCE_WIDTH, "0");
 }
 
 function decodePreferences(encoded: string): Preferences | undefined {
@@ -131,10 +143,16 @@ function decodePreferences(encoded: string): Preferences | undefined {
     difficulty: DIFFICULTIES[bits & 0b11]!,
     objective: OBJECTIVES[(bits >> 2) & 1]!,
     includeDlc: ((bits >> 3) & 1) === 1,
+    houseRules: Object.fromEntries(
+      HOUSE_RULES.map((rule, index) => [
+        rule,
+        ((bits >> (HOUSE_RULES_SHIFT + index)) & 1) === 1,
+      ]),
+    ) as Preferences["houseRules"],
     categories: Object.fromEntries(
       CONSTRAINT_CATEGORIES.map((category, index) => [
         category,
-        ((bits >> (4 + index)) & 1) === 1,
+        ((bits >> (CATEGORIES_SHIFT + index)) & 1) === 1,
       ]),
     ) as Preferences["categories"],
   };

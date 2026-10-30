@@ -9,6 +9,8 @@ const PATHS: Record<ConstraintCategory, string> = {
   // Footsteps.
   movement:
     "M8 5c1.4 0 2 1.4 2 3.2S9.2 12 8 12s-2-1.6-2-3.8S6.6 5 8 5Zm8 6c1.4 0 2 1.4 2 3.2S17.2 18 16 18s-2-1.6-2-3.8.6-3.2 2-3.2ZM7 14.5h2M15 20.5h2",
+  // Two crossed blades.
+  combat: "M5 5l14 14M19 5 5 19M5 5h3M5 5v3M19 5h-3M19 5v3M8 19l-3-3M16 19l3-3",
   // A flask.
   resource: "M10 3h4M10.5 3v5L6.5 15a4 4 0 0 0 3.5 6h4a4 4 0 0 0 3.5-6l-4-7V3M8 15h8",
   // A mask.

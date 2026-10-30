@@ -20,6 +20,7 @@ const classesById = new Map(dsrData.classes.map((c) => [c.id, c]));
 const weaponsById = new Map(dsrData.weapons.map((w) => [w.id, w]));
 const armorSetsById = new Map(dsrData.armorSets.map((s) => [s.id, s]));
 const MAGIC = ["catalyst", "talisman", "pyromancy-flame"];
+const PARAMETERIZED = ["specific-weapon", "weapon-category", "cosplay"];
 
 function randomPreferences(
   rng: Rng,
@@ -29,8 +30,10 @@ function randomPreferences(
 }
 
 function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
-  const has = (id: string) => run.constraints.includes(id);
-  const definitions = run.constraints.map((id) => constraintsById.get(id));
+  const ids = run.constraints.map((c) => c.id);
+  const has = (id: string) => ids.includes(id);
+  const paramsOf = (id: string) => run.constraints.find((c) => c.id === id)?.params;
+  const definitions = ids.map((id) => constraintsById.get(id));
 
   // Only known ids, all compatible, all from allowed categories.
   expect(definitions.every((d) => d !== undefined)).toBe(true);
@@ -47,14 +50,20 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   expect(run.difficulty).toBe(preferences.difficulty);
   expect(run.objective).toBe(preferences.objective);
   expect(run.includeDlc).toBe(preferences.includeDlc);
+  expect(run.houseRules).toEqual(preferences.houseRules);
 
-  // Picks appear exactly when their rule is selected.
-  expect(run.weapon !== undefined).toBe(has("specific-weapon"));
-  expect(run.weaponCategory !== undefined).toBe(has("weapon-category"));
-  expect(run.armorSet !== undefined).toBe(has("cosplay"));
+  // Only rules that draw something carry parameters.
+  const withParams = run.constraints.filter((c) => c.params).map((c) => c.id);
+  expect(withParams.every((id) => PARAMETERIZED.includes(id))).toBe(true);
+  const weaponId = paramsOf("specific-weapon")?.weapon;
+  const weaponCategory = paramsOf("weapon-category")?.weaponCategory;
+  const armorSetId = paramsOf("cosplay")?.armorSet;
+  expect(weaponId !== undefined).toBe(has("specific-weapon"));
+  expect(weaponCategory !== undefined).toBe(has("weapon-category"));
+  expect(armorSetId !== undefined).toBe(has("cosplay"));
 
-  if (run.weapon !== undefined) {
-    const weapon = weaponsById.get(run.weapon);
+  if (weaponId !== undefined) {
+    const weapon = weaponsById.get(String(weaponId));
     expect(weapon).toBeDefined();
     expect(weapon!.missable).toBe(false);
     if (!preferences.includeDlc) expect(weapon!.dlc).toBe(false);
@@ -62,16 +71,16 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
     if (has("no-magic")) expect(MAGIC).not.toContain(weapon!.category);
   }
 
-  if (run.weaponCategory !== undefined) {
+  if (weaponCategory !== undefined) {
     const usable = dsrData.weapons.filter(
       (w) =>
-        w.category === run.weaponCategory &&
+        w.category === weaponCategory &&
         !w.missable &&
         (preferences.includeDlc || !w.dlc) &&
         (!has("sl1") || canWieldAtBaseStats(startingClass!, w)),
     );
     expect(usable.length).toBeGreaterThan(0);
-    if (has("no-magic")) expect(MAGIC).not.toContain(run.weaponCategory);
+    if (has("no-magic")) expect(MAGIC).not.toContain(weaponCategory);
   }
 
   if (has("bow-only") && has("sl1")) {
@@ -85,8 +94,8 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
     expect(usableBow).toBe(true);
   }
 
-  if (run.armorSet !== undefined) {
-    const armorSet = armorSetsById.get(run.armorSet);
+  if (armorSetId !== undefined) {
+    const armorSet = armorSetsById.get(String(armorSetId));
     expect(armorSet).toBeDefined();
     expect(armorSet!.missable).toBe(false);
     if (!preferences.includeDlc) expect(armorSet!.dlc).toBe(false);
@@ -121,10 +130,12 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
       difficulty,
       objective: "all-bosses",
       includeDlc: true,
+      houseRules: { buffs: true, summons: false, glitches: false },
       categories: {
         level: true,
         equipment: true,
         movement: true,
+        combat: true,
         resource: true,
         style: true,
       },
@@ -147,21 +158,34 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
 describe("generated runs", () => {
   it("are locked for a known seed", () => {
     // Regression guard: if this changes, the ruleset version must be bumped.
-    expect(generateRun("dsr-1-e6-praisethesun")).toMatchInlineSnapshot(`
+    expect(generateRun("dsr-2-68u-praisethesun")).toMatchInlineSnapshot(`
       {
         "constraints": [
-          "sl1",
-          "no-rolling",
-          "no-estus",
-          "no-magic",
+          {
+            "id": "no-blocking",
+          },
+          {
+            "id": "boss-no-hit",
+          },
+          {
+            "id": "no-estus",
+          },
+          {
+            "id": "bow-only",
+          },
         ],
         "difficulty": "chosen",
         "gameId": "dsr",
+        "houseRules": {
+          "buffs": true,
+          "glitches": false,
+          "summons": false,
+        },
         "includeDlc": true,
         "objective": "all-bosses",
-        "rulesetVersion": 1,
-        "seed": "dsr-1-e6-praisethesun",
-        "startingClass": "wanderer",
+        "rulesetVersion": 2,
+        "seed": "dsr-2-68u-praisethesun",
+        "startingClass": "sorcerer",
       }
     `);
   });
@@ -176,7 +200,7 @@ describe("generated runs", () => {
         preferences,
         key: seedKeyFromNumber(rng.nextUint32()),
       });
-      generateRun(seed).constraints.forEach((id) => seen.add(id));
+      generateRun(seed).constraints.forEach(({ id }) => seen.add(id));
     }
 
     expect([...seen].sort()).toEqual(dsrConstraints.map((c) => c.id).sort());

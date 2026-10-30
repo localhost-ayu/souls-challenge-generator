@@ -18,10 +18,12 @@ Made by a fan, for fans.
 
 - **Coherent runs.** Conflicting rules never appear together, and picks respect the rest of the
   run: under Soul Level 1, the weapon is always usable with the class's starting attributes.
-- **Reproducible seeds.** A short, URL-safe seed such as `dsr-1-e6-praisethesun` rebuilds the same
+- **Reproducible seeds.** A short, URL-safe seed such as `dsr-2-68u-praisethesun` rebuilds the same
   run on any device. Share the seed or a link.
 - **Your difficulty, or luck.** Pick Hollow to Lord of Cinder, the objective (required bosses or
   every boss, with or without the DLC) and the kinds of rules allowed, or press _I'm feeling lucky_.
+- **House rules on every card.** Buffs, summons and glitches are stated as allowed or forbidden, so
+  a run never leaves them to guess.
 - **English and Portuguese**, switched instantly without reloading.
 - **History and favorites**, kept in your browser. No account, no backend.
 
@@ -31,12 +33,13 @@ Everything a run needs lives in its seed: `<game>-<ruleset>-<preferences>-<key>`
 
 - `ruleset` changes whenever the data or the algorithm changes, so an old seed is rejected with an
   explanation instead of silently producing a different run.
-- `preferences` packs difficulty, objective, DLC and allowed rule types into two characters.
+- `preferences` packs difficulty, objective, DLC, house rules and allowed rule types into three
+  characters.
 - `key` is the randomness. Any word works, so `praisethesun` is a valid key.
 
 ```mermaid
 flowchart TD
-    seed["Seed<br/>dsr-1-e6-praisethesun"] --> decode["Decode and validate<br/>(Zod, ruleset check)"]
+    seed["Seed<br/>dsr-2-68u-praisethesun"] --> decode["Decode and validate<br/>(Zod, ruleset check)"]
     decode --> rng["Seeded PRNG<br/>mulberry32(hash(seed))"]
     rng --> select["Pick rules by difficulty<br/>no conflicts, one per exclusive group"]
     select --> narrow["Narrow the pools<br/>classes, weapons, armor sets"]

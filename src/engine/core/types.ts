@@ -1,4 +1,4 @@
-import type { Difficulty, Objective, Preferences } from "./preferences";
+import type { Objective, Preferences } from "./preferences";
 import type { Rng } from "./rng";
 
 export const GAME_IDS = ["dsr"] as const;
@@ -8,6 +8,7 @@ export const CONSTRAINT_CATEGORIES = [
   "level",
   "equipment",
   "movement",
+  "combat",
   "resource",
   "style",
 ] as const;
@@ -39,12 +40,23 @@ export interface ObjectiveDefinition {
   id: Objective;
 }
 
+/**
+ * Values a constraint draws for one run, e.g. `{ weapon: "claymore" }`.
+ * The key tells the UI how to display the value (an id to look up in the
+ * catalog, a translated category, or a plain number).
+ */
+export type ConstraintParams = Readonly<Record<string, string | number>>;
+
+export interface AppliedConstraint {
+  id: string;
+  params?: ConstraintParams;
+}
+
 /** The concrete picks of a run, chosen once constraints are known. */
 export interface Loadout {
   startingClass: string;
-  weapon?: string;
-  weaponCategory?: string;
-  armorSet?: string;
+  /** Parameters keyed by constraint id; constraints without any are absent. */
+  params: Readonly<Record<string, ConstraintParams>>;
 }
 
 export interface CatalogEntry {
@@ -94,12 +106,11 @@ export interface GameModule<TData, TPools> {
 }
 
 /** A generated run. Holds ids only; display text is resolved by the UI. */
-export interface ChallengeRun extends Loadout {
+export interface ChallengeRun
+  extends Pick<Preferences, "difficulty" | "objective" | "includeDlc" | "houseRules"> {
   seed: string;
   gameId: GameId;
   rulesetVersion: number;
-  constraints: string[];
-  difficulty: Difficulty;
-  objective: Objective;
-  includeDlc: boolean;
+  startingClass: string;
+  constraints: AppliedConstraint[];
 }

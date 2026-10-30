@@ -6,7 +6,9 @@ import {
   CONSTRAINT_CATEGORIES,
   createLuckySeed,
   createSeed,
+  DEFAULT_PREFERENCES,
   DIFFICULTIES,
+  HOUSE_RULES,
   OBJECTIVES,
   type Preferences,
 } from "@/engine";
@@ -18,19 +20,6 @@ import { setItemValue, useStorageItem } from "@/lib/storage/store";
 import { Button } from "@/components/ui/Button";
 
 const UPCOMING_GAMES = ["ds2", "ds3", "bb", "er", "sote"] as const;
-
-const DEFAULT_PREFERENCES: Preferences = {
-  difficulty: "undead",
-  objective: "main-bosses",
-  includeDlc: false,
-  categories: {
-    level: true,
-    equipment: true,
-    movement: true,
-    resource: true,
-    style: true,
-  },
-};
 
 // Native inputs stay in the DOM (visually hidden) so keyboard and screen
 // reader behaviour comes for free; the label carries the visual state.
@@ -152,6 +141,33 @@ export function PlayForm() {
             </span>
           </span>
         </label>
+      </Fieldset>
+
+      <Fieldset legend={t("play.houseRulesLegend")} hint={t("play.houseRulesHint")}>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {HOUSE_RULES.map((rule) => (
+            <label key={rule} className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={preferences.houseRules[rule]}
+                onChange={(event) =>
+                  update({
+                    houseRules: { ...preferences.houseRules, [rule]: event.target.checked },
+                  })
+                }
+                className="mt-1.5 size-5 accent-ember"
+              />
+              <span>
+                <span className="block font-sans text-lg text-bone">
+                  {t(`houseRules.${rule}.name`)}
+                </span>
+                <span className="block font-sans text-base text-stone-400">
+                  {t(`houseRules.${rule}.description`)}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
       </Fieldset>
 
       <Fieldset legend={t("play.categoriesLegend")} hint={t("play.categoriesHint")}>

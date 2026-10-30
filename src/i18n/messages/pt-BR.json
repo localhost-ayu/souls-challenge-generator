@@ -72,10 +72,12 @@
     "categoriesEmpty": "Permita pelo menos um tipo de regra para gerar uma run.",
     "generate": "Gerar run",
     "lucky": "Estou com sorte",
-    "luckyHint": "Dificuldade, objetivo e tipos de regra sorteados.",
+    "luckyHint": "Dificuldade, objetivo, regras da casa e tipos de regra sorteados. Glitches ficam desligados.",
     "seedTitle": "Tem uma seed?",
     "seedLabel": "Seed",
-    "seedSubmit": "Abrir run"
+    "seedSubmit": "Abrir run",
+    "houseRulesLegend": "Regras da casa",
+    "houseRulesHint": "Regras de base de toda run, mostradas na carta para ninguém precisar adivinhar."
   },
   "difficulties": {
     "hollow": {
@@ -112,15 +114,19 @@
     },
     "equipment": {
       "name": "Equipamento",
-      "description": "O que você pode vestir e empunhar."
+      "description": "O que você pode vestir, empunhar e equipar."
     },
     "movement": {
       "name": "Movimento",
-      "description": "Como você pode se esquivar."
+      "description": "Como você pode se mover e esquivar."
+    },
+    "combat": {
+      "name": "Combate",
+      "description": "Como você pode se defender e levar golpes."
     },
     "resource": {
       "name": "Recursos",
-      "description": "Cura e descanso."
+      "description": "Cura, descanso e vidas."
     },
     "style": {
       "name": "Estilo",
@@ -175,6 +181,46 @@
     "naked-start": {
       "name": "Começo pelado",
       "description": "Comece como Deprived, só com um porrete e um escudo de tábua."
+    },
+    "no-rings": {
+      "name": "Sem anéis",
+      "description": "Nunca equipe um anel."
+    },
+    "one-ring": {
+      "name": "Um espaço de anel",
+      "description": "Use no máximo um anel por vez."
+    },
+    "no-sprinting": {
+      "name": "Sem correr",
+      "description": "Nunca segure o botão de corrida."
+    },
+    "no-jumping": {
+      "name": "Sem pular",
+      "description": "Nunca pule. Ataques em queda ao sair andando de uma borda valem."
+    },
+    "no-blocking": {
+      "name": "Sem bloquear",
+      "description": "Nunca bloqueie, nem com escudo nem com arma."
+    },
+    "no-parrying": {
+      "name": "Sem parry",
+      "description": "Nunca dê parry. Riposte após quebrar a guarda continua valendo."
+    },
+    "boss-no-hit": {
+      "name": "Chefes sem levar dano",
+      "description": "Se um chefe te acertar, a tentativa não conta: morra ou saia e enfrente-o de novo."
+    },
+    "no-estus-upgrades": {
+      "name": "Sem reforçar o Estus",
+      "description": "Nunca use Almas de Guardiã do Fogo para fortalecer o Estus."
+    },
+    "no-kindling": {
+      "name": "Sem atiçar fogueiras",
+      "description": "Nunca atice (kindle) uma fogueira."
+    },
+    "permadeath": {
+      "name": "Morte permanente",
+      "description": "Uma morte encerra a run. Crie um personagem novo para tentar de novo."
     }
   },
   "weaponCategories": {
@@ -206,9 +252,6 @@
     "loading": "Gerando sua run…",
     "difficulty": "Dificuldade",
     "startingClass": "Classe inicial",
-    "weapon": "Arma",
-    "weaponCategory": "Tipo de arma",
-    "armorSet": "Set de armadura",
     "rules": "Regras",
     "objective": "Objetivo",
     "seed": "Seed",
@@ -236,7 +279,15 @@
     },
     "favorite": "Favoritar",
     "favorited": "Adicionada aos favoritos.",
-    "unfavorited": "Removida dos favoritos."
+    "unfavorited": "Removida dos favoritos.",
+    "houseRules": "Regras da casa",
+    "allowed": "Permitido",
+    "forbidden": "Proibido",
+    "params": {
+      "weapon": "Arma",
+      "weaponCategory": "Tipo de arma",
+      "armorSet": "Conjunto de armadura"
+    }
   },
   "history": {
     "title": "Suas runs",
@@ -266,5 +317,19 @@
     "body": "A página que você procurava não existe, ou mudou de lugar. Volte para a fogueira e escolha outro caminho.",
     "home": "Voltar ao início",
     "play": "Começar desafio"
+  },
+  "houseRules": {
+    "buffs": {
+      "name": "Buffs",
+      "description": "Magias e itens que fortalecem sua arma ou você, como resinas."
+    },
+    "summons": {
+      "name": "Invocações",
+      "description": "Ajuda de fantasmas de NPCs ou de outros jogadores."
+    },
+    "glitches": {
+      "name": "Glitches",
+      "description": "Exploits, clips e skips. Desligado significa run glitchless."
+    }
   }
 }
