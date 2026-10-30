@@ -39,6 +39,24 @@ describe("dsr dataset", () => {
     );
   });
 
+  it("ties each spell school to the attribute it needs", () => {
+    for (const spell of dsrData.spells) {
+      const { int, fai } = spell.requirements;
+      if (spell.school === "sorcery") expect([int > 0, fai], spell.id).toEqual([true, 0]);
+      if (spell.school === "miracle") expect([int, fai > 0], spell.id).toEqual([0, true]);
+      if (spell.school === "pyromancy") expect([int, fai], spell.id).toEqual([0, 0]);
+    }
+  });
+
+  it("has a damaging spell in every school", () => {
+    for (const school of ["sorcery", "miracle", "pyromancy"]) {
+      const offensive = dsrData.spells.filter(
+        (s) => s.school === school && s.kind === "offensive" && !s.dlc,
+      );
+      expect(offensive.length, school).toBeGreaterThan(0);
+    }
+  });
+
   it("marks boss and tail weapons as missable", () => {
     // A boss soul can be spent on something else and a tail is cut only once.
     for (const weapon of dsrData.weapons) {

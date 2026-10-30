@@ -114,6 +114,22 @@ export const weaponSchema = z.strictObject({
   dlc: z.boolean(),
 });
 
+export const spellSchoolSchema = z.enum(["sorcery", "miracle", "pyromancy"]);
+
+export const spellSchema = z.strictObject({
+  id: idSchema,
+  name: z.string().min(1),
+  school: spellSchoolSchema,
+  // Pyromancies have none; sorceries need INT and miracles FAI.
+  requirements: z.strictObject({
+    int: requirementSchema,
+    fai: requirementSchema,
+  }),
+  slots: z.union([z.literal(1), z.literal(2)]),
+  kind: z.enum(["offensive", "buff", "healing", "utility"]),
+  dlc: z.boolean(),
+});
+
 export const armorSetSchema = z.strictObject({
   id: idSchema,
   name: z.string().min(1),
@@ -147,11 +163,12 @@ export const dsrDataSchema = z
   .strictObject({
     classes: z.array(startingClassSchema).min(1),
     weapons: z.array(weaponSchema).min(1),
+    spells: z.array(spellSchema).min(1),
     armorSets: z.array(armorSetSchema).min(1),
     bosses: z.array(bossSchema).min(1),
   })
   .superRefine((data, ctx) => {
-    for (const key of ["classes", "weapons", "armorSets", "bosses"] as const) {
+    for (const key of ["classes", "weapons", "spells", "armorSets", "bosses"] as const) {
       const seen = new Set<string>();
       data[key].forEach((entry, index) => {
         if (seen.has(entry.id)) {
@@ -193,6 +210,8 @@ export type StartingClass = z.infer<typeof startingClassSchema>;
 export type Weapon = z.infer<typeof weaponSchema>;
 export type WeaponCategory = z.infer<typeof weaponCategorySchema>;
 export type ArmorSet = z.infer<typeof armorSetSchema>;
+export type Spell = z.infer<typeof spellSchema>;
+export type SpellSchool = z.infer<typeof spellSchoolSchema>;
 export type Boss = z.infer<typeof bossSchema>;
 export type Region = z.infer<typeof regionSchema>;
 export type WeaponSource = z.infer<typeof weaponSourceSchema>;

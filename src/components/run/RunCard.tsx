@@ -45,6 +45,8 @@ function formatParam(
       return t(`regions.${id}` as MessageKey);
     case "stat":
       return t(`attributes.${id}` as MessageKey);
+    case "school":
+      return t(`spellSchools.${id}` as MessageKey);
     case "upgradeCap":
       return `+${id}`;
     default:

@@ -16,6 +16,8 @@ Each value was checked against at least two of the sources below.
     Gold-Hemmed Black, Big Hat's, Smough's, Xanthous, Painting Guardian, Holy)
   - Weapon sources and reinforcement: the same category pages, which list how each weapon is
     obtained and its scaling at maximum reinforcement
+  - Spells: https://darksouls.wiki.fextralife.com/Sorceries,
+    https://darksouls.wiki.fextralife.com/Miracles, https://darksouls.wiki.fextralife.com/Pyromancies
 - Dark Souls Wikidot — https://darksouls.wikidot.com/
   - Classes: https://darksouls.wikidot.com/classes
   - Bosses: https://darksouls.wikidot.com/bosses
@@ -25,6 +27,7 @@ Each value was checked against at least two of the sources below.
   - Upgrade paths: https://darksouls.wikidot.com/unique, https://darksouls.wikidot.com/dragon,
     https://darksouls.wikidot.com/demon
   - Boss soul items: https://darksouls.wikidot.com/boss-soul-items
+  - Miracles: https://darksouls.wikidot.com/miracles
 
 ## Judgement calls
 
@@ -40,6 +43,11 @@ Each value was checked against at least two of the sources below.
 - **Max reinforcement**: 15 for the regular path, 5 for unique (twinkling titanite), dragon (dragon
   scale) and boss (demon titanite) weapons, 0 for catalysts and talismans, which cannot be
   reinforced. The Pyromancy Flame counts as 15; its ascended form is not modelled.
+- **Spells**: `kind` says whether a spell deals damage (`offensive`), strengthens (`buff`),
+  heals (`healing`) or does something else (`utility`). Force and Acid Surge count as utility,
+  since their damage is incidental; Karmic Justice and Sunlight Blade count as buffs. Miracles that
+  only come from covenants (Lightning Spear, Great Lightning Spear, Sunlight Spear, Darkmoon Blade,
+  both Gravelord dances) and the unobtainable Escape Death are left out, like covenant weapons.
 - **Excluded weapons**: items that only exist after the final boss (Great Lord Greatsword) or that
   come from covenant ranks are not part of the dataset.
 - **Armor set names** follow the wiki convention (e.g. "Warrior Set"), since sets are not named

@@ -261,6 +261,10 @@
     "no-spending-souls": {
       "name": "Never spend souls",
       "description": "No leveling, buying, reinforcing or repairing. Souls only pile up."
+    },
+    "spell-school-only": {
+      "name": "Spells only",
+      "description": "Deal damage only with spells of the school shown on this card. No weapon attacks and no spells from other schools."
     }
   },
   "weaponCategories": {
@@ -322,6 +326,11 @@
     "int": "Intelligence",
     "fai": "Faith"
   },
+  "spellSchools": {
+    "sorcery": "Sorceries",
+    "miracle": "Miracles",
+    "pyromancy": "Pyromancies"
+  },
   "run": {
     "title": "Your challenge run",
     "loading": "Generating your run…",
@@ -365,7 +374,8 @@
       "region": "Region",
       "upgradeCap": "Upgrade limit",
       "maxLevel": "Max soul level",
-      "stat": "Only attribute"
+      "stat": "Only attribute",
+      "school": "Spell school"
     }
   },
   "history": {

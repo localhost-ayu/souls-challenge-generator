@@ -29,19 +29,19 @@ describe("RunView", () => {
   afterEach(cleanup);
 
   it("renders the run and records it in the history", () => {
-    renderView("DSR-4-68U-PRAISETHESUN");
+    renderView("DSR-5-68U-PRAISETHESUN");
 
-    expect(screen.getByRole("heading", { name: "Thief" })).toBeTruthy();
-    expect(screen.getByText("dsr-4-68u-praisethesun")).toBeTruthy();
-    expect(localStorage.getItem("scg:history")).toContain("dsr-4-68u-praisethesun");
+    expect(screen.getByRole("heading", { name: "Bandit" })).toBeTruthy();
+    expect(screen.getByText("dsr-5-68u-praisethesun")).toBeTruthy();
+    expect(localStorage.getItem("scg:history")).toContain("dsr-5-68u-praisethesun");
   });
 
   it.each([
     [null, "This link has no seed"],
     ["garbage", "This seed isn't valid"],
-    ["dsr-3-68u-abc", "This seed is from an earlier version"],
+    ["dsr-4-68u-abc", "This seed is from an earlier version"],
     ["dsr-9-68u-abc", "This seed is from a newer version"],
-    ["dsr-4-000-abc", "No run fits these settings"],
+    ["dsr-5-000-abc", "No run fits these settings"],
   ])("explains why %s cannot be shown", (seed, title) => {
     renderView(seed);
 
