@@ -8,6 +8,8 @@ import type {
 import type {
   ArmorSet,
   Region,
+  Spell,
+  SpellSchool,
   StartingClass,
   Weapon,
   WeaponCategory,
@@ -22,6 +24,8 @@ export interface DsrPools {
    * Picking one specific weapon still avoids them.
    */
   weapons: readonly Weapon[];
+  /** Spells the run may rely on. */
+  spells: readonly Spell[];
   /** Candidates for cosplay. */
   armorSets: readonly ArmorSet[];
 }
@@ -50,6 +54,20 @@ export const LEVEL_CAPS = [10, 20, 30] as const;
 export const ATTRIBUTES = ["vit", "att", "end", "str", "dex", "res", "int", "fai"] as const;
 export type Attribute = (typeof ATTRIBUTES)[number];
 
+type Requirements = Partial<Record<Attribute, number>>;
+
+/** The weapon category that casts each school (a talisman casts miracles). */
+const CASTING_TOOLS: Readonly<Record<SpellSchool, WeaponCategory>> = {
+  sorcery: "catalyst",
+  miracle: "talisman",
+  pyromancy: "pyromancy-flame",
+};
+
+export const SPELL_SCHOOLS = ["sorcery", "miracle", "pyromancy"] as const satisfies readonly SpellSchool[];
+
+/** Attunement needed for a spell's slots: 10 opens the first, 12 the second. */
+const ATTUNEMENT_FOR_SLOTS = { 1: 10, 2: 12 } as const;
+
 function onlyFrom(source: WeaponSource) {
   return (pools: DsrPools): DsrPools => ({
     ...pools,
@@ -76,31 +94,44 @@ export function canWieldAtBaseStats(
 }
 
 /**
- * Levels a class must gain before it can wield a weapon (two-handed, so
- * Strength counts 1.5×), or Infinity when an attribute outside `raisable`
- * falls short.
+ * Levels a class must gain to meet some requirements, or Infinity when an
+ * attribute outside `raisable` falls short. Strength counts 1.5×, since a
+ * weapon can be wielded with both hands.
  */
-export function levelsToWield(
+export function levelsToReach(
   startingClass: StartingClass,
-  weapon: Weapon,
+  requirements: Requirements,
   raisable: ReadonlySet<Attribute>,
 ): number {
   const { attributes } = startingClass;
-  const { requirements } = weapon;
-  const needed = {
-    str: Math.ceil((2 * requirements.str) / 3),
-    dex: requirements.dex,
-    int: requirements.int,
-    fai: requirements.fai,
-  };
   let levels = 0;
-  for (const stat of ["str", "dex", "int", "fai"] as const) {
-    const deficit = Math.max(0, needed[stat] - attributes[stat]);
+  for (const stat of ATTRIBUTES) {
+    const required = requirements[stat] ?? 0;
+    const needed = stat === "str" ? Math.ceil((2 * required) / 3) : required;
+    const deficit = Math.max(0, needed - attributes[stat]);
     if (deficit === 0) continue;
     if (!raisable.has(stat)) return Infinity;
     levels += deficit;
   }
   return levels;
+}
+
+export function levelsToWield(
+  startingClass: StartingClass,
+  weapon: Weapon,
+  raisable: ReadonlySet<Attribute>,
+): number {
+  return levelsToReach(startingClass, weapon.requirements, raisable);
+}
+
+/** What casting a spell with a given tool asks for, slots included. */
+export function castingRequirements(tool: Weapon, spell: Spell): Requirements {
+  return {
+    ...tool.requirements,
+    int: Math.max(tool.requirements.int, spell.requirements.int),
+    fai: Math.max(tool.requirements.fai, spell.requirements.fai),
+    att: ATTUNEMENT_FOR_SLOTS[spell.slots],
+  };
 }
 
 const LEVEL_RULES = ["level-cap", "single-stat", "no-vitality"];
@@ -235,6 +266,15 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
     conflictsWith: ["sl1", ...LEVEL_RULES, "no-buying", "upgrade-cap"],
   },
   {
+    // The drawn school is the only way to deal damage.
+    id: "spell-school-only",
+    category: "style",
+    difficulty: 3,
+    exclusiveGroup: "weapon-rule",
+    // Spells are mostly bought, and reinforcing a flame costs souls.
+    conflictsWith: ["no-magic", "no-buying", "no-spending-souls"],
+  },
+  {
     id: "cosplay",
     category: "style",
     difficulty: 1,
@@ -281,10 +321,12 @@ export function resolveDsrLoadout(
       params["level-cap"] = { maxLevel };
     }
 
-    let usable = pools.weapons.filter((w) => {
-      const levels = levelsToWield(startingClass, w, raisable);
+    const reachable = (requirements: Requirements) => {
+      const levels = levelsToReach(startingClass, requirements, raisable);
       return Number.isFinite(levels) && levels <= budget;
-    });
+    };
+
+    let usable = pools.weapons.filter((w) => reachable(w.requirements));
     if (has("no-buying") || has("no-spending-souls")) {
       const owned = new Set(startingClass.startingEquipment.weapons);
       usable = usable.filter(
@@ -292,6 +334,24 @@ export function resolveDsrLoadout(
       );
     }
 
+    if (has("spell-school-only")) {
+      const castable = (school: SpellSchool) =>
+        usable.some(
+          (tool) =>
+            tool.category === CASTING_TOOLS[school] &&
+            pools.spells.some(
+              (spell) =>
+                spell.school === school &&
+                spell.kind === "offensive" &&
+                reachable(castingRequirements(tool, spell)),
+            ),
+        );
+      const schools = SPELL_SCHOOLS.filter(castable);
+      if (schools.length === 0) continue;
+      const school = pick(ctx.rng, schools);
+      usable = usable.filter((w) => w.category === CASTING_TOOLS[school]);
+      params["spell-school-only"] = { school };
+    }
     if (has("region-weapons")) {
       const regional = usable.filter(
         (w) => w.region && w.sources.some((source) => REGIONAL_SOURCES.has(source)),

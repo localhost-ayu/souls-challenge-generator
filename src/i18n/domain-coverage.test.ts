@@ -5,7 +5,7 @@ import {
   getGameConstraints,
   OBJECTIVES,
 } from "@/engine";
-import { ATTRIBUTES } from "@/engine/games/dsr/constraints";
+import { ATTRIBUTES, SPELL_SCHOOLS } from "@/engine/games/dsr/constraints";
 import { regionSchema, weaponCategorySchema } from "@/engine/games/dsr/schema";
 import { translate, type MessageKey } from "./translate";
 import enUS from "./messages/en-US.json";
@@ -24,6 +24,7 @@ const keys: string[] = [
   ...weaponCategorySchema.options.map((id) => `weaponCategories.${id}`),
   ...regionSchema.options.map((id) => `regions.${id}`),
   ...ATTRIBUTES.map((id) => `attributes.${id}`),
+  ...SPELL_SCHOOLS.map((id) => `spellSchools.${id}`),
 ];
 
 describe("domain translations", () => {

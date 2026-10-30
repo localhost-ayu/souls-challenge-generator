@@ -261,6 +261,10 @@
     "no-spending-souls": {
       "name": "Nunca gaste almas",
       "description": "Nada de subir de nível, comprar, reforçar ou reparar. As almas só se acumulam."
+    },
+    "spell-school-only": {
+      "name": "Só magias",
+      "description": "Cause dano apenas com magias da escola indicada nesta carta. Nada de ataques com armas nem magias de outras escolas."
     }
   },
   "weaponCategories": {
@@ -322,6 +326,11 @@
     "int": "Inteligência",
     "fai": "Fé"
   },
+  "spellSchools": {
+    "sorcery": "Feitiçarias",
+    "miracle": "Milagres",
+    "pyromancy": "Piromancias"
+  },
   "run": {
     "title": "Sua challenge run",
     "loading": "Gerando sua run…",
@@ -365,7 +374,8 @@
       "region": "Região",
       "upgradeCap": "Limite de reforço",
       "maxLevel": "Soul level máximo",
-      "stat": "Único atributo"
+      "stat": "Único atributo",
+      "school": "Escola de magia"
     }
   },
   "history": {

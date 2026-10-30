@@ -32,6 +32,7 @@ const PARAMETERIZED = [
   "upgrade-cap",
   "level-cap",
   "single-stat",
+  "spell-school-only",
 ];
 const SOURCE_RULES: Record<string, string> = {
   "boss-weapons-only": "boss-soul",
@@ -50,9 +51,11 @@ function randomPreferences(
  * Levels needed per attribute to wield a weapon two-handed, counted one
  * level at a time so it does not share the resolver's arithmetic.
  */
-function levelDeficits(startingClass: StartingClass, weapon: Weapon) {
+function levelDeficits(
+  startingClass: StartingClass,
+  requirements: Weapon["requirements"] & { att?: number },
+) {
   const { attributes: base } = startingClass;
-  const { requirements } = weapon;
   let str = base.str;
   while (Math.floor(str * 1.5) < requirements.str) str++;
   return {
@@ -60,8 +63,15 @@ function levelDeficits(startingClass: StartingClass, weapon: Weapon) {
     dex: Math.max(0, requirements.dex - base.dex),
     int: Math.max(0, requirements.int - base.int),
     fai: Math.max(0, requirements.fai - base.fai),
+    att: Math.max(0, (requirements.att ?? 0) - base.att),
   };
 }
+
+const TOOL_OF_SCHOOL: Record<string, string> = {
+  sorcery: "catalyst",
+  miracle: "talisman",
+  pyromancy: "pyromancy-flame",
+};
 
 function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   const ids = run.constraints.map((c) => c.id);
@@ -95,6 +105,8 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   const region = paramsOf("region-weapons")?.region;
   const upgradeCap = paramsOf("upgrade-cap")?.upgradeCap;
   const maxLevel = paramsOf("level-cap")?.maxLevel;
+  const school = paramsOf("spell-school-only")?.school;
+  expect(school !== undefined).toBe(has("spell-school-only"));
   const stat = paramsOf("single-stat")?.stat;
   expect(maxLevel !== undefined).toBe(has("level-cap"));
   expect(stat !== undefined).toBe(has("single-stat"));
@@ -105,8 +117,8 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   }
 
   const frozen = has("sl1") || has("no-spending-souls");
-  const reachable = (w: Weapon) => {
-    const deficits = Object.entries(levelDeficits(startingClass!, w)).filter(
+  const reachable = (requirements: Parameters<typeof levelDeficits>[1]) => {
+    const deficits = Object.entries(levelDeficits(startingClass!, requirements)).filter(
       ([, levels]) => levels > 0,
     );
     if (frozen) return deficits.length === 0;
@@ -125,18 +137,39 @@ function expectValidRun(run: ChallengeRun, preferences: Preferences): void {
   const allowed = dsrData.weapons.filter(
     (w) =>
       (preferences.includeDlc || !w.dlc) &&
-      reachable(w) &&
+      reachable(w.requirements) &&
       (!(has("no-buying") || has("no-spending-souls")) ||
         startingClass!.startingEquipment.weapons.includes(w.id) ||
         w.sources.some((s) => s !== "merchant")) &&
       (!has("no-magic") || !MAGIC.includes(w.category)) &&
       (!has("bow-only") || w.category === "bow" || w.category === "greatbow") &&
       (!sourceRule || w.sources.includes(SOURCE_RULES[sourceRule] as never)) &&
+      (school === undefined || w.category === TOOL_OF_SCHOOL[String(school)]) &&
       (region === undefined ||
         (w.region === region &&
           w.sources.some((s) => ["found", "merchant", "enemy-drop"].includes(s)))),
   );
   expect(allowed.length).toBeGreaterThan(0);
+
+  if (school !== undefined) {
+    // Some allowed tool must cast some damaging spell of the school,
+    // with the attunement for its slots (10 for one, 12 for two).
+    const castable = allowed.some((tool) =>
+      dsrData.spells.some(
+        (spell) =>
+          spell.school === school &&
+          spell.kind === "offensive" &&
+          (preferences.includeDlc || !spell.dlc) &&
+          reachable({
+            ...tool.requirements,
+            int: Math.max(tool.requirements.int, spell.requirements.int),
+            fai: Math.max(tool.requirements.fai, spell.requirements.fai),
+            att: spell.slots === 1 ? 10 : 12,
+          }),
+      ),
+    );
+    expect(castable, `${run.startingClass} / ${String(school)}`).toBe(true);
+  }
 
   let ruleWeapons = allowed;
   if (weaponId !== undefined) {
@@ -219,11 +252,11 @@ describe.each(DIFFICULTIES)("generated %s runs", (difficulty) => {
 describe("generated runs", () => {
   it("are locked for a known seed", () => {
     // Regression guard: if this changes, the ruleset version must be bumped.
-    expect(generateRun("dsr-4-68u-praisethesun")).toMatchInlineSnapshot(`
+    expect(generateRun("dsr-5-68u-praisethesun")).toMatchInlineSnapshot(`
       {
         "constraints": [
           {
-            "id": "no-blocking",
+            "id": "no-sprinting",
           },
           {
             "id": "no-estus",
@@ -232,10 +265,7 @@ describe("generated runs", () => {
             "id": "tail-weapons-only",
           },
           {
-            "id": "upgrade-cap",
-            "params": {
-              "upgradeCap": 5,
-            },
+            "id": "no-buying",
           },
         ],
         "difficulty": "chosen",
@@ -247,9 +277,9 @@ describe("generated runs", () => {
         },
         "includeDlc": true,
         "objective": "all-bosses",
-        "rulesetVersion": 4,
-        "seed": "dsr-4-68u-praisethesun",
-        "startingClass": "thief",
+        "rulesetVersion": 5,
+        "seed": "dsr-5-68u-praisethesun",
+        "startingClass": "bandit",
       }
     `);
   });

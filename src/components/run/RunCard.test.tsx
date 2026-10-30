@@ -21,7 +21,7 @@ const preferences: Preferences = {
   },
 };
 
-// Locked by the engine snapshot: Thief with no-blocking, no-estus, tail-weapons-only, upgrade-cap.
+// Locked by the engine snapshot: Bandit with no-sprinting, no-estus, tail-weapons-only, no-buying.
 const run = generateRun(createSeed({ gameId: "dsr", preferences, key: "praisethesun" }));
 
 function renderCard() {
@@ -39,8 +39,8 @@ describe("RunCard", () => {
   it("shows the class, translated rules, objective and seed", () => {
     renderCard();
 
-    expect(screen.getByRole("heading", { name: "Thief" })).toBeTruthy();
-    expect(screen.getByText("No blocking")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Bandit" })).toBeTruthy();
+    expect(screen.getByText("No sprinting")).toBeTruthy();
     expect(screen.getByText("Never drink from the Estus Flask.")).toBeTruthy();
     expect(screen.getByText("Every boss")).toBeTruthy();
     expect(screen.getByText("Defeat all 26 bosses.")).toBeTruthy();
@@ -82,10 +82,10 @@ describe("RunCard", () => {
 
     act(() => setLocale("pt-BR"));
 
-    expect(screen.getByText("Sem bloquear")).toBeTruthy();
+    expect(screen.getByText("Sem correr")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Regras da casa" })).toBeTruthy();
     expect(screen.getByText("Derrote todos os 26 bosses.")).toBeTruthy();
     expect(screen.getByText("Morto-vivo Escolhido")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Thief" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Bandit" })).toBeTruthy();
   });
 });

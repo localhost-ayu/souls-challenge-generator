@@ -96,6 +96,7 @@ describe("dsr constraint definitions", () => {
       "enemy-drops-only",
       "region-weapons",
       "specific-weapon",
+      "spell-school-only",
       "tail-weapons-only",
       "weapon-category",
     ]);
@@ -246,6 +247,20 @@ describe("resolveDsrLoadout", () => {
     for (const loadout of resolveMany(["upgrade-cap", "specific-weapon"])) {
       const weapon = weaponById(String(loadout!.params["specific-weapon"]!.weapon));
       expect(loadout!.params["upgrade-cap"]!.upgradeCap).toBeLessThan(weapon.maxUpgrade);
+    }
+  });
+
+  it("never makes a class without spell slots cast under sl1", () => {
+    // Warriors and Bandits start with 8 Attunement: not a single slot.
+    for (const loadout of resolveMany(["sl1", "spell-school-only"])) {
+      expect(["warrior", "bandit"]).not.toContain(loadout?.startingClass);
+    }
+  });
+
+  it("only draws miracles under sl1 for classes that can cast one", () => {
+    // The cheapest damaging miracle without a covenant, Emit Force, needs 18 FAI.
+    for (const loadout of resolveMany(["sl1", "spell-school-only"])) {
+      expect(loadout?.params["spell-school-only"]?.school).not.toBe("miracle");
     }
   });
 

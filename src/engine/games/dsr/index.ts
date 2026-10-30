@@ -5,7 +5,7 @@ import type { DsrData } from "./schema";
 
 export const dsrModule: GameModule<DsrData, DsrPools> = {
   id: "dsr",
-  rulesetVersion: 4,
+  rulesetVersion: 5,
   data: dsrData,
   catalog: {
     classes: dsrData.classes,
@@ -20,6 +20,7 @@ export const dsrModule: GameModule<DsrData, DsrPools> = {
   createPools: (preferences) => ({
     classes: dsrData.classes,
     weapons: dsrData.weapons.filter((w) => preferences.includeDlc || !w.dlc),
+    spells: dsrData.spells.filter((s) => preferences.includeDlc || !s.dlc),
     armorSets: dsrData.armorSets.filter(
       (s) => !s.missable && (preferences.includeDlc || !s.dlc),
     ),
