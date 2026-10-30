@@ -1,6 +1,7 @@
 import { pick, shuffle } from "../../core/rng";
 import type {
   ConstraintDefinition,
+  ConstraintParams,
   GenerationContext,
   Loadout,
 } from "../../core/types";
@@ -54,10 +55,43 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
     conflictsWith: ["cosplay"],
   },
   { id: "no-shield", category: "equipment", difficulty: 1 },
+  {
+    id: "no-rings",
+    category: "equipment",
+    difficulty: 1,
+    exclusiveGroup: "ring-rule",
+  },
+  {
+    id: "one-ring",
+    category: "equipment",
+    difficulty: 1,
+    exclusiveGroup: "ring-rule",
+  },
   { id: "no-rolling", category: "movement", difficulty: 2 },
-  { id: "no-estus", category: "resource", difficulty: 3 },
+  { id: "no-sprinting", category: "movement", difficulty: 1 },
+  { id: "no-jumping", category: "movement", difficulty: 1 },
+  { id: "no-blocking", category: "combat", difficulty: 1 },
+  { id: "no-parrying", category: "combat", difficulty: 1 },
+  // A boss hit loses the attempt: the player dies or quits and refights it.
+  { id: "boss-no-hit", category: "combat", difficulty: 3 },
+  {
+    id: "no-estus",
+    category: "resource",
+    difficulty: 3,
+    // Without Estus, limits on upgrading it change nothing.
+    conflictsWith: ["no-estus-upgrades", "no-kindling"],
+  },
   // Bonfires may be lit (to unlock warps) but never rested at.
-  { id: "no-bonfires", category: "resource", difficulty: 3 },
+  {
+    id: "no-bonfires",
+    category: "resource",
+    difficulty: 3,
+    // Kindling and reinforcing Estus both happen while resting.
+    conflictsWith: ["no-estus-upgrades", "no-kindling"],
+  },
+  { id: "no-estus-upgrades", category: "resource", difficulty: 1 },
+  { id: "no-kindling", category: "resource", difficulty: 1 },
+  { id: "permadeath", category: "resource", difficulty: 3 },
   {
     id: "no-magic",
     category: "style",
@@ -124,18 +158,18 @@ export function resolveDsrLoadout(
       : pools.weapons;
     if (usable.length === 0) continue;
 
-    const loadout: Loadout = { startingClass: startingClass.id };
+    const params: Record<string, ConstraintParams> = {};
     if (has("specific-weapon")) {
-      loadout.weapon = pick(ctx.rng, usable).id;
+      params["specific-weapon"] = { weapon: pick(ctx.rng, usable).id };
     }
     if (has("weapon-category")) {
       const categories = [...new Set(usable.map((w) => w.category))];
-      loadout.weaponCategory = pick(ctx.rng, categories);
+      params["weapon-category"] = { weaponCategory: pick(ctx.rng, categories) };
     }
     if (has("cosplay")) {
-      loadout.armorSet = pick(ctx.rng, pools.armorSets).id;
+      params.cosplay = { armorSet: pick(ctx.rng, pools.armorSets).id };
     }
-    return loadout;
+    return { startingClass: startingClass.id, params };
   }
 
   return null;

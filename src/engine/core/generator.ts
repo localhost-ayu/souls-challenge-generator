@@ -103,11 +103,15 @@ export function generateFromModule<TData, TPools>(
       seed,
       gameId: module.id,
       rulesetVersion: module.rulesetVersion,
-      ...loadout,
-      constraints: selected.map((c) => c.id),
+      startingClass: loadout.startingClass,
+      constraints: selected.map(({ id }) => {
+        const params = loadout.params[id];
+        return params ? { id, params } : { id };
+      }),
       difficulty: preferences.difficulty,
       objective: preferences.objective,
       includeDlc: preferences.includeDlc,
+      houseRules: preferences.houseRules,
     };
   }
 

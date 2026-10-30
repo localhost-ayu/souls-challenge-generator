@@ -13,10 +13,12 @@ const EXAMPLE_PREFERENCES: Preferences = {
   difficulty: "chosen",
   objective: "all-bosses",
   includeDlc: true,
+  houseRules: { buffs: true, summons: false, glitches: false },
   categories: {
     level: true,
     equipment: true,
     movement: true,
+    combat: true,
     resource: true,
     style: true,
   },

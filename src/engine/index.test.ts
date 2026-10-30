@@ -15,10 +15,12 @@ const preferences: Preferences = {
   difficulty: "undead",
   objective: "main-bosses",
   includeDlc: false,
+  houseRules: { buffs: true, summons: false, glitches: false },
   categories: {
     level: true,
     equipment: true,
     movement: true,
+    combat: true,
     resource: true,
     style: true,
   },
@@ -29,7 +31,7 @@ describe("engine public api", () => {
     const seed = createSeed({ gameId: "dsr", preferences, key: "praisethesun" });
     const run = generateRun(seed);
 
-    expect(seed).toMatch(/^dsr-1-/);
+    expect(seed).toMatch(/^dsr-2-/);
     expect(run.seed).toBe(seed);
     expect(run.gameId).toBe("dsr");
     expect(parseSeed(seed).preferences).toEqual(preferences);
@@ -43,7 +45,7 @@ describe("engine public api", () => {
 
   it("surfaces typed errors", () => {
     expect(() => generateRun("not a seed")).toThrow(InvalidSeedError);
-    expect(() => generateRun("dsr-99-e6-abc")).toThrow(UnsupportedRulesetError);
+    expect(() => generateRun("dsr-99-68u-abc")).toThrow(UnsupportedRulesetError);
 
     const noCategories = createSeed({
       gameId: "dsr",
@@ -54,6 +56,7 @@ describe("engine public api", () => {
           level: false,
           equipment: false,
           movement: false,
+          combat: false,
           resource: false,
           style: false,
         },

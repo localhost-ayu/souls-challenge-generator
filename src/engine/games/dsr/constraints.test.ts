@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Preferences } from "../../core/preferences";
+import { isCompatible } from "../../core/compatibility";
 import { createRng } from "../../core/rng";
 import type { GenerationContext, Loadout } from "../../core/types";
 import { canWieldAtBaseStats, dsrConstraints } from "./constraints";
@@ -10,10 +11,12 @@ const preferences: Preferences = {
   difficulty: "chosen",
   objective: "all-bosses",
   includeDlc: false,
+  houseRules: { buffs: true, summons: false, glitches: false },
   categories: {
     level: true,
     equipment: true,
     movement: true,
+    combat: true,
     resource: true,
     style: true,
   },
@@ -21,6 +24,7 @@ const preferences: Preferences = {
 
 const classById = (id: string) => dsrData.classes.find((c) => c.id === id)!;
 const weaponById = (id: string) => dsrData.weapons.find((w) => w.id === id)!;
+const armorSetById = (id: string) => dsrData.armorSets.find((s) => s.id === id);
 
 /** Runs narrow + resolve for a forced set of constraints. */
 function resolveWith(
@@ -58,6 +62,21 @@ describe("dsr constraint definitions", () => {
       ];
       for (const ref of refs) {
         expect(ids, `${constraint.id} -> ${ref}`).toContain(ref);
+      }
+    }
+  });
+
+  it("put both ring rules in the same exclusive group", () => {
+    const ringRules = dsrConstraints.filter((c) => c.exclusiveGroup === "ring-rule");
+    expect(ringRules.map((c) => c.id).sort()).toEqual(["no-rings", "one-ring"]);
+  });
+
+  it("never pair Estus limits with rules that make them pointless", () => {
+    for (const id of ["no-estus-upgrades", "no-kindling"]) {
+      for (const other of ["no-estus", "no-bonfires"]) {
+        const a = dsrConstraints.find((c) => c.id === id)!;
+        const b = dsrConstraints.find((c) => c.id === other)!;
+        expect(isCompatible([a, b]), `${id} + ${other}`).toBe(false);
       }
     }
   });
@@ -120,8 +139,9 @@ describe("resolveDsrLoadout", () => {
 
   it("picks a weapon the class can use under sl1", () => {
     for (const loadout of resolveMany(["sl1", "specific-weapon"])) {
-      expect(loadout?.weapon).toBeDefined();
-      const weapon = weaponById(loadout!.weapon!);
+      const weaponId = loadout?.params["specific-weapon"]?.weapon;
+      expect(weaponId).toBeDefined();
+      const weapon = weaponById(String(weaponId));
       expect(canWieldAtBaseStats(classById(loadout!.startingClass), weapon)).toBe(true);
     }
   });
@@ -129,15 +149,15 @@ describe("resolveDsrLoadout", () => {
   it("never picks a magic category with no-magic", () => {
     for (const loadout of resolveMany(["no-magic", "weapon-category"])) {
       expect(["catalyst", "talisman", "pyromancy-flame"]).not.toContain(
-        loadout?.weaponCategory,
+        loadout?.params["weapon-category"]?.weaponCategory,
       );
     }
   });
 
   it("never picks missable or disabled dlc items", () => {
     for (const loadout of resolveMany(["specific-weapon", "cosplay"])) {
-      const weapon = weaponById(loadout!.weapon!);
-      const armorSet = dsrData.armorSets.find((s) => s.id === loadout!.armorSet)!;
+      const weapon = weaponById(String(loadout!.params["specific-weapon"]!.weapon));
+      const armorSet = armorSetById(String(loadout!.params.cosplay!.armorSet))!;
       expect(weapon.missable || weapon.dlc).toBe(false);
       expect(armorSet.missable || armorSet.dlc).toBe(false);
     }
@@ -146,14 +166,15 @@ describe("resolveDsrLoadout", () => {
   it("can pick dlc items when dlc is enabled", () => {
     const withDlc = { ...preferences, includeDlc: true };
     const dlcPicked = resolveMany(["cosplay"], withDlc).some(
-      (l) => dsrData.armorSets.find((s) => s.id === l?.armorSet)?.dlc,
+      (l) => armorSetById(String(l?.params.cosplay?.armorSet))?.dlc,
     );
     expect(dlcPicked).toBe(true);
   });
 
-  it("only fills the fields the selected rules ask for", () => {
+  it("only draws parameters for the rules that need them", () => {
     expect(resolveWith(["no-rolling"], 1)).toEqual({
       startingClass: expect.any(String),
+      params: {},
     });
   });
 });

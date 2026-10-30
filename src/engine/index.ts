@@ -57,10 +57,13 @@ export function parseSeed(seed: string): SeedParts {
 
 export { GenerationError, type GenerationErrorReason } from "./core/generator";
 export {
+  DEFAULT_PREFERENCES,
   DIFFICULTIES,
+  HOUSE_RULES,
   OBJECTIVES,
   preferencesSchema,
   type Difficulty,
+  type HouseRule,
   type Objective,
   type Preferences,
 } from "./core/preferences";
@@ -74,10 +77,12 @@ export {
 export {
   CONSTRAINT_CATEGORIES,
   GAME_IDS,
+  type AppliedConstraint,
   type BossEntry,
   type CatalogEntry,
   type ChallengeRun,
   type ConstraintCategory,
+  type ConstraintParams,
   type ConstraintSummary,
   type GameCatalog,
   type GameId,

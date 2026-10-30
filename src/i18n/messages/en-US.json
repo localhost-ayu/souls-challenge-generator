@@ -72,10 +72,12 @@
     "categoriesEmpty": "Allow at least one rule type to generate a run.",
     "generate": "Generate run",
     "lucky": "I'm feeling lucky",
-    "luckyHint": "Difficulty, objective and rule types picked at random.",
+    "luckyHint": "Difficulty, objective, house rules and rule types picked at random. Glitches stay off.",
     "seedTitle": "Have a seed?",
     "seedLabel": "Seed",
-    "seedSubmit": "Open run"
+    "seedSubmit": "Open run",
+    "houseRulesLegend": "House rules",
+    "houseRulesHint": "Baseline rules for every run, shown on the card so nobody has to guess."
   },
   "difficulties": {
     "hollow": {
@@ -112,15 +114,19 @@
     },
     "equipment": {
       "name": "Equipment",
-      "description": "What you may wear and wield."
+      "description": "What you may wear, wield and slot."
     },
     "movement": {
       "name": "Movement",
-      "description": "How you may dodge."
+      "description": "How you may move and dodge."
+    },
+    "combat": {
+      "name": "Combat",
+      "description": "How you may defend and take hits."
     },
     "resource": {
       "name": "Resources",
-      "description": "Healing and resting."
+      "description": "Healing, resting and lives."
     },
     "style": {
       "name": "Style",
@@ -175,6 +181,46 @@
     "naked-start": {
       "name": "Naked start",
       "description": "Start as the Deprived, with only a club and a plank shield."
+    },
+    "no-rings": {
+      "name": "No rings",
+      "description": "Never equip a ring."
+    },
+    "one-ring": {
+      "name": "One ring slot",
+      "description": "Wear at most one ring at a time."
+    },
+    "no-sprinting": {
+      "name": "No sprinting",
+      "description": "Never hold the run button to sprint."
+    },
+    "no-jumping": {
+      "name": "No jumping",
+      "description": "Never jump. Plunging attacks after walking off a ledge are fine."
+    },
+    "no-blocking": {
+      "name": "No blocking",
+      "description": "Never block, with a shield or a weapon."
+    },
+    "no-parrying": {
+      "name": "No parrying",
+      "description": "Never parry. Ripostes after a guard break are still allowed."
+    },
+    "boss-no-hit": {
+      "name": "No-hit bosses",
+      "description": "If a boss hits you, the attempt is lost: die or quit and fight it again."
+    },
+    "no-estus-upgrades": {
+      "name": "No Estus reinforcement",
+      "description": "Never use Firekeeper Souls to strengthen your Estus."
+    },
+    "no-kindling": {
+      "name": "No kindling",
+      "description": "Never kindle a bonfire."
+    },
+    "permadeath": {
+      "name": "Permadeath",
+      "description": "One death ends the run. Start a new character to try again."
     }
   },
   "weaponCategories": {
@@ -206,9 +252,6 @@
     "loading": "Generating your run…",
     "difficulty": "Difficulty",
     "startingClass": "Starting class",
-    "weapon": "Weapon",
-    "weaponCategory": "Weapon type",
-    "armorSet": "Armor set",
     "rules": "Rules",
     "objective": "Objective",
     "seed": "Seed",
@@ -236,7 +279,15 @@
     },
     "favorite": "Favorite",
     "favorited": "Added to favorites.",
-    "unfavorited": "Removed from favorites."
+    "unfavorited": "Removed from favorites.",
+    "houseRules": "House rules",
+    "allowed": "Allowed",
+    "forbidden": "Forbidden",
+    "params": {
+      "weapon": "Weapon",
+      "weaponCategory": "Weapon type",
+      "armorSet": "Armor set"
+    }
   },
   "history": {
     "title": "Your runs",
@@ -266,5 +317,19 @@
     "body": "The page you were looking for doesn't exist, or it moved. Head back to the bonfire and pick another way.",
     "home": "Back to the start",
     "play": "Start a challenge"
+  },
+  "houseRules": {
+    "buffs": {
+      "name": "Buffs",
+      "description": "Spells and items that strengthen your weapon or yourself, such as resins."
+    },
+    "summons": {
+      "name": "Summons",
+      "description": "Help from NPC phantoms or other players."
+    },
+    "glitches": {
+      "name": "Glitches",
+      "description": "Exploits, clips and skips. Off means a glitchless run."
+    }
   }
 }

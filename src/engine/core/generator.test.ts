@@ -21,6 +21,7 @@ const everything: Preferences["categories"] = {
   level: true,
   equipment: true,
   movement: true,
+  combat: true,
   resource: true,
   style: true,
 };
@@ -37,7 +38,7 @@ function makeModule(constraints: Definition[]): GameModule<null, Pools> {
     resolve: (pools, ctx) =>
       pools.classes.length === 0
         ? null
-        : { startingClass: pick(ctx.rng, pools.classes) },
+        : { startingClass: pick(ctx.rng, pools.classes), params: {} },
   };
 }
 
@@ -53,6 +54,7 @@ function makeParts(
       difficulty: "undead",
       objective: "main-bosses",
       includeDlc: false,
+      houseRules: { buffs: true, summons: false, glitches: false },
       categories: everything,
       ...overrides,
     },
@@ -93,7 +95,7 @@ describe("generateFromModule", () => {
       makeParts({ includeDlc: true }),
     );
 
-    expect(run.seed).toMatch(/^dsr-1-[0-9a-z]{2}-abc123$/);
+    expect(run.seed).toMatch(/^dsr-1-[0-9a-z]{3}-abc123$/);
     expect(run.objective).toBe("main-bosses");
     expect(run.includeDlc).toBe(true);
   });
@@ -117,8 +119,8 @@ describe("generateFromModule", () => {
         game,
         makeParts({ categories: { ...everything, style: false } }, `k${i}`),
       );
-      expect(run.constraints).not.toContain("a");
-      expect(run.constraints).not.toContain("b");
+      expect(run.constraints).not.toContainEqual({ id: "a" });
+      expect(run.constraints).not.toContainEqual({ id: "b" });
     }
   });
 
@@ -135,7 +137,7 @@ describe("generateFromModule", () => {
     for (let i = 0; i < 200; i++) {
       const parts = makeParts({ difficulty: "hollow" }, `k${i}`);
       const run = generateFromModule(game, parts);
-      expect(run.constraints).toEqual(["possible"]);
+      expect(run.constraints).toEqual([{ id: "possible" }]);
     }
   });
 
@@ -160,6 +162,7 @@ describe("generateFromModule", () => {
       level: false,
       equipment: false,
       movement: false,
+      combat: false,
       resource: false,
       style: false,
     };

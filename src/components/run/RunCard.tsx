@@ -4,6 +4,7 @@ import type { CSSProperties, ReactNode } from "react";
 import {
   getGameCatalog,
   getGameConstraints,
+  HOUSE_RULES,
   type ChallengeRun,
   type GameCatalog,
 } from "@/engine";
@@ -20,6 +21,29 @@ function bossCount(run: ChallengeRun, catalog: GameCatalog): number {
     if (boss.dlc && !run.includeDlc) return false;
     return run.objective === "all-bosses" || boss.required;
   }).length;
+}
+
+/**
+ * Parameter keys name what their value is, so ids can be resolved to display
+ * names; anything else (e.g. a number) is shown as is.
+ */
+function formatParam(
+  key: string,
+  value: string | number,
+  catalog: GameCatalog,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  const id = String(value);
+  switch (key) {
+    case "weapon":
+      return nameOf(catalog.weapons, id);
+    case "armorSet":
+      return nameOf(catalog.armorSets, id);
+    case "weaponCategory":
+      return t(`weaponCategories.${id}` as MessageKey);
+    default:
+      return id;
+  }
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -46,6 +70,7 @@ export function RunCard({
   const categoryOf = new Map(
     getGameConstraints(run.gameId).map((c) => [c.id, c.category]),
   );
+  const params = run.constraints.flatMap(({ params }) => Object.entries(params ?? {}));
 
   return (
     <article
@@ -75,21 +100,13 @@ export function RunCard({
           </h2>
         </div>
 
-        {(run.weapon || run.weaponCategory || run.armorSet) && (
+        {params.length > 0 && (
           <dl className="mt-8 grid gap-6 sm:grid-cols-2">
-            {run.weapon && (
-              <Field label={t("run.weapon")}>{nameOf(catalog.weapons, run.weapon)}</Field>
-            )}
-            {run.weaponCategory && (
-              <Field label={t("run.weaponCategory")}>
-                {t(`weaponCategories.${run.weaponCategory}` as MessageKey)}
+            {params.map(([key, value]) => (
+              <Field key={key} label={t(`run.params.${key}` as MessageKey)}>
+                {formatParam(key, value, catalog, t)}
               </Field>
-            )}
-            {run.armorSet && (
-              <Field label={t("run.armorSet")}>
-                {nameOf(catalog.armorSets, run.armorSet)}
-              </Field>
-            )}
+            ))}
           </dl>
         )}
 
@@ -98,7 +115,7 @@ export function RunCard({
             {t("run.rules")}
           </h3>
           <ul className="mt-5 space-y-5">
-            {run.constraints.map((id, index) => {
+            {run.constraints.map(({ id }, index) => {
               const category = categoryOf.get(id) ?? "style";
               return (
                 <li
@@ -133,6 +150,26 @@ export function RunCard({
               count: bossCount(run, catalog),
             })}
           </p>
+        </section>
+
+        <section className="mt-10" aria-labelledby={`house-${run.seed}`}>
+          <h3 id={`house-${run.seed}`} className="font-display text-heading text-bone">
+            {t("run.houseRules")}
+          </h3>
+          <dl className="mt-4 grid gap-x-6 gap-y-2 font-sans sm:grid-cols-3">
+            {HOUSE_RULES.map((rule) => (
+              <div key={rule} className="flex justify-between gap-3 sm:block">
+                <dt className="text-stone-400">{t(`houseRules.${rule}.name`)}</dt>
+                <dd
+                  className={
+                    run.houseRules[rule] ? "text-bone" : "font-medium text-ember-glow"
+                  }
+                >
+                  {t(run.houseRules[rule] ? "run.allowed" : "run.forbidden")}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </section>
 
         <footer className="mt-10 flex flex-wrap items-end justify-between gap-4 border-t border-stone-800 pt-6">
