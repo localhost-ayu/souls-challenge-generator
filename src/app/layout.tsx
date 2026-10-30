@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Alegreya_Sans, Cinzel, EB_Garamond } from "next/font/google";
+import { Cinzel, EB_Garamond, Inter } from "next/font/google";
 import { Atmosphere } from "@/components/layout/Atmosphere";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -10,7 +10,7 @@ import "./globals.css";
 const cinzel = Cinzel({
   variable: "--font-cinzel",
   subsets: ["latin"],
-  weight: ["500", "700"],
+  weight: ["500", "600", "700"],
 });
 
 const garamond = EB_Garamond({
@@ -19,10 +19,9 @@ const garamond = EB_Garamond({
   style: ["normal", "italic"],
 });
 
-const alegreyaSans = Alegreya_Sans({
-  variable: "--font-alegreya-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
 });
 
 const description =
@@ -59,7 +58,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#141210",
+  themeColor: "#0c0b0a",
   colorScheme: "dark",
 };
 
@@ -67,7 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-US"
-      className={`${cinzel.variable} ${garamond.variable} ${alegreyaSans.variable} h-full antialiased`}
+      className={`${cinzel.variable} ${garamond.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <I18nProvider>

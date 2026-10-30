@@ -135,7 +135,7 @@ Nenhum asset oficial dos jogos é utilizado neste projeto.
 
 Fontes: [Cinzel](https://fonts.google.com/specimen/Cinzel),
 [EB Garamond](https://fonts.google.com/specimen/EB+Garamond) e
-[Alegreya Sans](https://fonts.google.com/specimen/Alegreya+Sans), sob a SIL Open Font License.
+[Inter](https://fonts.google.com/specimen/Inter), sob a SIL Open Font License.
 Ícones e ilustrações são originais deste projeto.
 
 ## Licença

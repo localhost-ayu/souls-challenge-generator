@@ -28,7 +28,10 @@
     "step3Title": "Compartilhe a seed",
     "step3": "Toda run tem uma seed. Mande para um amigo e ele recebe exatamente o mesmo desafio.",
     "exampleTitle": "Uma run de exemplo",
-    "exampleOpen": "Abrir esta run"
+    "exampleOpen": "Abrir esta run",
+    "eyebrow": "Feito de fã para fã · Dark Souls Remastered",
+    "exampleEyebrow": "Exemplo",
+    "exampleBody": "Uma carta como esta sai de cada seed. Abra para ver todas as regras e copiar o link."
   },
   "footer": {
     "madeBy": "Feito de fã para fã por",
@@ -50,7 +53,8 @@
     "credits": "Design e desenvolvimento por",
     "licenseTitle": "Licença",
     "license": "O código-fonte está disponível sob a licença MIT, que cobre apenas o código e os assets originais deste projeto.",
-    "sourceCode": "Ver o código-fonte"
+    "sourceCode": "Ver o código-fonte",
+    "eyebrow": "Feito de fã para fã"
   },
   "games": {
     "dsr": "Dark Souls Remastered",
@@ -80,7 +84,12 @@
     "houseRulesHint": "Regras de base de toda run, mostradas na carta para ninguém precisar adivinhar.",
     "needsGlitches": "Permita glitches para escolher este objetivo.",
     "customizeTitle": "Personalizar regras",
-    "customizeSummary": "{count} de {total} tipos de regra permitidos"
+    "customizeSummary": "{count} de {total} tipos de regra permitidos",
+    "eyebrow": "Novo desafio",
+    "lead": "Escolha o jogo e a dificuldade. O resto, a seed decide.",
+    "dsrScope": "Jogo base + Artorias of the Abyss",
+    "allowGlitches": "Permitir glitches",
+    "houseSummary": "{count} de {total} regras da casa permitidas"
   },
   "difficulties": {
     "hollow": {
@@ -426,7 +435,11 @@
       "weapons": "Ordem das armas",
       "scope": "Vale para"
     },
-    "wikiLink": "{name} na {wiki} (abre em nova aba)"
+    "wikiLink": "{name} na {wiki} (abre em nova aba)",
+    "drawn": "Valores sorteados",
+    "includesDlc": "Inclui Artorias of the Abyss",
+    "seedMeta": "Ruleset {version} · mesma seed, mesma run",
+    "actions": "Ações da run"
   },
   "history": {
     "title": "Suas runs",
@@ -440,16 +453,17 @@
     "openedAt": "Aberta em {date}",
     "savedAt": "Salva em {date}",
     "unavailable": "Esta seed é de outra versão e não pode mais ser recriada.",
-    "label": "Rótulo",
     "labelPlaceholder": "Adicionar rótulo",
-    "remove": "Remover",
     "removeNamed": "Remover {name}",
     "clearHistory": "Limpar histórico",
     "clearFavorites": "Limpar favoritos",
     "confirmClearHistory": "Remover todas as {count} runs do histórico?",
     "confirmClearFavorites": "Remover todos os {count} favoritos?",
     "confirm": "Sim, limpar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "eyebrow": "Salvo só neste navegador",
+    "labelFor": "Rótulo de {name}",
+    "open": "Abrir run"
   },
   "notFound": {
     "title": "Este caminho não leva a lugar nenhum",

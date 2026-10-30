@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo } from "react";
 import { generateRun, getGameCatalog } from "@/engine";
+import { Icon } from "@/components/icons/Icon";
+import { ButtonLink } from "@/components/ui/Button";
 import { useTranslation } from "@/i18n/useTranslation";
 import { runPath } from "@/lib/run-link";
 import { FAVORITE_LABEL_MAX } from "@/lib/storage/items";
-import { Button } from "@/components/ui/Button";
 
 function tryGenerate(seed: string) {
   try {
@@ -41,56 +41,72 @@ export function SavedRunItem({
     dateStyle: "medium",
     timeStyle: "short",
   }).format(timestamp);
+  const rowClass = ["run-row", onLabelChange && "fav", !run && "unavailable"]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <li className="flex flex-col gap-3 border-b border-stone-800 py-5 sm:flex-row sm:items-start sm:justify-between">
-      <div className="min-w-0">
-        {run ? (
-          <Link
-            href={runPath(seed)}
-            className="font-display text-heading text-bone underline-offset-4 hover:text-ember-glow hover:underline"
-          >
-            {title}
-          </Link>
+    <li className={rowClass}>
+      <div className="run-main">
+        {onLabelChange ? (
+          <input
+            className="label-input"
+            defaultValue={label}
+            maxLength={FAVORITE_LABEL_MAX}
+            placeholder={t("history.labelPlaceholder")}
+            aria-label={t("history.labelFor", { name: className ?? seed })}
+            onBlur={(event) => onLabelChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.currentTarget.blur();
+            }}
+          />
         ) : (
-          <p className="font-display text-heading text-stone-400">{title}</p>
+          <span className="run-class">{title}</span>
         )}
-        <p className="mt-1 font-sans text-base text-parchment">
-          {run
-            ? `${t(`difficulties.${run.difficulty}.name`)}, ${
-                run.constraints.length === 1
+        <div className="run-meta">
+          {run ? (
+            <>
+              {onLabelChange && className && (
+                <>
+                  <span>{className}</span>
+                  <span aria-hidden="true">·</span>
+                </>
+              )}
+              <span>{t(`difficulties.${run.difficulty}.name`)}</span>
+              <span aria-hidden="true">·</span>
+              <span>
+                {run.constraints.length === 1
                   ? t("history.rulesOne")
-                  : t("history.rulesOther", { count: run.constraints.length })
-              }`
-            : t("history.unavailable")}
-        </p>
-        <p className="mt-1 font-sans text-sm break-all text-stone-400">
-          <span className="text-ember-glow">{seed}</span> {t(timestampKey, { date })}
-        </p>
-        {onLabelChange && (
-          <label className="mt-3 block max-w-sm">
-            <span className="sr-only">{t("history.label")}</span>
-            <input
-              defaultValue={label}
-              maxLength={FAVORITE_LABEL_MAX}
-              placeholder={t("history.labelPlaceholder")}
-              onBlur={(event) => onLabelChange(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") event.currentTarget.blur();
-              }}
-              className="w-full rounded-sm border border-stone-800 bg-transparent px-3 py-1.5 font-sans text-base text-bone placeholder:text-stone-600 hover:border-stone-600 focus:border-ember"
-            />
-          </label>
+                  : t("history.rulesOther", { count: run.constraints.length })}
+              </span>
+              <span aria-hidden="true">·</span>
+            </>
+          ) : null}
+          <span>{t(timestampKey, { date })}</span>
+        </div>
+        <code className="run-seed">{seed}</code>
+        {!run && (
+          <p className="unavail-note">
+            <Icon name="hourglass" size={14} />
+            {t("history.unavailable")}
+          </p>
         )}
       </div>
-      <Button
-        variant="quiet"
-        onClick={onRemove}
-        aria-label={t("history.removeNamed", { name: title })}
-        className="self-start"
-      >
-        {t("history.remove")}
-      </Button>
+      <div className="run-row-actions">
+        {run && (
+          <ButtonLink href={runPath(seed)} className="btn-sm">
+            {t("history.open")}
+          </ButtonLink>
+        )}
+        <button
+          type="button"
+          className="icon-btn"
+          onClick={onRemove}
+          aria-label={t("history.removeNamed", { name: title })}
+        >
+          <Icon name="trash" />
+        </button>
+      </div>
     </li>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { createSeed, generateRun, type Preferences } from "@/engine";
+import { Icon, type IconName } from "@/components/icons/Icon";
+import { RunCard } from "@/components/run/RunCard";
+import { ButtonLink } from "@/components/ui/Button";
 import { useTranslation } from "@/i18n/useTranslation";
 import { runPath } from "@/lib/run-link";
-import { ButtonLink } from "@/components/ui/Button";
-import { RunCard } from "@/components/run/RunCard";
 
 // Built from preferences rather than a literal seed so it stays valid when
 // the ruleset version changes.
@@ -28,51 +28,99 @@ const exampleRun = generateRun(
   createSeed({ gameId: "dsr", preferences: EXAMPLE_PREFERENCES, key: "praisethesun" }),
 );
 
-const STEPS = ["step1", "step2", "step3"] as const;
+const STEPS = [
+  { key: "step1", numeral: "I", icon: "card" },
+  { key: "step2", numeral: "II", icon: "settings" },
+  { key: "step3", numeral: "III", icon: "share" },
+] as const satisfies readonly { key: string; numeral: string; icon: IconName }[];
+
+/** Original illustration: a sword planted in an ember-lit mound. */
+function BonfireArt() {
+  return (
+    <svg
+      width="170"
+      height="170"
+      viewBox="0 0 64 64"
+      fill="none"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M32 6v34" className="stroke-bone" />
+      <path d="M30 8.5 32 6l2 2.5V38" className="stroke-parchment" />
+      <path d="M25 15h14" className="stroke-bone" />
+      <path d="M32 15v-5" className="stroke-bone" />
+      <path d="M32 40c-3-4-1-7 0-9 1 2 3 5 0 9z" className="stroke-ember-glow" />
+      <path d="M28 41c-2-3-1-5 0-6.5M36 41c2-3 1-5 0-6.5" className="stroke-ember" />
+      <path d="M12 54c5-8 12-12 20-12s15 4 20 12" className="stroke-stone-400" />
+      <path d="M18 54c3-4 8-7 14-7s11 3 14 7" className="stroke-stone-500" />
+      <path d="M8 54h48" className="stroke-stone-500" />
+    </svg>
+  );
+}
 
 export function Landing() {
   const { t } = useTranslation();
 
   return (
-    <div className="mx-auto max-w-page px-5 sm:px-8">
-      <section className="grid items-start gap-14 pt-12 pb-20 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-20">
-        <div className="lg:pt-10">
-          <h1 className="font-display text-display font-medium text-bone">{t("home.title")}</h1>
-          <p className="mt-8 max-w-prose text-lead text-parchment">{t("home.lead")}</p>
-          <ButtonLink href="/play" variant="primary" className="mt-10">
-            {t("home.cta")}
-          </ButtonLink>
+    <div className="page">
+      <section className="hero" aria-labelledby="hero-title">
+        <div className="hero-text">
+          <p className="eyebrow">{t("home.eyebrow")}</p>
+          <h1 id="hero-title" className="hero-title">
+            Souls Challenge<span>Generator</span>
+          </h1>
+          <p className="lead">{t("home.lead")}</p>
+          <div className="cta-row">
+            <ButtonLink href="/play" variant="primary">
+              <Icon name="flame" />
+              {t("home.cta")}
+            </ButtonLink>
+            <a href="#how-it-works" className="btn btn-ghost">
+              {t("home.howTitle")}
+            </a>
+          </div>
         </div>
-
-        <div>
-          <h2 className="sr-only">{t("home.exampleTitle")}</h2>
-          <RunCard run={exampleRun} />
-          <Link
-            href={runPath(exampleRun.seed)}
-            className="mt-4 inline-block font-sans text-base text-parchment underline decoration-stone-600 underline-offset-4 transition-colors duration-200 hover:text-bone hover:decoration-ember"
-          >
-            {t("home.exampleOpen")}
-          </Link>
+        <div className="hero-art" aria-hidden="true">
+          <div className="halo">
+            <BonfireArt />
+          </div>
         </div>
       </section>
 
-      <section className="border-t border-stone-800 py-16" aria-labelledby="how-it-works">
-        <h2 id="how-it-works" className="font-display text-title font-medium text-bone">
+      <section id="how-it-works" aria-labelledby="how-title" className="pt-6 pb-18">
+        <h2 id="how-title" className="h-section text-base">
           {t("home.howTitle")}
         </h2>
-        <ol className="mt-10 grid gap-10 sm:grid-cols-3">
-          {STEPS.map((step, index) => (
-            <li key={step}>
-              <span aria-hidden="true" className="font-display text-title text-ember">
-                {index + 1}
+        <ol className="steps">
+          {STEPS.map((step) => (
+            <li key={step.key} className="step">
+              <span className="step-icon" aria-hidden="true">
+                <Icon name={step.icon} size={24} />
               </span>
-              <h3 className="mt-2 font-sans text-xl font-medium text-bone">
-                {t(`home.${step}Title`)}
-              </h3>
-              <p className="mt-2 text-parchment">{t(`home.${step}`)}</p>
+              <div className="step-num" aria-hidden="true">
+                {step.numeral}
+              </div>
+              <h3>{t(`home.${step.key}Title`)}</h3>
+              <p>{t(`home.${step.key}`)}</p>
             </li>
           ))}
         </ol>
+      </section>
+
+      <section className="example" aria-labelledby="example-title">
+        <div className="example-text">
+          <p className="eyebrow">{t("home.exampleEyebrow")}</p>
+          <h2 id="example-title" className="display text-2xl">
+            {t("home.exampleTitle")}
+          </h2>
+          <p className="text-parchment">{t("home.exampleBody")}</p>
+          <ButtonLink href={runPath(exampleRun.seed)}>
+            {t("home.exampleOpen")}
+            <Icon name="arrow" size={18} />
+          </ButtonLink>
+        </div>
+        <RunCard run={exampleRun} compact />
       </section>
     </div>
   );

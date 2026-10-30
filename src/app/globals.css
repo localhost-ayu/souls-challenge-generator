@@ -1,172 +1,92 @@
 @import "tailwindcss";
+@import "./design.css";
 
 /*
- * Design tokens. Components only use these, so the visual identity can be
- * reworked here without touching component code.
+ * Design tokens ("ember over stone"). Components only use these, so the
+ * visual identity can be reworked here without touching component code.
  */
 @theme {
   --color-*: initial;
-  --color-abyss: #141210;
-  --color-stone-900: #1d1a17;
-  --color-stone-800: #2a2622;
-  --color-stone-600: #4a443c;
-  --color-stone-400: #8a8174;
-  --color-parchment: #cfc3a8;
-  --color-bone: #e8dfcc;
-  --color-ember: #e0892f;
-  --color-ember-glow: #f4b860;
-  --color-blood: #a3392d;
+  --color-stone-950: #0c0b0a;
+  --color-stone-900: #14120f;
+  --color-stone-850: #1a1713;
+  --color-stone-800: #221e19;
+  --color-stone-700: #2f2a23;
+  --color-stone-600: #453e35;
+  --color-stone-500: #5f574c;
+  --color-stone-400: #9a9081;
+  --color-parchment: #c9bc9e;
+  --color-bone: #ece4d2;
+  --color-ember-deep: #6e3812;
+  --color-ember: #d4873a;
+  --color-ember-glow: #f0b35a;
+  --color-ember-bright: #f6c47a;
+  --color-blood-deep: #331410;
+  --color-blood: #e07a68;
+  --color-blood-bright: #ea9182;
   --color-transparent: transparent;
   --color-current: currentColor;
 
-  --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
-  --text-display--line-height: 1.08;
-  --text-title: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
-  --text-title--line-height: 1.15;
-  --text-heading: 1.375rem;
-  --text-heading--line-height: 1.3;
-  --text-lead: 1.3125rem;
-  --text-lead--line-height: 1.6;
+  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
 
-  --container-prose: 40rem;
-  --container-page: 72rem;
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.4375rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.5rem;
+  --text-4xl: 3.5rem;
 
-  --ease-ember: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --tracking-caps: 0.14em;
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  --shadow-card:
+    0 1px 0 rgb(236 228 210 / 0.06) inset, 0 40px 80px -30px rgb(0 0 0 / 0.85),
+    0 0 0 1px rgb(0 0 0 / 0.6);
+  --shadow-ember: 0 0 0 1px rgb(212 135 58 / 0.55), 0 0 24px -4px rgb(240 179 90 / 0.35);
+  --shadow-focus: 0 0 0 2px var(--color-stone-950), 0 0 0 4px var(--color-ember-glow);
+
+  --container-page: 70rem;
+  --container-form: 62.5rem;
+  --container-article: 53.75rem;
+
+  --ease-rise: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-@theme inline {
-  --font-display: var(--font-cinzel);
-  --font-serif: var(--font-garamond);
-  --font-sans: var(--font-alegreya-sans);
+/* next/font sets these variables on <html>, so components can use them too. */
+@theme {
+  --font-display: var(--font-cinzel), Georgia, serif;
+  --font-serif: var(--font-garamond), Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
   html {
     color-scheme: dark;
-    background-color: var(--color-abyss);
+    background-color: var(--color-stone-950);
   }
 
   body {
-    background-color: var(--color-abyss);
+    background-color: var(--color-stone-950);
     color: var(--color-bone);
     font-family: var(--font-serif);
-    font-size: 1.125rem;
-    line-height: 1.65;
+    font-size: var(--text-base);
+    line-height: 1.55;
   }
 
   ::selection {
     background-color: var(--color-ember);
-    color: var(--color-abyss);
+    color: var(--color-stone-950);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-ember-glow);
     outline-offset: 3px;
-    border-radius: 2px;
-  }
-}
-
-@layer components {
-  .bonfire-glow {
-    position: absolute;
-    inset-inline: 0;
-    bottom: -10vh;
-    height: 75vh;
-    background:
-      radial-gradient(
-        ellipse 18% 30% at 50% 100%,
-        color-mix(in oklab, var(--color-ember-glow) 38%, transparent),
-        transparent 70%
-      ),
-      radial-gradient(
-        ellipse 55% 60% at 50% 100%,
-        color-mix(in oklab, var(--color-ember) 40%, transparent),
-        color-mix(in oklab, var(--color-ember) 12%, transparent) 50%,
-        transparent 78%
-      );
-  }
-
-  .vignette {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      ellipse 85% 75% at 50% 40%,
-      transparent 55%,
-      color-mix(in oklab, var(--color-abyss) 85%, black) 100%
-    );
-  }
-
-  .grain {
-    position: absolute;
-    inset: 0;
-    opacity: 0.07;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  .ember {
-    position: absolute;
-    bottom: -2vh;
-    left: var(--ember-x);
-    width: var(--ember-size);
-    height: var(--ember-size);
-    border-radius: 9999px;
-    background: var(--color-ember-glow);
-    box-shadow: 0 0 6px 1px var(--color-ember);
-    opacity: 0;
-    animation: ember-rise var(--ember-duration) var(--ease-ember) var(--ember-delay) infinite;
-  }
-
-  @keyframes ember-rise {
-    0% {
-      transform: translate3d(0, 0, 0);
-      opacity: 0;
-    }
-    15% {
-      opacity: 0.9;
-    }
-    100% {
-      transform: translate3d(var(--ember-drift), -55vh, 0) scale(0.4);
-      opacity: 0;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ember {
-      display: none;
-    }
-  }
-}
-
-@layer components {
-  /* The one orchestrated moment: the run card rises, then its rules follow. */
-  .run-reveal {
-    animation: run-reveal 700ms var(--ease-ember) both;
-  }
-
-  .run-reveal-item {
-    animation: run-reveal-item 500ms var(--ease-ember) both;
-    animation-delay: calc(350ms + var(--reveal-index) * 120ms);
-  }
-
-  @keyframes run-reveal {
-    from {
-      opacity: 0;
-      transform: translateY(16px) scale(0.985);
-    }
-  }
-
-  @keyframes run-reveal-item {
-    from {
-      opacity: 0;
-      transform: translateX(-8px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .run-reveal,
-    .run-reveal-item {
-      animation: none;
-    }
   }
 }

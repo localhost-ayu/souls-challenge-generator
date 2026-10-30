@@ -1,34 +1,47 @@
 import type { ConstraintCategory } from "@/engine";
 
 /* Original line icons, one per rule category. */
-const PATHS: Record<ConstraintCategory, string> = {
-  // A single upward notch, struck through: no leveling.
-  level: "M6 18h12M12 15V6m0 0-4 4m4-4 4 4M5 5l14 14",
+const PATHS: Record<ConstraintCategory, string[]> = {
+  // Climbing steps.
+  level: ["M3 20h5v-5h5v-5h5V5h3", "M3 20h18"],
   // A blade.
-  equipment: "M14.5 4.5 19.5 4.5 19.5 9.5 10 19 5 19 5 14ZM8 16l-3 3",
-  // Footsteps.
-  movement:
-    "M8 5c1.4 0 2 1.4 2 3.2S9.2 12 8 12s-2-1.6-2-3.8S6.6 5 8 5Zm8 6c1.4 0 2 1.4 2 3.2S17.2 18 16 18s-2-1.6-2-3.8.6-3.2 2-3.2ZM7 14.5h2M15 20.5h2",
-  // Two crossed blades.
-  combat: "M5 5l14 14M19 5 5 19M5 5h3M5 5v3M19 5h-3M19 5v3M8 19l-3-3M16 19l3-3",
+  equipment: ["M20 4v3.5l-9 9L7.5 13l9-9z", "M5.5 11.5l7 7", "M8.5 15.5 4 20"],
+  // Speed lines and an arrow.
+  movement: ["M3 8h8", "M3 12h12", "M3 16h6", "M15 7l5 5-5 5"],
+  // Crossed swords.
+  combat: [
+    "M4.5 4.5 15 15",
+    "M19.5 4.5 9 15",
+    "M13 17.5l4.5-4.5",
+    "M6.5 13l4.5 4.5",
+    "M16.5 16.5l3 3",
+    "M7.5 16.5l-3 3",
+  ],
   // A flask.
-  resource: "M10 3h4M10.5 3v5L6.5 15a4 4 0 0 0 3.5 6h4a4 4 0 0 0 3.5-6l-4-7V3M8 15h8",
-  // A spiral.
-  absurd: "M12 12a1 1 0 0 1 2 0 3 3 0 0 1-6 0 5 5 0 0 1 10 0 7 7 0 0 1-14 0",
-  // A mask.
-  style:
-    "M5 6c4.5-1.5 9.5-1.5 14 0 0 7-3 12-7 12S5 13 5 6Zm3.5 4.5h2.5M13 10.5h2.5M10 14.5c1.3.8 2.7.8 4 0",
+  resource: [
+    "M9.5 3h5",
+    "M10.5 3v5.5L6 16a3.5 3.5 0 0 0 3 5h6a3.5 3.5 0 0 0 3-5l-4.5-7.5V3",
+    "M7.3 14.5h9.4",
+  ],
+  // A helm.
+  style: ["M5 21v-8.5a7 7 0 0 1 14 0V21", "M5 15h14", "M12 15v6", "M8.5 11h7"],
+  // A die; drawn separately below for its pips.
+  absurd: [],
 };
 
 export function ConstraintIcon({
   category,
   className,
+  size = 24,
 }: {
   category: ConstraintCategory;
   className?: string;
+  size?: number;
 }) {
   return (
     <svg
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -38,7 +51,23 @@ export function ConstraintIcon({
       aria-hidden="true"
       className={className}
     >
-      <path d={PATHS[category]} />
+      {PATHS[category].map((d) => (
+        <path key={d} d={d} />
+      ))}
+      {category === "absurd" && (
+        <>
+          <rect x="4" y="4" width="16" height="16" rx="3" />
+          {[
+            [9, 9],
+            [15, 9],
+            [12, 12],
+            [9, 15],
+            [15, 15],
+          ].map(([cx, cy]) => (
+            <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="0.9" />
+          ))}
+        </>
+      )}
     </svg>
   );
 }

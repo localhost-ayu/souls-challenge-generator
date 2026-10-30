@@ -1,25 +1,29 @@
 "use client";
 
-import { useTranslation } from "@/i18n/useTranslation";
+import { Icon } from "@/components/icons/Icon";
 import { ButtonLink } from "@/components/ui/Button";
+import { useTranslation } from "@/i18n/useTranslation";
 
 export function NotFoundView() {
   const { t } = useTranslation();
 
   return (
-    <div className="mx-auto max-w-page px-5 pt-16 pb-24 sm:px-8 sm:pt-28">
-      <p aria-hidden="true" className="font-display text-display text-ember/40">
-        404
-      </p>
-      <h1 className="mt-2 max-w-3xl font-display text-title font-medium text-bone">
-        {t("notFound.title")}
-      </h1>
-      <p className="mt-6 max-w-prose text-lead text-parchment">{t("notFound.body")}</p>
-      <div className="mt-10 flex flex-wrap items-center gap-4">
-        <ButtonLink href="/" variant="primary">
-          {t("notFound.home")}
-        </ButtonLink>
-        <ButtonLink href="/play">{t("notFound.play")}</ButtonLink>
+    <div className="page max-w-form pt-16">
+      <div className="state">
+        <span className="state-icon">
+          <Icon name="embers" size={32} />
+        </span>
+        <p aria-hidden="true" className="display text-4xl text-ember">
+          404
+        </p>
+        <h1>{t("notFound.title")}</h1>
+        <p>{t("notFound.body")}</p>
+        <div className="cta-row">
+          <ButtonLink href="/" variant="primary">
+            {t("notFound.home")}
+          </ButtonLink>
+          <ButtonLink href="/play">{t("notFound.play")}</ButtonLink>
+        </div>
       </div>
     </div>
   );
