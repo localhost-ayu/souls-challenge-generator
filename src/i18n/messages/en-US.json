@@ -110,7 +110,7 @@
   "categories": {
     "level": {
       "name": "Level",
-      "description": "Limits on leveling up."
+      "description": "Limits on leveling up and spending souls."
     },
     "equipment": {
       "name": "Equipment",
@@ -245,6 +245,22 @@
     "no-buying": {
       "name": "No shopping",
       "description": "Never buy anything from a merchant. Blacksmith services are still allowed."
+    },
+    "level-cap": {
+      "name": "Level cap",
+      "description": "Never go past the soul level shown on this card."
+    },
+    "single-stat": {
+      "name": "One attribute",
+      "description": "When you level up, only raise the attribute shown on this card."
+    },
+    "no-vitality": {
+      "name": "No Vitality",
+      "description": "Never raise Vitality."
+    },
+    "no-spending-souls": {
+      "name": "Never spend souls",
+      "description": "No leveling, buying, reinforcing or repairing. Souls only pile up."
     }
   },
   "weaponCategories": {
@@ -296,6 +312,16 @@
     "royal-wood": "Royal Wood",
     "oolacile-township": "Oolacile Township"
   },
+  "attributes": {
+    "vit": "Vitality",
+    "att": "Attunement",
+    "end": "Endurance",
+    "str": "Strength",
+    "dex": "Dexterity",
+    "res": "Resistance",
+    "int": "Intelligence",
+    "fai": "Faith"
+  },
   "run": {
     "title": "Your challenge run",
     "loading": "Generating your run…",
@@ -337,7 +363,9 @@
       "weaponCategory": "Weapon type",
       "armorSet": "Armor set",
       "region": "Region",
-      "upgradeCap": "Upgrade limit"
+      "upgradeCap": "Upgrade limit",
+      "maxLevel": "Max soul level",
+      "stat": "Only attribute"
     }
   },
   "history": {

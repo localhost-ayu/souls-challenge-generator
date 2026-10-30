@@ -44,6 +44,12 @@ const REGIONAL_SOURCES: ReadonlySet<WeaponSource> = new Set([
 /** Ceilings an upgrade cap can impose; +15 is no cap at all. */
 export const UPGRADE_CAPS = [0, 5, 10] as const;
 
+/** Soul level ceilings; all above every class's starting level (at most 6). */
+export const LEVEL_CAPS = [10, 20, 30] as const;
+
+export const ATTRIBUTES = ["vit", "att", "end", "str", "dex", "res", "int", "fai"] as const;
+export type Attribute = (typeof ATTRIBUTES)[number];
+
 function onlyFrom(source: WeaponSource) {
   return (pools: DsrPools): DsrPools => ({
     ...pools,
@@ -69,8 +75,53 @@ export function canWieldAtBaseStats(
   );
 }
 
+/**
+ * Levels a class must gain before it can wield a weapon (two-handed, so
+ * Strength counts 1.5×), or Infinity when an attribute outside `raisable`
+ * falls short.
+ */
+export function levelsToWield(
+  startingClass: StartingClass,
+  weapon: Weapon,
+  raisable: ReadonlySet<Attribute>,
+): number {
+  const { attributes } = startingClass;
+  const { requirements } = weapon;
+  const needed = {
+    str: Math.ceil((2 * requirements.str) / 3),
+    dex: requirements.dex,
+    int: requirements.int,
+    fai: requirements.fai,
+  };
+  let levels = 0;
+  for (const stat of ["str", "dex", "int", "fai"] as const) {
+    const deficit = Math.max(0, needed[stat] - attributes[stat]);
+    if (deficit === 0) continue;
+    if (!raisable.has(stat)) return Infinity;
+    levels += deficit;
+  }
+  return levels;
+}
+
+const LEVEL_RULES = ["level-cap", "single-stat", "no-vitality"];
+
 export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
-  { id: "sl1", category: "level", difficulty: 3 },
+  {
+    id: "sl1",
+    category: "level",
+    difficulty: 3,
+    // Every other level rule limits leveling that SL1 already forbids.
+    conflictsWith: LEVEL_RULES,
+  },
+  { id: "level-cap", category: "level", difficulty: 2 },
+  // The drawn attribute is the only one that may ever be raised.
+  { id: "single-stat", category: "level", difficulty: 2 },
+  {
+    id: "no-vitality",
+    category: "level",
+    difficulty: 1,
+    conflictsWith: ["single-stat"],
+  },
   {
     id: "no-armor",
     category: "equipment",
@@ -177,6 +228,13 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
   // Starting equipment counts as owned, not bought.
   { id: "no-buying", category: "resource", difficulty: 2 },
   {
+    id: "no-spending-souls",
+    category: "level",
+    difficulty: 3,
+    // Already rules out leveling, buying and reinforcing.
+    conflictsWith: ["sl1", ...LEVEL_RULES, "no-buying", "upgrade-cap"],
+  },
+  {
     id: "cosplay",
     category: "style",
     difficulty: 1,
@@ -194,9 +252,9 @@ export const dsrConstraints: readonly ConstraintDefinition<DsrPools>[] = [
 
 /**
  * Tries classes in random order and returns the first one for which every
- * selected rule can be met. Under SL1 only weapons usable at base stats
- * count, without buying only weapons the class can get for free, and a class
- * left with no usable weapon at all is never picked.
+ * selected rule can be met. Only weapons the class can reach within its
+ * level rules count (none at all under SL1), without buying only weapons it
+ * can get for free, and a class left with no usable weapon is never picked.
  */
 export function resolveDsrLoadout(
   pools: DsrPools,
@@ -206,19 +264,34 @@ export function resolveDsrLoadout(
 
   if (has("cosplay") && pools.armorSets.length === 0) return null;
 
+  const frozen = has("sl1") || has("no-spending-souls");
+
   for (const startingClass of shuffle(ctx.rng, pools.classes)) {
-    let usable = pools.weapons;
-    if (has("sl1")) {
-      usable = usable.filter((w) => canWieldAtBaseStats(startingClass, w));
+    const params: Record<string, ConstraintParams> = {};
+    let raisable: ReadonlySet<Attribute> = new Set(frozen ? [] : ATTRIBUTES);
+    let budget = Infinity;
+    if (has("single-stat")) {
+      const stat = pick(ctx.rng, ATTRIBUTES);
+      raisable = new Set([stat]);
+      params["single-stat"] = { stat };
     }
-    if (has("no-buying")) {
+    if (has("level-cap")) {
+      const maxLevel = pick(ctx.rng, LEVEL_CAPS);
+      budget = maxLevel - startingClass.soulLevel;
+      params["level-cap"] = { maxLevel };
+    }
+
+    let usable = pools.weapons.filter((w) => {
+      const levels = levelsToWield(startingClass, w, raisable);
+      return Number.isFinite(levels) && levels <= budget;
+    });
+    if (has("no-buying") || has("no-spending-souls")) {
       const owned = new Set(startingClass.startingEquipment.weapons);
       usable = usable.filter(
         (w) => owned.has(w.id) || w.sources.some((source) => source !== "merchant"),
       );
     }
 
-    const params: Record<string, ConstraintParams> = {};
     if (has("region-weapons")) {
       const regional = usable.filter(
         (w) => w.region && w.sources.some((source) => REGIONAL_SOURCES.has(source)),

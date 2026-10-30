@@ -31,7 +31,7 @@ describe("engine public api", () => {
     const seed = createSeed({ gameId: "dsr", preferences, key: "praisethesun" });
     const run = generateRun(seed);
 
-    expect(seed).toMatch(/^dsr-3-/);
+    expect(seed).toMatch(/^dsr-4-/);
     expect(run.seed).toBe(seed);
     expect(run.gameId).toBe("dsr");
     expect(parseSeed(seed).preferences).toEqual(preferences);

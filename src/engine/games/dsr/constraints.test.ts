@@ -3,7 +3,12 @@ import type { Preferences } from "../../core/preferences";
 import { isCompatible } from "../../core/compatibility";
 import { createRng } from "../../core/rng";
 import type { GenerationContext, Loadout } from "../../core/types";
-import { canWieldAtBaseStats, dsrConstraints } from "./constraints";
+import {
+  ATTRIBUTES,
+  canWieldAtBaseStats,
+  dsrConstraints,
+  levelsToWield,
+} from "./constraints";
 import { dsrData } from "./dataset";
 import { dsrModule } from "./index";
 
@@ -116,6 +121,44 @@ describe("canWieldAtBaseStats", () => {
     expect(can("sorcerer", "short-bow")).toBe(false);
     // Cleric has 14 FAI; the Ivory Talisman needs 16.
     expect(can("cleric", "ivory-talisman")).toBe(false);
+  });
+});
+
+describe("levelsToWield", () => {
+  const all = new Set(ATTRIBUTES);
+  const levels = (classId: string, weaponId: string, raisable = all) =>
+    levelsToWield(classById(classId), weaponById(weaponId), raisable);
+
+  it("counts the levels a class still needs, two-handing for strength", () => {
+    // Bandit: 14 STR, 9 DEX. The Butcher Knife needs 24 STR, i.e. 16 two-handed.
+    expect(levels("bandit", "butcher-knife")).toBe(2);
+    // The Zweihander also needs 10 DEX: one more level.
+    expect(levels("bandit", "zweihander")).toBe(3);
+    expect(levels("deprived", "claymore")).toBe(0);
+  });
+
+  it("is infinite when a needed attribute may not be raised", () => {
+    expect(levels("bandit", "zweihander", new Set(["str"]))).toBe(Infinity);
+    expect(levels("bandit", "butcher-knife", new Set(["str"]))).toBe(2);
+  });
+});
+
+describe("level rules", () => {
+  it("never combine with sl1 or with each other where redundant", () => {
+    const byId = (id: string) => dsrConstraints.find((c) => c.id === id)!;
+    const pairs = [
+      ["sl1", "level-cap"],
+      ["sl1", "single-stat"],
+      ["sl1", "no-vitality"],
+      ["no-vitality", "single-stat"],
+      ["no-spending-souls", "sl1"],
+      ["no-spending-souls", "no-buying"],
+      ["no-spending-souls", "upgrade-cap"],
+    ];
+    for (const [a, b] of pairs) {
+      expect(isCompatible([byId(a!), byId(b!)]), `${a} + ${b}`).toBe(false);
+    }
+    expect(isCompatible([byId("level-cap"), byId("single-stat")])).toBe(true);
   });
 });
 

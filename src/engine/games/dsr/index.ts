@@ -5,7 +5,7 @@ import type { DsrData } from "./schema";
 
 export const dsrModule: GameModule<DsrData, DsrPools> = {
   id: "dsr",
-  rulesetVersion: 3,
+  rulesetVersion: 4,
   data: dsrData,
   catalog: {
     classes: dsrData.classes,

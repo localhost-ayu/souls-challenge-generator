@@ -110,7 +110,7 @@
   "categories": {
     "level": {
       "name": "Nível",
-      "description": "Limites para subir de nível."
+      "description": "Limites para subir de nível e gastar almas."
     },
     "equipment": {
       "name": "Equipamento",
@@ -245,6 +245,22 @@
     "no-buying": {
       "name": "Sem compras",
       "description": "Nunca compre nada de um mercador. Serviços de ferreiro continuam permitidos."
+    },
+    "level-cap": {
+      "name": "Nível máximo",
+      "description": "Nunca passe do soul level indicado nesta carta."
+    },
+    "single-stat": {
+      "name": "Um atributo",
+      "description": "Ao subir de nível, aumente apenas o atributo indicado nesta carta."
+    },
+    "no-vitality": {
+      "name": "Sem Vitalidade",
+      "description": "Nunca aumente a Vitalidade."
+    },
+    "no-spending-souls": {
+      "name": "Nunca gaste almas",
+      "description": "Nada de subir de nível, comprar, reforçar ou reparar. As almas só se acumulam."
     }
   },
   "weaponCategories": {
@@ -296,6 +312,16 @@
     "royal-wood": "Royal Wood",
     "oolacile-township": "Oolacile Township"
   },
+  "attributes": {
+    "vit": "Vitalidade",
+    "att": "Sintonia",
+    "end": "Fôlego",
+    "str": "Força",
+    "dex": "Destreza",
+    "res": "Resistência",
+    "int": "Inteligência",
+    "fai": "Fé"
+  },
   "run": {
     "title": "Sua challenge run",
     "loading": "Gerando sua run…",
@@ -337,7 +363,9 @@
       "weaponCategory": "Tipo de arma",
       "armorSet": "Conjunto de armadura",
       "region": "Região",
-      "upgradeCap": "Limite de reforço"
+      "upgradeCap": "Limite de reforço",
+      "maxLevel": "Soul level máximo",
+      "stat": "Único atributo"
     }
   },
   "history": {
