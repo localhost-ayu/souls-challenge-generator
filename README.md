@@ -133,7 +133,7 @@ are used in this project.
 
 Fonts: [Cinzel](https://fonts.google.com/specimen/Cinzel),
 [EB Garamond](https://fonts.google.com/specimen/EB+Garamond) and
-[Alegreya Sans](https://fonts.google.com/specimen/Alegreya+Sans), under the SIL Open Font License.
+[Inter](https://fonts.google.com/specimen/Inter), under the SIL Open Font License.
 Icons and illustrations are original to this project.
 
 ## License
