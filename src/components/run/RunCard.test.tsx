@@ -21,7 +21,7 @@ const preferences: Preferences = {
   },
 };
 
-// Locked by the engine snapshot: Sorcerer with no-blocking, boss-no-hit, no-estus, bow-only.
+// Locked by the engine snapshot: Thief with permadeath, no-magic, boss-weapons-only.
 const run = generateRun(createSeed({ gameId: "dsr", preferences, key: "praisethesun" }));
 
 function renderCard() {
@@ -39,9 +39,9 @@ describe("RunCard", () => {
   it("shows the class, translated rules, objective and seed", () => {
     renderCard();
 
-    expect(screen.getByRole("heading", { name: "Sorcerer" })).toBeTruthy();
-    expect(screen.getByText("No blocking")).toBeTruthy();
-    expect(screen.getByText("Never drink from the Estus Flask.")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Thief" })).toBeTruthy();
+    expect(screen.getByText("Permadeath")).toBeTruthy();
+    expect(screen.getByText("No sorceries, miracles or pyromancies.")).toBeTruthy();
     expect(screen.getByText("Every boss")).toBeTruthy();
     expect(screen.getByText("Defeat all 26 bosses.")).toBeTruthy();
     expect(screen.getByText(run.seed)).toBeTruthy();
@@ -64,7 +64,8 @@ describe("RunCard", () => {
             ...run,
             constraints: [
               { id: "specific-weapon", params: { weapon: "claymore" } },
-              { id: "weapon-category", params: { weaponCategory: "great-hammer" } },
+              { id: "region-weapons", params: { region: "undead-burg" } },
+              { id: "upgrade-cap", params: { upgradeCap: 5 } },
             ],
           }}
         />
@@ -72,7 +73,8 @@ describe("RunCard", () => {
     );
 
     expect(screen.getByText("Weapon").nextSibling?.textContent).toBe("Claymore");
-    expect(screen.getByText("Weapon type").nextSibling?.textContent).toBe("Great hammer");
+    expect(screen.getByText("Region").nextSibling?.textContent).toBe("Undead Burg");
+    expect(screen.getAllByText("Upgrade limit")[0]!.nextSibling?.textContent).toBe("+5");
   });
 
   it("follows the language while keeping game names untranslated", () => {
@@ -80,10 +82,10 @@ describe("RunCard", () => {
 
     act(() => setLocale("pt-BR"));
 
-    expect(screen.getByText("Sem bloquear")).toBeTruthy();
+    expect(screen.getByText("Morte permanente")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Regras da casa" })).toBeTruthy();
     expect(screen.getByText("Derrote todos os 26 bosses.")).toBeTruthy();
     expect(screen.getByText("Morto-vivo Escolhido")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Sorcerer" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Thief" })).toBeTruthy();
   });
 });

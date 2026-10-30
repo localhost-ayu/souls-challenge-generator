@@ -41,6 +41,10 @@ function formatParam(
       return nameOf(catalog.armorSets, id);
     case "weaponCategory":
       return t(`weaponCategories.${id}` as MessageKey);
+    case "region":
+      return t(`regions.${id}` as MessageKey);
+    case "upgradeCap":
+      return `+${id}`;
     default:
       return id;
   }

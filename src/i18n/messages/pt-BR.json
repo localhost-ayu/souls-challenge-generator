@@ -221,6 +221,30 @@
     "permadeath": {
       "name": "Morte permanente",
       "description": "Uma morte encerra a run. Crie um personagem novo para tentar de novo."
+    },
+    "boss-weapons-only": {
+      "name": "Só armas de chefe",
+      "description": "Use apenas armas feitas de almas de chefes. Até conseguir uma, lute com os punhos."
+    },
+    "tail-weapons-only": {
+      "name": "Só armas de cauda",
+      "description": "Use apenas armas obtidas cortando caudas. Até conseguir uma, lute com os punhos."
+    },
+    "enemy-drops-only": {
+      "name": "Só drops de inimigos",
+      "description": "Use apenas armas que inimigos deixam cair. Até cair uma, lute com os punhos."
+    },
+    "region-weapons": {
+      "name": "Armas locais",
+      "description": "Use apenas armas encontradas, compradas ou obtidas de inimigos na região indicada nesta carta."
+    },
+    "upgrade-cap": {
+      "name": "Limite de reforço",
+      "description": "Nunca reforce uma arma além do nível indicado nesta carta. Infusões que exigem nível maior ficam fora de alcance."
+    },
+    "no-buying": {
+      "name": "Sem compras",
+      "description": "Nunca compre nada de um mercador. Serviços de ferreiro continuam permitidos."
     }
   },
   "weaponCategories": {
@@ -246,6 +270,31 @@
     "catalyst": "Catalisador",
     "talisman": "Talismã",
     "pyromancy-flame": "Chama de piromancia"
+  },
+  "regions": {
+    "northern-undead-asylum": "Northern Undead Asylum",
+    "firelink-shrine": "Firelink Shrine",
+    "undead-burg": "Undead Burg",
+    "undead-parish": "Undead Parish",
+    "depths": "Depths",
+    "blighttown": "Blighttown",
+    "valley-of-drakes": "Valley of Drakes",
+    "darkroot-garden": "Darkroot Garden",
+    "darkroot-basin": "Darkroot Basin",
+    "new-londo-ruins": "New Londo Ruins",
+    "sens-fortress": "Sen's Fortress",
+    "anor-londo": "Anor Londo",
+    "painted-world-of-ariamis": "Painted World of Ariamis",
+    "the-catacombs": "The Catacombs",
+    "tomb-of-the-giants": "Tomb of the Giants",
+    "demon-ruins": "Demon Ruins",
+    "lost-izalith": "Lost Izalith",
+    "dukes-archives": "The Duke's Archives",
+    "crystal-cave": "Crystal Cave",
+    "ash-lake": "Ash Lake",
+    "sanctuary-garden": "Sanctuary Garden",
+    "royal-wood": "Royal Wood",
+    "oolacile-township": "Oolacile Township"
   },
   "run": {
     "title": "Sua challenge run",
@@ -286,7 +335,9 @@
     "params": {
       "weapon": "Arma",
       "weaponCategory": "Tipo de arma",
-      "armorSet": "Conjunto de armadura"
+      "armorSet": "Conjunto de armadura",
+      "region": "Região",
+      "upgradeCap": "Limite de reforço"
     }
   },
   "history": {
