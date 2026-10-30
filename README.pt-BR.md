@@ -18,12 +18,14 @@ Feito de fã para fã.
 
 - **Runs coerentes.** Regras conflitantes nunca aparecem juntas, e as escolhas respeitam o resto da
   run: em Soul Level 1, a arma sempre pode ser usada com os atributos iniciais da classe.
-- **Seeds reproduzíveis.** Uma seed curta e segura para URL, como `dsr-1-e6-praisethesun`, recria a
+- **Seeds reproduzíveis.** Uma seed curta e segura para URL, como `dsr-2-68u-praisethesun`, recria a
   mesma run em qualquer dispositivo. Compartilhe a seed ou um link.
 - **Sua dificuldade, ou a sorte.** Escolha de Hollow a Lorde das Cinzas, o objetivo (bosses
   obrigatórios ou todos, com ou sem o DLC) e os tipos de regra permitidos, ou clique em
   _Estou com sorte_.
 - **Português e inglês**, com troca instantânea e sem recarregar.
+- **Regras da casa em toda carta.** Buffs, invocações e glitches aparecem como permitidos ou
+  proibidos, para nenhuma run deixar isso em aberto.
 - **Histórico e favoritos** guardados no seu navegador. Sem conta e sem backend.
 
 ## Como funciona
@@ -32,12 +34,13 @@ Tudo o que uma run precisa está na seed: `<jogo>-<ruleset>-<preferências>-<cha
 
 - `ruleset` muda sempre que os dados ou o algoritmo mudam. Assim, uma seed antiga é recusada com
   uma explicação, em vez de gerar outra run sem avisar.
-- `preferências` guarda dificuldade, objetivo, DLC e tipos de regra em dois caracteres.
+- `preferências` guarda dificuldade, objetivo, DLC, regras da casa e tipos de regra em três
+  caracteres.
 - `chave` é a aleatoriedade. Qualquer palavra serve, então `praisethesun` é uma chave válida.
 
 ```mermaid
 flowchart TD
-    seed["Seed<br/>dsr-1-e6-praisethesun"] --> decode["Decodificar e validar<br/>(Zod, checagem do ruleset)"]
+    seed["Seed<br/>dsr-2-68u-praisethesun"] --> decode["Decodificar e validar<br/>(Zod, checagem do ruleset)"]
     decode --> rng["PRNG com semente<br/>mulberry32(hash(seed))"]
     rng --> select["Sortear regras pela dificuldade<br/>sem conflitos, uma por grupo exclusivo"]
     select --> narrow["Restringir as opções<br/>classes, armas, sets de armadura"]
