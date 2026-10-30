@@ -78,7 +78,9 @@
     "seedSubmit": "Open run",
     "houseRulesLegend": "House rules",
     "houseRulesHint": "Baseline rules for every run, shown on the card so nobody has to guess.",
-    "needsGlitches": "Allow glitches to pick this objective."
+    "needsGlitches": "Allow glitches to pick this objective.",
+    "customizeTitle": "Customize rules",
+    "customizeSummary": "{count} of {total} rule types allowed"
   },
   "difficulties": {
     "hollow": {
@@ -423,7 +425,8 @@
       "school": "Spell school",
       "weapons": "Weapon order",
       "scope": "Applies to"
-    }
+    },
+    "wikiLink": "{name} on {wiki} (opens in a new tab)"
   },
   "history": {
     "title": "Your runs",
